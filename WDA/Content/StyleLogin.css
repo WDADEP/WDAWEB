@@ -1,0 +1,162 @@
+﻿body
+{
+    background-image: none;
+    background-attachment: fixed;
+}
+
+.LoginStyle /* 登入畫面樣式 */
+{
+    background-color: #707070;
+}
+.LoginStyle .LoginBackground /* 登入畫面背景樣式 */
+{
+    background-image: url("../Images/Login_Style/bg_login.gif");
+    background-repeat: no-repeat;
+    background-position:center;
+    width: 1100px;
+    height: 768px;
+}
+.LoginStyle .LoginBoxPosition /* 登入畫面輸入方塊位置 */
+{
+    margin-top: 0px;
+    margin-left: 400px;
+}
+.LoginStyle .LoinBoxLeftTop /* 登入畫面輸入方塊左上樣式 */
+{
+    background-image: url("../Images/Login_Style/bg_loginform_lt.gif");
+    background-repeat: no-repeat;
+    width: 15px;
+    height: 15px;
+}
+.LoginStyle .LoinBoxTop /* 登入畫面輸入方塊上方樣式 */
+{
+    background-image: url("../Images/Login_Style/bg_loginform_t.gif");
+    background-repeat: repeat-x;
+    width: 230px;
+    height: 15px;
+}
+.LoginStyle .LoinBoxRightTop /* 登入畫面輸入方塊右上樣式 */
+{
+    background-image: url("../Images/Login_Style/bg_loginform_rt.gif");
+    background-repeat: no-repeat;
+    width: 15px;
+    height: 15px;
+}
+.LoginStyle .LoinBoxLeft /* 登入畫面輸入方塊左方樣式 */
+{
+    background-image: url("../Images/Login_Style/bg_loginform_l.gif");
+    background-repeat: repeat-y;
+}
+.LoginStyle .LoinBoxCenter /* 登入畫面輸入方塊中間樣式 */
+{
+    background-image: url("../Images/Login_Style/bg_loginform_center.gif");
+    background-repeat: repeat;
+}
+.LoginStyle .LoinBoxRight /* 登入畫面輸入方塊右方樣式 */
+{
+    background-image: url("../Images/Login_Style/bg_loginform_r.gif");
+    background-repeat: repeat-y;
+    width: 15px;
+}
+.LoginStyle .LoinBoxLeftBottom /* 登入畫面輸入方塊左下樣式 */
+{
+    background-image: url("../Images/Login_Style/bg_loginform_lb.gif");
+    background-repeat: no-repeat;
+    width: 15px;
+    height: 15px;
+}
+.LoginStyle .LoinBoxBottom /* 登入畫面輸入方塊下方樣式 */
+{
+    background-image: url("../Images/Login_Style/bg_loginform_b.gif");
+    background-repeat: repeat-x;
+    height: 15px;
+    width: 230px;
+}
+.LoginStyle .LoinBoxRightBottom /* 登入畫面輸入方塊右下樣式 */
+{
+    background-image: url("../Images/Login_Style/bg_loginform_rb.gif");
+    background-repeat: no-repeat;
+    width: 15px;
+    height: 15px;
+}
+.frameHeaderStyle /* Header 樣式 */
+{
+    background-color: #1269b0;
+    background-image: url("../Images/Login_Style/bg_header.jpg");
+    background-repeat: no-repeat;
+    height: 75px;
+}
+.frameHeaderStatusStyle /* Header 狀態列樣式 */
+{
+    background-color: #1269b0;
+    color: #ffffff;
+}
+.frameHeaderStatusStyle a /* Header 狀態列超連結樣式 */
+{
+    color: #ffffff;
+}
+.frameHeaderStatusStyle a:hover /* Header 狀態列超連結樣式 */
+{
+    color: #ecfa9d;
+}
+.frameFooterStyle /* Footer 樣式 */
+{
+    background-image: url('../Images/Login_Style/status_bg.gif');
+    background-repeat: repeat-x;
+    background-position: left top;
+    color: #ffffff;
+    margin: 0px 0px 0px 0px;
+    width: 100%;
+    height: 30px;
+}
+
+body
+{
+    margin: 10px 10px 10px 15px;
+    background-color: #ffffff;
+    background-image: url("../Images/Login_Style/ap_bg.gif");
+    background-repeat: no-repeat;
+    background-position: right bottom;
+    font-family: "微軟正黑體" , "新細明體" ,Arial;
+    font-size: 12pt;
+}
+hr
+{
+    background-color: #5d7b9d;
+    border: 0px;
+    height: 1px;
+}
+input[type=text]
+{
+    font-family: "微軟正黑體" , "新細明體" ,Arial;
+    font-size: 10pt;
+}
+.InputRequired /* 必填欄位樣式 */
+{
+    background-color: #FFFF99;
+    border-style: groove;
+    border-width: 1px;
+}
+input[type=button]
+{
+    cursor: pointer;
+}
+input[type=submit]
+{
+    cursor: pointer;
+}
+textarea
+{
+    font-family: "微軟正黑體" , "新細明體" ,Arial;
+    font-size: 10pt;
+}
+select
+{
+    font-family: "微軟正黑體" , "新細明體" ,Arial;
+    font-size: 10pt;
+}
+table
+{
+    font-family: "微軟正黑體" , "新細明體" ,Arial;
+    font-size: 10pt;
+}

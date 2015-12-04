@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ReportDB" targetNamespace="http://tempuri.org/ReportDB.xsd" xmlns:mstns="http://tempuri.org/ReportDB.xsd" xmlns="http://tempuri.org/ReportDB.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ReportDB" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="ReportDB" msprop:Generator_UserDSName="ReportDB">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="ScanListTable" msprop:Generator_TableClassName="ScanListTableDataTable" msprop:Generator_TableVarName="tableScanListTable" msprop:Generator_RowChangedName="ScanListTableRowChanged" msprop:Generator_TablePropName="ScanListTable" msprop:Generator_RowDeletingName="ScanListTableRowDeleting" msprop:Generator_RowChangingName="ScanListTableRowChanging" msprop:Generator_RowEvHandlerName="ScanListTableRowChangeEventHandler" msprop:Generator_RowDeletedName="ScanListTableRowDeleted" msprop:Generator_RowClassName="ScanListTableRow" msprop:Generator_UserTableName="ScanListTable" msprop:Generator_RowEvArgName="ScanListTableRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CASEID" msprop:Generator_ColumnVarNameInTable="columnCASEID" msprop:Generator_ColumnPropNameInRow="CASEID" msprop:Generator_ColumnPropNameInTable="CASEIDColumn" msprop:Generator_UserColumnName="CASEID" type="xs:string" minOccurs="0" />
+              <xs:element name="BARCODEVALUE" msprop:Generator_ColumnVarNameInTable="columnBARCODEVALUE" msprop:Generator_ColumnPropNameInRow="BARCODEVALUE" msprop:Generator_ColumnPropNameInTable="BARCODEVALUEColumn" msprop:Generator_UserColumnName="BARCODEVALUE" type="xs:string" minOccurs="0" />
+              <xs:element name="CREATETIME" msprop:Generator_ColumnVarNameInTable="columnCREATETIME" msprop:Generator_ColumnPropNameInRow="CREATETIME" msprop:Generator_ColumnPropNameInTable="CREATETIMEColumn" msprop:Generator_UserColumnName="CREATETIME" type="xs:string" minOccurs="0" />
+              <xs:element name="RealName" msprop:Generator_ColumnVarNameInTable="columnRealName" msprop:Generator_ColumnPropNameInRow="RealName" msprop:Generator_ColumnPropNameInTable="RealNameColumn" msprop:Generator_UserColumnName="RealName" type="xs:string" minOccurs="0" />
+              <xs:element name="FileCount" msprop:Generator_ColumnVarNameInTable="columnFileCount" msprop:Generator_ColumnPropNameInRow="FileCount" msprop:Generator_ColumnPropNameInTable="FileCountColumn" msprop:Generator_UserColumnName="FileCount" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="RecallQueryTable" msprop:Generator_TableClassName="RecallQueryTableDataTable" msprop:Generator_TableVarName="tableRecallQueryTable" msprop:Generator_RowChangedName="RecallQueryTableRowChanged" msprop:Generator_TablePropName="RecallQueryTable" msprop:Generator_RowDeletingName="RecallQueryTableRowDeleting" msprop:Generator_RowChangingName="RecallQueryTableRowChanging" msprop:Generator_RowEvHandlerName="RecallQueryTableRowChangeEventHandler" msprop:Generator_RowDeletedName="RecallQueryTableRowDeleted" msprop:Generator_RowClassName="RecallQueryTableRow" msprop:Generator_UserTableName="RecallQueryTable" msprop:Generator_RowEvArgName="RecallQueryTableRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="WPINNO" msprop:Generator_ColumnVarNameInTable="columnWPINNO" msprop:Generator_ColumnPropNameInRow="WPINNO" msprop:Generator_ColumnPropNameInTable="WPINNOColumn" msprop:Generator_UserColumnName="WPINNO" type="xs:string" minOccurs="0" />
+              <xs:element name="WPOUTNO" msprop:Generator_ColumnVarNameInTable="columnWPOUTNO" msprop:Generator_ColumnPropNameInRow="WPOUTNO" msprop:Generator_ColumnPropNameInTable="WPOUTNOColumn" msprop:Generator_UserColumnName="WPOUTNO" type="xs:string" minOccurs="0" />
+              <xs:element name="COMMNAME" msprop:Generator_ColumnVarNameInTable="columnCOMMNAME" msprop:Generator_ColumnPropNameInRow="COMMNAME" msprop:Generator_ColumnPropNameInTable="COMMNAMEColumn" msprop:Generator_UserColumnName="COMMNAME" type="xs:string" minOccurs="0" />
+              <xs:element name="BOXNO" msprop:Generator_ColumnVarNameInTable="columnBOXNO" msprop:Generator_ColumnPropNameInRow="BOXNO" msprop:Generator_ColumnPropNameInTable="BOXNOColumn" msprop:Generator_UserColumnName="BOXNO" type="xs:string" minOccurs="0" />
+              <xs:element name="TRANST" msprop:Generator_ColumnVarNameInTable="columnTRANST" msprop:Generator_ColumnPropNameInRow="TRANST" msprop:Generator_ColumnPropNameInTable="TRANSTColumn" msprop:Generator_UserColumnName="TRANST" type="xs:string" minOccurs="0" />
+              <xs:element name="HURRYTIME" msprop:Generator_ColumnVarNameInTable="columnHURRYTIME" msprop:Generator_ColumnPropNameInRow="HURRYTIME" msprop:Generator_ColumnPropNameInTable="HURRYTIMEColumn" msprop:Generator_UserColumnName="HURRYTIME" type="xs:string" minOccurs="0" />
+              <xs:element name="RECEIVER" msprop:Generator_ColumnVarNameInTable="columnRECEIVER" msprop:Generator_ColumnPropNameInRow="RECEIVER" msprop:Generator_ColumnPropNameInTable="RECEIVERColumn" msprop:Generator_UserColumnName="RECEIVER" type="xs:string" minOccurs="0" />
+              <xs:element name="transtExtra" msprop:Generator_ColumnVarNameInTable="columntranstExtra" msprop:Generator_ColumnPropNameInRow="transtExtra" msprop:Generator_ColumnPropNameInTable="transtExtraColumn" msprop:Generator_UserColumnName="transtExtra" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ReservationBorrowTable" msprop:Generator_TableClassName="ReservationBorrowTableDataTable" msprop:Generator_TableVarName="tableReservationBorrowTable" msprop:Generator_RowChangedName="ReservationBorrowTableRowChanged" msprop:Generator_TablePropName="ReservationBorrowTable" msprop:Generator_RowDeletingName="ReservationBorrowTableRowDeleting" msprop:Generator_RowChangingName="ReservationBorrowTableRowChanging" msprop:Generator_RowEvHandlerName="ReservationBorrowTableRowChangeEventHandler" msprop:Generator_RowDeletedName="ReservationBorrowTableRowDeleted" msprop:Generator_RowClassName="ReservationBorrowTableRow" msprop:Generator_UserTableName="ReservationBorrowTable" msprop:Generator_RowEvArgName="ReservationBorrowTableRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="WPINNO" msprop:Generator_ColumnVarNameInTable="columnWPINNO" msprop:Generator_ColumnPropNameInRow="WPINNO" msprop:Generator_ColumnPropNameInTable="WPINNOColumn" msprop:Generator_UserColumnName="WPINNO" type="xs:string" minOccurs="0" />
+              <xs:element name="WPOUTNO" msprop:Generator_ColumnVarNameInTable="columnWPOUTNO" msprop:Generator_ColumnPropNameInRow="WPOUTNO" msprop:Generator_ColumnPropNameInTable="WPOUTNOColumn" msprop:Generator_UserColumnName="WPOUTNO" type="xs:string" minOccurs="0" />
+              <xs:element name="COMMNAME" msprop:Generator_ColumnVarNameInTable="columnCOMMNAME" msprop:Generator_ColumnPropNameInRow="COMMNAME" msprop:Generator_ColumnPropNameInTable="COMMNAMEColumn" msprop:Generator_UserColumnName="COMMNAME" type="xs:string" minOccurs="0" />
+              <xs:element name="BOXNO" msprop:Generator_ColumnVarNameInTable="columnBOXNO" msprop:Generator_ColumnPropNameInRow="BOXNO" msprop:Generator_ColumnPropNameInTable="BOXNOColumn" msprop:Generator_UserColumnName="BOXNO" type="xs:string" minOccurs="0" />
+              <xs:element name="TRANST" msprop:Generator_ColumnVarNameInTable="columnTRANST" msprop:Generator_ColumnPropNameInRow="TRANST" msprop:Generator_ColumnPropNameInTable="TRANSTColumn" msprop:Generator_UserColumnName="TRANST" type="xs:string" minOccurs="0" />
+              <xs:element name="RECEIVER" msprop:Generator_ColumnVarNameInTable="columnRECEIVER" msprop:Generator_ColumnPropNameInRow="RECEIVER" msprop:Generator_ColumnPropNameInTable="RECEIVERColumn" msprop:Generator_UserColumnName="RECEIVER" type="xs:string" minOccurs="0" />
+              <xs:element name="TEL" msprop:Generator_ColumnVarNameInTable="columnTEL" msprop:Generator_ColumnPropNameInRow="TEL" msprop:Generator_ColumnPropNameInTable="TELColumn" msprop:Generator_UserColumnName="TEL" type="xs:string" minOccurs="0" />
+              <xs:element name="ONFILE" msprop:Generator_ColumnVarNameInTable="columnONFILE" msprop:Generator_ColumnPropNameInRow="ONFILE" msprop:Generator_ColumnPropNameInTable="ONFILEColumn" msprop:Generator_UserColumnName="ONFILE" type="xs:string" minOccurs="0" />
+              <xs:element name="FILENO" msprop:Generator_ColumnVarNameInTable="columnFILENO" msprop:Generator_ColumnPropNameInRow="FILENO" msprop:Generator_ColumnPropNameInTable="FILENOColumn" msprop:Generator_UserColumnName="FILENO" type="xs:string" minOccurs="0" />
+              <xs:element name="RID" msprop:Generator_ColumnVarNameInTable="columnRID" msprop:Generator_ColumnPropNameInRow="RID" msprop:Generator_ColumnPropNameInTable="RIDColumn" msprop:Generator_UserColumnName="RID" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="FileArchiveTable" msprop:Generator_TableClassName="FileArchiveTableDataTable" msprop:Generator_TableVarName="tableFileArchiveTable" msprop:Generator_RowChangedName="FileArchiveTableRowChanged" msprop:Generator_TablePropName="FileArchiveTable" msprop:Generator_RowDeletingName="FileArchiveTableRowDeleting" msprop:Generator_RowChangingName="FileArchiveTableRowChanging" msprop:Generator_RowEvHandlerName="FileArchiveTableRowChangeEventHandler" msprop:Generator_RowDeletedName="FileArchiveTableRowDeleted" msprop:Generator_RowClassName="FileArchiveTableRow" msprop:Generator_UserTableName="FileArchiveTable" msprop:Generator_RowEvArgName="FileArchiveTableRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="BARCODEVALUE" msprop:Generator_ColumnVarNameInTable="columnBARCODEVALUE" msprop:Generator_ColumnPropNameInRow="BARCODEVALUE" msprop:Generator_ColumnPropNameInTable="BARCODEVALUEColumn" msprop:Generator_UserColumnName="BARCODEVALUE" type="xs:string" minOccurs="0" />
+              <xs:element name="WPOUTNO" msprop:Generator_ColumnVarNameInTable="columnWPOUTNO" msprop:Generator_ColumnPropNameInRow="WPOUTNO" msprop:Generator_ColumnPropNameInTable="WPOUTNOColumn" msprop:Generator_UserColumnName="WPOUTNO" type="xs:string" minOccurs="0" />
+              <xs:element name="FILEDATE" msdata:Caption="COMMNAME" msprop:Generator_ColumnVarNameInTable="columnFILEDATE" msprop:Generator_ColumnPropNameInRow="FILEDATE" msprop:Generator_ColumnPropNameInTable="FILEDATEColumn" msprop:Generator_UserColumnName="FILEDATE" type="xs:string" minOccurs="0" />
+              <xs:element name="BOXNO" msprop:Generator_ColumnVarNameInTable="columnBOXNO" msprop:Generator_ColumnPropNameInRow="BOXNO" msprop:Generator_ColumnPropNameInTable="BOXNOColumn" msprop:Generator_UserColumnName="BOXNO" type="xs:string" minOccurs="0" />
+              <xs:element name="FILENO" msdata:Caption="TRANST" msprop:Generator_ColumnVarNameInTable="columnFILENO" msprop:Generator_ColumnPropNameInRow="FILENO" msprop:Generator_ColumnPropNameInTable="FILENOColumn" msprop:Generator_UserColumnName="FILENO" type="xs:string" minOccurs="0" />
+              <xs:element name="KEEPYR" msdata:Caption="RECEIVER" msprop:Generator_ColumnVarNameInTable="columnKEEPYR" msprop:Generator_ColumnPropNameInRow="KEEPYR" msprop:Generator_ColumnPropNameInTable="KEEPYRColumn" msprop:Generator_UserColumnName="KEEPYR" type="xs:string" minOccurs="0" />
+              <xs:element name="RID" msdata:Caption="FILENO" msprop:Generator_ColumnVarNameInTable="columnRID" msprop:Generator_ColumnPropNameInRow="RID" msprop:Generator_ColumnPropNameInTable="RIDColumn" msprop:Generator_UserColumnName="RID" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

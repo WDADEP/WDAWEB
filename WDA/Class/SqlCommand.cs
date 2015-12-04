@@ -1,0 +1,2684 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace WDA.Class
+{
+    public class SqlCommand
+    {
+        #region Select
+        /// <summary>
+        /// Select
+        /// </summary>
+        public class Select
+        {
+            #region AllPrivilege()
+            /// <summary>
+            /// 所有權限資訊
+            /// </summary>
+            /// <returns></returns>
+            public string AllPrivilege()
+            {
+                #region SQL Command
+
+                string strSql = "Select\n"
+                    + "	'NODE' || rp.PrivID  As PrivID\n"
+                    + "	, Case When rp.ParentID = -1 Then '' Else 'NODE' || rp.ParentID End As ParentID\n"
+                    + "	,rp.PrivValue\n"
+                    + "	,rp.PrivName\n"
+                    + "	,rp.PrivLevel\n"
+                    + "	,rp.Seq\n"
+                    + "From RolePrivilegeTable rp\n"
+                    + "Where rp.Status = 0\n"
+                    + "Order By rp.ParentID";
+
+                #endregion
+
+                return strSql;
+            }
+            #endregion
+
+            #region BarcodeTable
+            /// <summary>
+            /// 索引資訊
+            /// </summary>
+            public string BarcodeTable()
+            {
+                return this.BarcodeTable(null);
+            }
+
+            public string BarcodeTable(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select bt.* ,ROW_NUMBER() OVER(ORDER BY CASEID) AS RID, ut.realname\n"
+                              + "From BarcodeTable bt Left Join UserTable ut On bt.onfile = ut.username\n"
+                                + "Where 1=1 {0}";
+                #endregion
+
+                strSql = string.Format(strSql, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region BkwpfileTable
+            /// <summary>
+            /// 歸檔資訊
+            /// </summary>
+            /// <param name="WpinNo">收文文號</param>
+            /// <param name="WpoutNo">發文文號</param>
+            /// <param name="FileNo">歸檔檔號</param>
+            /// <param name="FileDate">歸檔日期</param>
+            /// <param name="KeepYr">保存年限</param>
+            /// <param name="BoxNo">卷宗號</param>
+            /// <param name="OnFile">歸檔作業者</param>
+            /// <returns></returns>
+            public string BkwpfileTable(string WpinNo, string WpoutNo, string FileNo, string FileDate, string KeepYr, string BoxNo, string OnFile)
+            {
+                #region SQL Command
+
+                string strSql = "Select t.WPINNO,\n"
+                    + "t.WPOUTNO,\n"
+                    + "t.FILENO,\n"
+                    + "t.FILEDATE,\n"
+                    + "t.KEEPYR,\n"
+                    + "t.BOXNO,\n"
+                    + "t.ONFILE\n"
+                    + "From BKWPFILE t\n"
+                    + "Where 1 = 1\n"
+                    + "And t.FILENO != ' '\n"
+                    + "{0}"
+                    + "Order By t.WPINNO\n";
+
+                string where = string.Empty;
+
+                if (WpinNo != null && WpinNo.Length > 0) where += string.Format("And t.WPINNO = '{0}'\n", WpinNo);
+
+                if (WpoutNo != null && WpoutNo.Length > 0) where += string.Format("And t.WPOUTNO = '{0}'\n", WpoutNo);
+
+                if (FileNo != null && FileNo.Length > 0) where += string.Format("And t.FILENO = '{0}'\n", FileNo);
+
+                if (FileDate != null && FileDate.Length > 0) where += string.Format("And t.FILEDATE = '{0}'\n", FileDate);
+
+                if (KeepYr != null && KeepYr.Length > 0) where += string.Format("And t.KEEPYR = '{0}'\n", KeepYr);
+
+                if (BoxNo != null && BoxNo.Length > 0) where += string.Format("And t.BOXNO = '{0}'\n", BoxNo);
+
+                if (OnFile != null && OnFile.Length > 0) where += string.Format("And t.ONFILE = N'{0}'\n", OnFile);
+
+                #endregion
+
+                strSql = string.Format(strSql, where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region UploadCaseQuery
+            /// <summary>
+            /// 索引資訊
+            /// </summary>
+            public string UploadCaseQuery(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select ct.* ,bt.Barcodevalue,ut.UserName From CASETABLE ct\n"
+                                + "Inner Join BarcodeTable bt On ct.caseID = bt.caseid\n"
+                                + "Inner Join UserTable ut On ct.createuserid = ut.userid\n"
+                                + "Where 1=1 {0}";
+
+                #endregion
+
+                strSql = string.Format(strSql, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region CaseQuery
+            /// <summary>
+            /// 
+            /// </summary>
+            public string CaseQuery(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "SELECT fb.*,bt.CaseID,wb.ViewType,\n"
+                                + "CASE kind\n"
+                                + "WHEN N'1' THEN '一般'\n"
+                                + "WHEN N'2' THEN '法制'\n"
+                                + "WHEN N'3' THEN '行政'\n"
+                                + "ELSE '其他' END As kindName\n"
+                                + "From FILEBORO fb\n"
+                                + "INNER JOIN WPBORROW wb ON fb.WPINNO = wb.WPINNO And fb.Receiver = wb.Receiver \n"
+                                + "Left JOIN BarcodeTable bt ON fb.WPINNO = bt.Barcodevalue\n"
+                                + "WHERE 1=1 And wb.REDATE Is Null  {0}\n  And ((fb.chk='Y' And wb.viewtype =2) or(fb.chk='N' And wb.viewtype =1))";
+
+                #endregion
+
+                strSql = string.Format(strSql, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region Wpborrow
+            /// <summary>
+            /// 
+            /// </summary>
+            public string Wpborrow(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select wb.WPINNO,wb.WPOUTNO,fb.commname,fb.transt,wb.hurrytime,fb.receiver\n"
+                                + " From Wpborrow wb\n"
+                                + "Inner Join (Select wb.WPINNO,\n"
+                                + "CASE wb.kind\n"
+                                + "WHEN N'1' THEN wb.transt + 8\n"
+                                + "WHEN N'2' THEN wb.transt + 15\n"
+                                + "WHEN N'3' THEN wb.transt + 366\n"
+                                + "ELSE wb.transt END As transtExtra\n"
+                                + "From Wpborrow wb WHERE  wb.REDATE IS null  And wb.EXTEN In('D','N') And wb.ViewType = 1 And wb.PRTFLAG In('P','T'))B\n"
+                                + "On wb.wpinno = B.wpinno\n"
+                                + "Inner Join UserTable ut\n"
+                                + "On wb.receiver = ut.username\n"
+                                + "Inner Join Fileboro fb\n"
+                                + "On wb.wpinno = fb.wpinno\n"
+                    //+ "Inner Join {1} wp\n"
+                    //+ "On wb.wpinno = wp.wpinno\n"
+                                + "WHERE  wb.REDATE IS null  And fb.chk ='N' And wb.EXTEN In('D','N') And wb.ViewType = 1  {0}";
+
+                #endregion
+
+                //strSql = string.Format(strSql, Where,PageUtility.WprecSchema);
+                strSql = string.Format(strSql, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region WprecInfos
+            /// <summary>
+            /// 
+            /// </summary>
+            public string WprecInfos(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select * From {1} Where 1=1 {0}";
+
+                #endregion
+
+                strSql = string.Format(strSql, Where, PageUtility.WprecSchema);
+
+                return strSql;
+            }
+            #endregion
+
+            #region AlsoFileInfos
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
+            public string AlsoFileInfos(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select wpb.wpinno,wpb.wpoutno,wpb.transt,wpb.receiver,kind,\n"
+                                + "CASE kind\n"
+                                + "WHEN N'1' THEN '一般'\n"
+                                + "WHEN N'2' THEN '法制'\n"
+                                + "WHEN N'3' THEN '行政'\n"
+                                + "ELSE '其他' END As kindName,\n"
+                                + "wpb.redate,wpb.exten,ut.RealName\n"
+                                + "From wpborrow wpb\n"
+                                + "Inner Join UserTable ut On wpb.receiver = ut.UserName\n"
+                                + "Where 1=1 And wpb.REDATE IS null And wpb.ViewType = 1 And wpb.EXTEN ='N' {0}";
+
+
+                #endregion
+
+                strSql = string.Format(strSql, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region AlsoFileInfosD
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
+            public string AlsoFileInfosD(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select wpb.wpinno,wpb.wpoutno,wpb.transt,wpb.receiver,kind,\n"
+                                + "CASE kind\n"
+                                + "WHEN N'1' THEN '一般'\n"
+                                + "WHEN N'2' THEN '法制'\n"
+                                + "WHEN N'3' THEN '行政'\n"
+                                + "ELSE '其他' END As kindName,\n"
+                                + "wpb.redate,wpb.exten,ut.RealName\n"
+                                + "From wpborrow wpb\n"
+                                + "Inner Join UserTable ut On wpb.receiver = ut.UserName\n"
+                                + "Where 1=1 And wpb.REDATE IS null And wpb.ViewType = 1 And wpb.EXTEN ='D' {0}";
+
+
+                #endregion
+
+                strSql = string.Format(strSql, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region PaperAlsoFileInfos
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
+            public string PaperAlsoFileInfos(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select wpb.wpinno,wpb.wpoutno,wpb.transt,wpb.receiver,ut.TEL,wpb.kind,wpb.redate\n"
+                                + "From wpborrow wpb\n"
+                                + "Inner Join UserTable ut On wpb.receiver = ut.UserName\n"
+                                + "Inner Join FILEBORO fb On wpb.wpinno = fb.wpinno\n"
+                                + "Where 1=1 {0}";
+                #endregion
+
+                strSql = string.Format(strSql, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region GetAlsoFileByVisa
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
+            public string GetAlsoFileByVisa(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select wpb.wpinno,wpb.wpoutno,wpb.transt,wpb.receiver,kind,\n"
+                                + "CASE kind\n"
+                                + "WHEN N'1' THEN '一般'\n"
+                                + "WHEN N'2' THEN '法制'\n"
+                                + "WHEN N'3' THEN '行政'\n"
+                                + "ELSE '其他' END As kindName,\n"
+                                + "wpb.redate,wpb.exten,ut.RealName\n"
+                                + "From wpborrow wpb\n"
+                                + "Inner Join UserTable ut On wpb.receiver = ut.UserName\n"
+                                + "Where 1=1 And REDATE IS null And EXTEN ='Y' {0}";
+
+
+                #endregion
+
+                strSql = string.Format(strSql, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region DulyAdjustedInfo
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
+            public string DulyAdjustedInfo(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select wpr.wpindate,wpr.wpoutno,wpr.wpoutdate,wpr.caseno,wpr.applkind,wpr.commname,wpb.receiver,\n"
+                                + "(Select ut.realname From usertable ut Where wpb.receiver = ut.username ) As rname,\n"
+                                + "wpb.transt ,SYSDATE as getime,\n"
+                                + "CASE wpr.applkind\n"
+                                + "WHEN N'1' THEN '一般'\n"
+                                + "WHEN N'2' THEN '法制'\n"
+                                + "WHEN N'3' THEN '行政'\n"
+                                + "ELSE '其他' END As kindName\n"
+                                + "From Wpborrow wpb\n"
+                                + "Inner Join {0} wpr On wpb.wpinno = wpr.wpinno\n"
+                                + "Where 1=1 {1} And  wpb.Redate Is Null And PRTFLAG In('P','T') And not exists (Select wpinno from Fileboro Where CHK ='N' And wpb.wpinno = fileboro.wpinno )";
+
+
+                #endregion
+
+                strSql = string.Format(strSql, PageUtility.WprecSchema, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region GetApproveuserID
+            /// <summary>
+            /// 
+            /// </summary>
+            public string GetApproveuserID()
+            {
+                #region SQL Command
+
+                string strSql = @"Select ut.* From UserTable ut
+                                  Inner Join ROLEPRIVILEGE rp On ut.RoleID = rp.RoleID
+                                  Where rp.PrivID =26";
+
+                #endregion
+
+                return strSql;
+            }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="PrivID"></param>
+            /// <returns></returns>
+            public string GetApproveuserID(string PrivID)
+            {
+                #region SQL Command
+                string strSql = string.Format(
+                    @"Select ut.* From UserTable ut
+                      Inner Join ROLEPRIVILEGE rp On ut.RoleID = rp.RoleID
+                      Where rp.PrivID = '{0}'",
+                      PrivID);
+
+                #endregion
+
+                return strSql;
+            }
+            #endregion
+
+            #region GetWPINNO
+            /// <summary>
+            /// 取得UserID
+            /// </summary>
+            public string GetWPINNO()
+            {
+                #region SQL Command
+
+                string strSql = "Select wb.wpinno From WPBORROW wb\n"
+                                 + "Where wb.wpinno =:Wpinno And wb.receiver =:UserName And wb.REDATE Is Null ";
+
+                #endregion
+
+                return strSql;
+            }
+
+            #endregion
+
+            #region GetCaseID
+            /// <summary>
+            /// 取得UserID
+            /// </summary>
+            public string GetCaseID()
+            {
+                #region SQL Command
+
+                string strSql = "Select bt.CaseID From WPBORROW wb Inner Join BARCODETABLE bt On wb.wpinno =bt.BARCODEVALUE\n"
+                                 + "Where wb.wpinno =:Wpinno And wb.receiver =:UserName And wb.REDATE Is Null ";
+
+                #endregion
+
+                return strSql;
+            }
+
+            #endregion
+
+            #region GetDocLapID
+            /// <summary>
+            /// 取得文件LapID
+            /// </summary>
+            public string GetDocLapID()
+            {
+                #region SQL Command
+
+                string strSql = "Select * From LapTable Where BcValue =@BcValue Order By Seq";
+
+                #endregion
+
+                return strSql;
+            }
+
+            #endregion
+
+            #region GetUserID
+            /// <summary>
+            /// 取得UserID
+            /// </summary>
+            public string GetUserID()
+            {
+                #region SQL Command
+
+                string strSql = "Select * From UserTable Where UserName =:UserName And UserStatus=0";
+
+                #endregion
+
+                return strSql;
+            }
+
+            #endregion
+
+            #region GetDepID
+            /// <summary>
+            /// 取得UserID
+            /// </summary>
+            public string GetDepID()
+            {
+                #region SQL Command
+
+                string strSql = "Select * From UnitTable Where UnitCode =@UnitCode";
+
+                #endregion
+
+                return strSql;
+            }
+
+            #endregion
+
+            #region GetBARCODETABLE
+            /// <summary>
+            /// 取得文件LapID
+            /// </summary>
+            public string GetBARCODETABLE(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select * From BARCODETABLE\n"
+                              + "Where 1=1 {0}";
+
+                #endregion
+
+                if (!string.IsNullOrEmpty(Where)) strSql = string.Format(strSql, Where);
+
+                return strSql;
+            }
+
+            #endregion
+
+            #region GetCaseTable
+            /// <summary>
+            /// 取得文件LapID
+            /// </summary>
+            public string GetCaseTable(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select * From CaseTable\n"
+                              + "Where 1=1 {0}";
+
+                #endregion
+
+                if (!string.IsNullOrEmpty(Where)) strSql = string.Format(strSql, Where);
+
+                return strSql;
+            }
+
+            #endregion
+
+            #region GetFileTable
+            /// <summary>
+            /// 
+            /// </summary>
+            public string GetFileTable(string Where)
+            {
+                #region SQL Command
+                string strSql = @"Select * From FileTable ft Where 1=1 And FileStatus = 1 {0} Order By ft.FileName";
+                //                string strSql = @"Select ft.* ,fdt.DrawXml,REPLICATE('0',3-LEN(ROW_NUMBER() OVER (PARTITION BY ft.CaseID  ORDER BY ft.CreateTime)))+CAST(ROW_NUMBER() OVER (PARTITION BY ft.CaseID  ORDER BY ft.CreateTime) AS NVARCHAR(3)) FileNumberName
+                //                                    From FileTable ft 
+                //                                        Left Join (
+                //                                                    Select * From FileDrawTable A Where A.FileStatus = 0 
+                //                                                  ) fdt
+                //                                  On ft.FileID = fdt.FileID Where 1=1 {0} Order By ft.FileName";
+                #endregion
+
+                if (!string.IsNullOrEmpty(Where)) strSql = string.Format(strSql, Where);
+
+                return strSql;
+            }
+
+            #endregion
+
+            #region GetAllFileTable
+            /// <summary>
+            /// 
+            /// </summary>
+            public string GetAllFileTable(string Where)
+            {
+                #region SQL Command
+                string strSql = @"Select * From FileTable ft Where 1=1  {0} Order By ft.FileName";
+                #endregion
+
+                if (!string.IsNullOrEmpty(Where)) strSql = string.Format(strSql, Where);
+
+                return strSql;
+            }
+
+            #endregion
+
+            #region GetDocAboveNodes
+            /// <summary>
+            /// 取得指定LapID的所有上層節點
+            /// </summary>
+            public string GetDocAboveNodes(string LapID)
+            {
+                #region SQL Command
+
+                string strSql = "WITH tmpTree(LapID, ParentID, LapName ,LevelID,BcValue) AS (\n"
+                    + "SELECT LapID, ParentID, LapName, LevelID,BcValue FROM LapTable WHERE LapID={0} And LapStatus=0\n"
+                    + "UNION All\n"
+                    + "SELECT a.LapID, a.ParentID ,a.LapName,b.LevelID-1,a.BcValue\n"
+                    + "FROM LapTable a INNER JOIN tmpTree b on a.LapID=b.ParentID  WHERE  LapStatus=0\n"
+                    + ")\n"
+                    + "SELECT * FROM tmpTree\n";
+
+                #endregion
+
+                if (!string.IsNullOrEmpty(LapID)) strSql = string.Format(strSql, LapID);
+
+                return strSql;
+            }
+
+            #endregion
+
+            #region GetMessageTable
+            /// <summary>
+            /// 取得交易紀錄交易內容
+            /// </summary>
+            /// <param name="MsgSource"></param>
+            /// <returns></returns>
+            public string GetMessageTable(int MsgSource)
+            {
+                #region SQL Command
+
+                string strSql = "Select MsgID,MsgText From MessageTable Where MsgStatus = 0 And MsgSource = {0}";
+
+                #endregion
+
+                strSql = string.Format(strSql, MsgSource);
+
+                return strSql;
+            }
+
+            #endregion
+
+            #region GetMaxUserID
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
+            public string GetMaxUserID()
+            {
+                #region SQL Command
+
+                string strSql = "Select (Max(UserID) + 1) As UserID From UserTable\n";
+
+                #endregion
+
+                return strSql;
+            }
+            #endregion
+
+            #region GetMaxRoleID
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
+            public string GetMaxRoleID()
+            {
+                #region SQL Command
+
+                string strSql = "Select (Max(RoleID) + 1) As RoleID From RoleTable\n";
+
+                #endregion
+
+                return strSql;
+            }
+            #endregion
+
+            #region GetUserAllViewerPrivilegeByViewer
+            /// <summary>
+            /// 
+            /// </summary>
+            public string GetUserAllViewerPrivilegeByViewer()
+            {
+                #region SQL Command
+                string strSql = "Select DISTINCT ViewerPrivilege As Privilege From UserTable\n"
+                               + "Inner Join UserViewerTable On UserTable.UserID = UserViewerTable.UserID where UserTable.UserID=@UserID and JobItemID=@JobItemID\n"
+                               + "Union Select DISTINCT ViewerPrivilege As Privilege FROM UserRoleTable\n"
+                               + "Inner Join RoleViewerTable On UserRoleTable.RoleID = RoleViewerTable.RoleID where UserRoleTable.UserID=@UserID and JobItemID=@JobItemID";
+                #endregion
+
+                return strSql;
+            }
+            #endregion
+
+            #region GetViewPrivilegeName
+            /// <summary>
+            /// 取得Viewer權限
+            /// </summary>
+            public string GetViewPrivilegeName()
+            {
+                #region SQL Command
+                string strSql = @"Select vpt.XmlName From ViewerPrivilegeTable vpt";
+                #endregion
+
+                return strSql;
+            }
+            #endregion
+
+            #region GetRoleViewPrivilege
+            /// <summary>
+            /// 取得Viewer權限
+            /// </summary>
+            public string GetRoleViewPrivilege(int RoleID)
+            {
+                #region SQL Command
+
+                string strSql = @"Select Sum(ViewerPriv)+1 as viewerPrivCount From ViewerRolePrivilegeTable vpt
+                                  Inner Join ViewerPrivilegeTable vt On vpt.ViewerPrivID = vt.PrivID
+                                  Where RoleID ={0}";
+
+                strSql = string.Format(strSql, RoleID);
+
+                #endregion
+
+                return strSql;
+            }
+            #endregion
+
+            #region GetDocTreeView
+            public string GetDocTreeView()
+            {
+                return this.GetDocTreeView(null);
+            }
+            /// <summary>
+            /// 取得文件節點
+            /// </summary>
+            public string GetDocTreeView(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select * From LapTable Where 1=1 And LapStatus = 0 {0} Order By Seq";
+
+                #endregion
+
+                if (Where != null && Where.Length > 0) strSql = string.Format(strSql, Where);
+                else strSql = string.Format(strSql, "");
+
+                return strSql;
+            }
+
+            #endregion
+
+            #region ScanListQuery
+            /// <summary>
+            /// 索引資訊
+            /// </summary>
+            public string ScanListQuery()
+            {
+                return this.ScanListQuery(null);
+            }
+            /// <summary>
+            /// 索引資訊
+            /// </summary>
+            public string ScanListQuery(string Where)
+            {
+                #region SQL Command
+
+                string strSql = " Select bt.*,ft.FileCount,ut.* From BARCODETABLE bt\n"
+                    + "Inner Join Casetable ct On bt.caseid = ct.caseid\n"
+                    + "Inner Join Usertable ut On ct.CreateUserID = ut.UserID\n"
+                    + "Inner Join (Select COUNT(*) AS FileCount,a.CaseID From FileTable a GROUP BY CaseID) ft ON ct.CaseID =ft.CaseID\n"
+                    + " Where 1=1\n"
+                    + " {0} Order BY bt.CaseID\n";
+
+                #endregion
+
+                if (Where != null && Where.Length > 0) strSql = string.Format(strSql, Where);
+                else strSql = string.Format(strSql, "");
+
+                return strSql;
+            }
+            #endregion
+
+            #region RoleInfo
+            /// <summary>
+            /// 角色資訊
+            /// </summary>
+            /// <returns></returns>
+            public string RoleInfo()
+            {
+                return this.RoleInfo(null, null);
+            }
+            /// <summary>
+            /// 角色資訊
+            /// </summary>
+            /// <param name="RoleID"></param>
+            /// <param name="RoleName"></param>
+            /// <returns></returns>
+            public string RoleInfo(string RoleID, string RoleName)
+            {
+                #region SQL Command
+
+                string strSql = "Select rt.RoleID, rt.RoleName ,NVL(rt.Comments, '') As Comments\n"
+                      + "From RoleTable rt\n"
+                      + "Where 1 = 1\n"
+                      + "{0}\n"
+                      + "Order By rt.RoleID";
+
+                #endregion
+
+                if (RoleID != null && RoleID.Length > 0) strSql = string.Format(strSql, string.Format("And rt.RoleID='{0}'", RoleID));
+
+                if (RoleName != null && RoleName.Length > 0) strSql = string.Format(strSql, string.Format("And rt.RoleName='{0}'", RoleName));
+
+                strSql = string.Format(strSql, "");
+
+                return strSql;
+            }
+            #endregion
+
+            #region RoleTable
+            /// <summary>
+            /// 角色資訊
+            /// </summary>
+            /// <returns></returns>
+            public string RoleTable()
+            {
+                return this.RoleTable(null);
+            }
+            /// <summary>
+            /// 角色資訊
+            /// </summary>
+            /// <param name="FieldName">欄位名稱</param>
+            /// <returns></returns>
+            public string RoleTable(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select *\n"
+                    + "From RoleTable rt\n"
+                    + "Where 1 = 1 {0}\n";
+
+                #endregion
+
+                if (!string.IsNullOrEmpty(Where)) { strSql = string.Format(strSql, Where); }
+                else strSql = string.Format(strSql, "");
+                return strSql;
+            }
+            #endregion
+
+            #region RolePrivilegeTable()
+            /// <summary>
+            /// 角色權限資訊
+            /// </summary>
+            /// <param name="RoleID">角色 ID</param>
+            /// <returns></returns>
+            public string RolePrivilegeTable(int RoleID)
+            {
+                #region SQL Command
+
+                string strSql = "Select\n"
+                    + "	'NODE' || rp.PrivID  As PrivID\n"
+                    + "	,Case When rp.ParentID = -1 Then '' Else 'NODE' || rp.ParentID End As ParentID\n"
+                    + "	,rp.PrivValue\n"
+                    + "	,rp.PrivName\n"
+                    + "	,rp.PrivLevel\n"
+                    + "	,rp.Seq\n"
+                    + "	,NVL(rp.Comments, '') As Comments\n"
+                    + "	,'NODE' || rt.PrivID As RolePrivID\n"
+                    + "From RolePrivilegeTable rp\n"
+                    + "Left Join (Select A.PrivID From RolePrivilege A Where A.RoleID = {0}) rt On (rp.PrivID = rt.PrivID)\n"
+                    + "Where 1 = 1 And rp.Status = 0\n"
+                    + "Order By rp.ParentID\n";
+
+                #endregion
+
+                strSql = string.Format(strSql, RoleID);
+
+                return strSql;
+            }
+            #endregion
+
+            #region LogQuery
+            /// <summary>
+            /// 案件資料查詢
+            /// </summary>
+            public string LogQuery(string SystemOperatingWhere, string CaseStatusOperatingWhere, string Where)
+            {
+                #region SQL Command
+
+                string strSql = " With SystemOperatingTable([LogID],[RepNo],[FileID],[UserName],[RealName],[TransDateTime],[TransIP],[TransResult],[Comments]) as\n"
+                                 + "(\n"
+                                      + "Select lt.* From LogTable lt\n"
+                                      + "Inner Join MessageTable mt On lt.TransResult = mt.MsgID\n"
+                                      + "Where 1=1{0}\n"
+                                 + "),\n"
+                                 + "CaseStatusTable([LogID],[RepNo],[FileID],[UserName],[RealName],[TransDateTime],[TransIP],[TransResult],[Comments]) as\n"
+                                 + "(\n"
+                                      + "Select lt.* From LogTable lt\n"
+                                      + "Inner Join MessageTable mt On lt.TransResult = mt.MsgID\n"
+                                      + "Where 1=1{1}\n"
+                                 + "),\n"
+                                 + "AllDataTable([LogID],[RepNo],[FileID],[UserName],[RealName],[TransDateTime],[TransIP],[TransResult],[Comments]) as\n"
+                                 + "(\n"
+                                 + "select LogTable.* From LogTable Inner Join SystemOperatingTable\n"
+                                 + "On LogTable.LogID = SystemOperatingTable.LogID\n"
+                                 + "UNION\n"
+                                 + "select LogTable.* From LogTable Inner Join CaseStatusTable\n"
+                                 + "On LogTable.LogID = CaseStatusTable.LogID\n"
+                                 + ")\n"
+                                 + "Select lt.*,mt.* From AllDataTable lt\n"
+                                 + "Inner Join MessageTable mt On lt.TransResult = mt.MsgID\n"
+                                 + "Where 1=1{2} ";
+
+                #endregion
+
+                strSql = string.Format(strSql, SystemOperatingWhere, CaseStatusOperatingWhere, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region UserTable
+            /// <summary>
+            /// 使用者資訊
+            /// </summary>
+            public string UserTable()
+            {
+                return this.UserTable(null);
+            }
+            /// <summary>
+            /// 使用者資訊
+            /// </summary>
+            public string UserTable(string Where)
+            {
+                #region SQL Command
+
+                string strSql = " Select ut.UserID,\n"
+                    + " ut.UserName,\n"
+                    + " ut.Password,\n"
+                    + " ut.RealName,\n"
+                    + " ut.UserStatus,\n"
+                    + " ut.CreateTime,\n"
+                    + " ut.TEL,\n"
+                    + " ut.Comments\n"
+                    + " From UserTable ut\n"
+                    + " Where 1=1\n"
+                    + " {0}\n";
+
+                #endregion
+
+                if (Where != null && Where.Length > 0) strSql = string.Format(strSql, Where);
+                else strSql = string.Format(strSql, "");
+
+                return strSql;
+            }
+            /// <summary>
+            /// 使用者資訊
+            /// </summary>
+            /// <param name="UserName">帳號</param>
+            /// <param name="Flag">內部或外部</param>
+            /// <returns></returns>
+            public string UserTable(string UserName, int Flag)
+            {
+                #region SQL Command
+
+                string strSql = " Select ut.UserID,\n"
+                    + "ut.Password,\n"
+                    + "ut.UserName,\n"
+                    + "ut.RealName,\n"
+                    + "ut.UserStatus,\n"
+                    + "ut.EMail,\n"
+                    + "ut.Comments,\n"
+                    + "dep.DepID,\n"
+                    + "dep.DepName,\n"
+                    + "dep.DepFlag,\n"
+                    + "corp.CorpID,\n"
+                    + "corp.CorpName,\n"
+                    + "corp.CorpFlag,\n"
+                    + "IsNull(ut.RoleID, -2) As RoleID,\n"
+                    + "IsNull(rt.RoleName, '') As RoleName,\n"
+                    + "IsNull(Replace(Convert(NvarChar, ut.CreateTime, 120), '-', '/'), '') As CreateTime\n"
+                    + "From UserTable ut\n"
+                    + "Inner Join RoleTable rt On (rt.RoleID = ut.RoleID)\n"
+                    + "Left Join DepTable dep On (dep.DepID = ut.DepID)\n"
+                    + "Left Join CorpTable corp On (corp.CorpID = ut.CorpID)\n"
+                    + "Where 1 = 1\n"
+                    + "And ut.UserName='{0}'\n"
+                    + "And ut.Flag={1}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql, UserName, Flag);
+
+                return strSql;
+            }
+            #endregion
+
+            #region UserInfo
+            /// <summary>
+            /// 使用者資訊
+            /// </summary>
+            public string UserInfo()
+            {
+                return this.UserInfo(null);
+            }
+            /// <summary>
+            /// 使用者資訊
+            /// </summary>
+            public string UserInfo(string UserID)
+            {
+                #region SQL Command
+
+                string strSql = " Select ut.UserID,\n"
+                    + "ut.Password,\n"
+                    + "ut.UserName,\n"
+                    + "ut.RealName,\n"
+                    + "ut.UserStatus,\n"
+                    + "ut.Comments,\n"
+                    + "ut.Tel,\n"
+                    + "NVL(rt.RoleID, 0) As RoleID,\n"
+                    + "NVL(rt.RoleName, '') As RoleName\n"
+                    + "From UserTable ut\n"
+                    + "Inner Join RoleTable rt On (ut.RoleID = rt.RoleID)\n"
+                    + "Where 1=1\n"
+                    + "{0}\n";
+
+                #endregion
+
+                if (UserID != null && UserID.Length > 0) strSql = string.Format(strSql, string.Format("And ut.UserID='{0}'", UserID));
+                else strSql = string.Format(strSql, "");
+
+                return strSql;
+            }
+            #endregion
+
+            #region UsersMaintain
+            /// <summary>
+            /// UsersMaintain.aspx
+            /// </summary>
+            /// <param name="UserName"></param>
+            /// <param name="RealName"></param>
+            /// <returns></returns>
+            public string UsersMaintain(string UserName, string RealName)
+            {
+                #region SQL Command
+
+                string strSql = "Select ut.UserID,\n"
+                      + "ut.UserName,\n"
+                      + "ut.RealName,\n"
+                      + "ut.Comments,\n"
+                      + "ut.UserStatus,\n"
+                      + "ut.RoleID,\n"
+                      + "ut.TEL,\n"
+                      + "rt.RoleName\n"
+                      + "From UserTable ut\n"
+                      + "Left Join RoleTable rt  On ut.RoleID =rt.RoleID\n"
+                      + "Where 1 = 1 {0}\n"
+                      + "Order By ut.CreateTime";
+
+                #endregion
+
+                string where = string.Empty;
+
+                if (UserName != null && UserName.Length > 0) where += string.Format("And ut.UserName='{0}'\n", UserName);
+
+                if (RealName != null && RealName.Length > 0) where += string.Format("And ut.RealName=N'{0}'\n", RealName);
+
+                strSql = string.Format(strSql, where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region UsersCheck
+            /// <summary>
+            /// UsersMaintain.aspx
+            /// </summary>
+            /// <returns></returns>
+            public string UsersCheck(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select *\n"
+                    + "From UserTable ut\n"
+                    + "Where 1=1 {0}";
+
+
+                #endregion
+
+                strSql = string.Format(strSql, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region ViewerPrivilegeTable()
+            /// <summary>
+            /// Viewer預覽權限資訊
+            /// </summary>
+            /// <returns></returns>
+            public string ViewerPrivilegeTable(int RoleID)
+            {
+                #region SQL Command
+
+                string strSql = "Select\n"
+                      + "'NODE' || vt.PrivID As PrivID\n"
+                      + ",Case When vt.ParentID = 0 Then '' Else 'NODE' || vt.ParentID End As ParentID\n"
+                      + ",vt.PrivName\n"
+                      + ",vt.LevelID\n"
+                      + ",vt.Seq\n"
+                      + ",'NODE' || dp.ViewerPrivID As ViewerPrivID\n"
+                      + "From ViewerPrivilegeTable vt\n"
+                      + "Left Join (Select A.ViewerPrivID From ViewerRolePrivilegeTable A Where A.RoleID = {0}) dp On (vt.PrivID = dp.ViewerPrivID)\n"
+                      + "Where 1 = 1\n"
+                      + "Order By vt.ParentID\n";
+                #endregion
+
+                strSql = string.Format(strSql, RoleID);
+
+                return strSql;
+            }
+            #endregion
+
+            #region ViewerAreaPrivilegeTable()
+            /// <summary>
+            /// Viewer調閱權限資訊
+            /// </summary>
+            /// <returns></returns>
+            public string ViewerAreaPrivilegeTable(int RoleID)
+            {
+                #region SQL Command
+
+                string strSql = "Select\n"
+                      + "'NODE' || vt.PrivID As PrivID\n"
+                      + ",Case When vt.ParentID = -1 Then '' Else 'NODE' || vt.ParentID End As ParentID\n"
+                      + ",vt.PrivName\n"
+                      + ",vt.LevelID\n"
+                      + ",vt.Seq\n"
+                      + ",'NODE' || dp.ViewerPrivID As ViewerPrivID\n"
+                      + "From ViewerAreaPrivilegeTable vt\n"
+                      + "Left Join (Select A.ViewerPrivID From ViewerAreaRolePrivilegeTable A Where A.RoleID = {0}) dp On (vt.PrivID = dp.ViewerPrivID)\n"
+                      + "Where 1 = 1\n"
+                      + "Order By vt.ParentID\n";
+                #endregion
+
+                strSql = string.Format(strSql, RoleID);
+
+                return strSql;
+            }
+            #endregion
+
+            #region WpborrowPrint
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="Where"></param>
+            /// <returns></returns>
+            public string WpborrowPrint(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select\n"
+                              + " ROW_NUMBER() OVER(ORDER BY wb.wpinno) AS RID,\n"
+                              + " wb.wpinno,\n"
+                              + " wb.receiver,\n"
+                              + " bt.onfile,\n"
+                              + " ut.tel\n"
+                              + "From Wpborrow wb\n"
+                              + "Left Join BarcodeTable bt On wb.wpinno = bt.barcodevalue\n"
+                              + "Inner Join Usertable ut On wb.receiver = ut.username\n"
+                              + "Where 1=1 {1}";
+                #endregion
+
+                strSql = string.Format(strSql, PageUtility.WprecSchema, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            //#region WpborrowPrint
+            ///// <summary>
+            ///// 
+            ///// </summary>
+            ///// <param name="Where"></param>
+            ///// <returns></returns>
+            //public string WpborrowPrint(string Where)
+            //{
+            //    #region SQL Command
+
+            //    string strSql = "Select\n"
+            //                  + " ROW_NUMBER() OVER(ORDER BY wb.wpinno) AS RID,\n"
+            //                  + " wr.wpinno,\n"
+            //                  + " wr.wpoutno,\n"
+            //                  + " wr.commname,\n"
+            //                  + " wr.boxno,\n"
+            //                  + " wr.fileno,\n"
+            //                  + " wb.receiver,\n"
+            //                  + " bt.onfile,\n"
+            //                  + " ut.tel\n"
+            //                  + "From {0} wr\n"
+            //                  + "Inner Join Wpborrow wb On wr.wpinno = wb.wpinno\n"
+            //                  + "Left Join BarcodeTable bt On wr.wpinno = bt.barcodevalue\n"
+            //                  + "Inner Join Usertable ut On wb.receiver = ut.username\n"
+            //                  + "Where 1=1 {1}";
+            //    #endregion
+
+            //    strSql = string.Format(strSql, PageUtility.WprecSchema, Where);
+
+            //    return strSql;
+            //}
+            //#endregion
+
+            #region WpborrowQuery
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="Where"></param>
+            /// <returns></returns>
+            public string WpborrowQuery(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select\n"
+                              + " wr.wpinno,\n"
+                              + " wr.wpoutno,\n"
+                              + " wr.wpindate,\n"
+                              + " wr.caseno,\n"
+                              + " wr.commname,\n"
+                              + " wb.prtflag,\n"
+                              + " wb.kind,\n"
+                              + " wb.viewtype,\n"
+                              + " wb.receiver,\n"
+                              + " wb.transt,\n"
+                              + " wb.redate,\n"
+                              + " cl.cirlname,\n"
+                              + " bt.fileno,\n"
+                              + " bt.onfile,\n"
+                              + " wt.marker\n"
+                              + "From {0} wr\n"
+                              + "Left Join Wptrans wt On wr.wpinno = wt.wpinno\n"
+                              + "Left Join Wpborrow wb On wr.wpinno = wb.wpinno\n"
+                              + "Left Join {1} cl On wr.wpkind = cl.wpkind And wr.wptype = cl.wptype\n"
+                              + "Left Join BarcodeTable bt On wr.wpinno = bt.barcodevalue\n"
+                              + "Where 1=1 {2}\n"
+                              + "Order By wb.transt Desc";
+                #endregion
+
+                strSql = string.Format(strSql, PageUtility.WprecSchema, PageUtility.CirlmSchema, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region WpborrowToApprove
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="Where"></param>
+            /// <returns></returns>
+            public string WpborrowToApprove(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select\n"
+                              + " wb.receiver,\n"
+                              + " wb.transt,\n"
+                              + " wb.wpinno,\n"
+                              + " wb.prtflag,\n"
+                              + " ut.tel,\n"
+                              + " wr.fileno,\n"
+                              + " wr.boxno,\n"
+                              + " wr.wpoutno,\n"
+                              + " wr.commname,\n"
+                              + " ut.realname,\n"
+                              + " bt.onfile,\n"
+                              + " wb.viewtype,\n"
+                              + " Case When wb.viewtype = '1' Then '紙本調閱' When wb.viewtype = '2' Then '電子調閱' Else '其他' End As viewtypename\n"
+                              + "From Wpborrow wb\n"
+                              + "Inner Join Usertable ut On wb.receiver = ut.username\n"
+                              + "Left Join Barcodetable bt On wb.wpinno = bt.barcodevalue\n"
+                              + "Inner Join {0} wr On wb.wpinno = wr.wpinno\n"
+                              + "Where 1=1 {1}";
+
+                #endregion
+
+                strSql = string.Format(strSql, PageUtility.WprecSchema, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region Wprec
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="Where"></param>
+            /// <returns></returns>
+            public string Wprec(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select * From {0}\n"
+                              + "Where 1=1 {1}";
+                #endregion
+
+                strSql = string.Format(strSql, PageUtility.WprecSchema, Where);
+
+                return strSql;
+            }
+            #endregion
+        }
+        #endregion
+
+        #region Update
+        /// <summary>
+        /// Update
+        /// </summary>
+        public class Update
+        {
+            #region BackPiecesTable
+            /// <summary>
+            /// BranchTable
+            /// </summary>
+            /// <returns></returns>
+            public string BackPiecesTable(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Update BackPiecesTable Set\n"
+                    + "	SystemCodeID = @SystemCodeID,\n"
+                    + "	UserID = @UserID,\n"
+                    + "	Comments = @Comments\n"
+                    + "Where 1=1 {0}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region BranchTable
+            /// <summary>
+            /// BranchTable
+            /// </summary>
+            /// <returns></returns>
+            public string BranchTable(string HeadBranchID, string BranchCode)
+            {
+                #region SQL Command
+
+                string strSql = "Update BranchTable Set\n"
+                    + "	HeadBranchID = @HeadBranchID,\n"
+                    + "	BranchCode = @BranchCode,\n"
+                    + "	BranchName = @BranchName,\n"
+                    + "	CorpID = @CorpID,\n"
+                    + "	UserName = @UserName\n"
+                    + "Where HeadBranchID = {0} And BranchCode = '{1}'\n";
+
+                #endregion
+
+                strSql = string.Format(strSql,
+                 HeadBranchID, BranchCode);
+
+                return strSql;
+            }
+            #endregion
+
+            #region BarcodeTable
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <param name="Where"></param>
+            /// <returns></returns>
+            public string BarcodeTable(Hashtable Data, string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Update BarcodeTable Set\n"
+                    + " FileNo = '{0}',\n"
+                    + " FileDate = '{1}',\n"
+                    + " KeepYr = '{2}',\n"
+                    + " BoxNo = '{3}',\n"
+                    + " LastModifyUserID = '{4}',\n"
+                    + " LastModifyTime = {5}\n"
+                    + "Where 1=1 {6}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql,
+                    Data["FileNo"].ToString(),
+                    Data["FileDate"].ToString(),
+                    Data["KeepYr"].ToString(),
+                    Data["BoxNo"].ToString(),
+                    Data["LastModifyUserID"].ToString(),
+                    Data["LastModifyTime"].ToString(),
+                    Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region SystemCodeStatus
+            /// <summary>
+            /// UsersMaintain.aspx
+            /// </summary>
+            /// <param name="UserID"></param>
+            /// <returns></returns>
+            public string FormTable(string FormID, string Status)
+            {
+                #region SQL Command
+
+                string strSql = "Update FormTable Set Status = {1} Where FormID = {0}";
+
+                #endregion
+
+                strSql = string.Format(strSql, FormID, Status);
+
+                return strSql;
+            }
+            #endregion
+
+            #region RoleTable
+            /// <summary>
+            /// RoleTable
+            /// </summary>
+            /// <param name="FieldName"></param>
+            /// <returns></returns>
+            public string RoleTable(string RoleName, string Comments, string RoleID)
+            {
+                #region SQL Command
+
+                string strSql = "Update RoleTable Set\n"
+                    + "	RoleName = '{0}',\n"
+                    + "	Comments = '{1}'\n"
+                    + "Where RoleID = {2}";
+
+                #endregion
+
+                strSql = string.Format(strSql, RoleName, Comments, RoleID);
+
+                return strSql;
+            }
+            #endregion
+
+            #region HeadBranchTable
+            /// <summary>
+            /// HeadBranchTable
+            /// </summary>
+            /// <returns></returns>
+            public string HeadBranchTable(string HeadBranchID)
+            {
+                #region SQL Command
+
+                string strSql = "Update HeadBranchTable Set\n"
+                    + "	HeadBranchCode = @HeadBranchCode,\n"
+                    + "	HeadBranchName = @HeadBranchName,\n"
+                    + "	Name = @Name,\n"
+                    + "	Phone = @Phone\n"
+                    + "Where HeadBranchID = {0}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql,
+                 HeadBranchID);
+
+                return strSql;
+            }
+            #endregion
+
+            #region SystemTable
+            /// <summary>
+            /// RoleTable
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <returns></returns>
+            public string SystemTable()
+            {
+                #region SQL Command
+
+                string strSql = "Update SystemTable Set\n"
+                    + "	SystemComment = :systemcomment\n"
+                    + "Where SystemName = :systemname\n";
+
+                #endregion
+
+                return strSql;
+            }
+            public string SystemTable(string SystemName, string SystemComment)
+            {
+                #region SQL Command
+
+                string strSql = "Update SystemTable Set\n"
+                    + "	SystemComment = '{1}'\n"
+                    + "Where SystemName = '{0}'\n";
+
+                #endregion
+
+                strSql = string.Format(strSql, SystemName, SystemComment);
+
+                return strSql;
+            }
+            #endregion
+
+            #region SystemCodeTable()
+            public string SystemCodeTable(string SystemCodeID)
+            {
+                #region SQL Command
+
+                string strSql = "Update SystemCodeTable Set\n"
+                    + "	SystemCode = @SystemCode,\n"
+                    + "	SystemCodeName = @SystemCodeName,\n"
+                    + "	SystemCodeStatus = @SystemCodeStatus\n"
+                    + "Where SystemCodeID = {0}";
+
+                #endregion
+
+                strSql = string.Format(strSql, SystemCodeID);
+
+                return strSql;
+            }
+            #endregion
+
+            #region SystemCodeStatus
+            /// <summary>
+            /// UsersMaintain.aspx
+            /// </summary>
+            /// <param name="UserID"></param>
+            /// <returns></returns>
+            public string SystemCodeStatus(string SystemCodeID, string SystemCodeStatus)
+            {
+                #region SQL Command
+
+                string strSql = "Update SystemCodeTable Set SystemCodeStatus = {1} Where SystemCodeID = {0}";
+
+                #endregion
+
+                strSql = string.Format(strSql, SystemCodeID, SystemCodeStatus);
+
+                return strSql;
+            }
+            #endregion
+
+            #region UserMaintain_Enable
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="UserID"></param>
+            /// <param name="Status"></param>
+            /// <returns></returns>
+            public string UserMaintain_Enable(string UserID, string Status)
+            {
+                #region SQL Command
+
+                string strSql = "Update UserTable Set UserStatus = '{1}' Where UserID = '{0}'";
+
+                #endregion
+
+                strSql = string.Format(strSql, UserID, Status);
+
+                return strSql;
+            }
+            #endregion
+
+            #region CaseStatus
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
+            public string CaseStatus(string Status, string CloseTime, string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Update CaseTable Set CaseStatus = {0},CloseTime = {1} Where 1=1{2}";
+
+                #endregion
+
+                strSql = string.Format(strSql, Status, CloseTime, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region IndexClassTable
+            /// <summary>
+            /// UserTable
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <returns></returns>
+            public string IndexClassTable(Hashtable Data)
+            {
+                #region SQL Command
+
+                string strSql = "Update IndexClassTable Set\n"
+                    + "	IndexClassCode = '{1}',\n"
+                    + "	IndexClassName = '{2}',\n"
+                    + "	Attrib = {3},\n"
+                    + "	BarcodePreFixedName = '{4}',\n"
+                    + "	CheckRuleID = {5},\n"
+                    + "	CheckType = {6}\n"
+                    + "Where IndexClassID = {0}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql,
+                    Data["IndexClassID"].ToString(),
+                    Data["IndexClassCode"].ToString(),
+                    Data["IndexClassName"].ToString(),
+                    Data["Attrib"].ToString(),
+                    Data["BarcodePreFixedName"].ToString(),
+                    Data["CheckRuleID"].ToString(),
+                    Data["CheckType"].ToString());
+
+                return strSql;
+            }
+            #endregion
+
+            #region UserTable
+            /// <summary>
+            /// UserTable
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <returns></returns>
+            public string UserTable(Hashtable Data)
+            {
+                #region SQL Command
+
+                string strSql = "Update UserTable Set\n"
+                    + "	Password = '{1}'\n"
+                    + "	,RealName = '{2}'\n"
+                    + "	,UserUnit = {3}\n"
+                    + "Where UserID = {0}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql,
+                    Data["UserID"].ToString(),
+                    Data["Password"].ToString(),
+                    Data["RealName"].ToString(),
+                    Data["UserUnit"].ToString());
+
+                return strSql;
+            }
+            #endregion
+
+            #region UserTablePassWord
+            /// <summary>
+            /// UserTable
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <returns></returns>
+            public string UserTablePassWord(Hashtable Data)
+            {
+                #region SQL Command
+
+                string strSql = "Update UserTable Set\n"
+                    + "	Password =N'{0}',\n"
+                    + " TEL =N'{2}'\n"
+                    + "Where UserID ='{1}'\n";
+
+                #endregion
+
+                strSql = string.Format(strSql,
+                    Data["Password"].ToString(),
+                     Data["UserID"].ToString(),
+                      Data["TEL"].ToString());
+
+                return strSql;
+            }
+            #endregion
+
+            #region FILEBORO
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <returns></returns>
+            public string FILEBORO(Hashtable Data, string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Update FILEBORO Set\n"
+                    + "	CHK =N'{1}'\n"
+                    + "Where {0}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql, Where,
+                    Data["CHK"].ToString());
+
+                return strSql;
+            }
+            #endregion
+
+            #region wpborrow
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <returns></returns>
+            public string wpborrow(Hashtable Data, string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Update wpborrow Set\n"
+                    + "	EXTEN =N'{1}',\n"
+                    + "	APPROVEUSERID =N'{2}'\n"
+                    + "Where {0}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql, Where,
+                    Data["EXTEN"].ToString(),
+                     Data["APPROVEUSERID"].ToString());
+
+                return strSql;
+            }
+            #endregion
+
+            #region wpborrowByViewType
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <returns></returns>
+            public string wpborrowByViewType(string UserID)
+            {
+                #region SQL Command
+
+                string strSql = "Update WPBORROW Set Redate = sysdate ,UserID ={0}\n"
+                               + "Where Transt +7 <=sysdate And ViewType = 2";
+
+                #endregion
+
+                strSql = string.Format(strSql, UserID);
+
+                return strSql;
+            }
+            #endregion
+
+            #region wpborrowByVisa
+            /// <summary>
+            /// UserTable
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <returns></returns>
+            public string wpborrowByVisa(Hashtable Data, string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Update wpborrow Set\n"
+                                + "EXTEN ='D',\n"
+                                + "transt =(Select  CASE kind\n"
+                                + "WHEN N'1' THEN transt + 7\n"
+                                + "WHEN N'2' THEN transt + 7\n"
+                                + "WHEN N'3' THEN transt + 90\n"
+                                + "ELSE transt END As transtExten From wpborrow Where {0} And REDATE is null )\n"
+                                + "Where {0}";
+                #endregion
+
+                strSql = string.Format(strSql, Where,
+                    Data["EXTEN"].ToString());
+
+                return strSql;
+            }
+            #endregion
+
+            #region wpborrowPaperAlsoFile
+            /// <summary>
+            /// UserTable
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <returns></returns>
+            public string wpborrowPaperAlsoFile(Hashtable Data, string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Update wpborrow Set\n"
+                    + "	REDATE =N'{1}',\n"
+                    + " UserID={2}\n"
+                    + "Where {0}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql, Where,
+                    Data["REDATE"].ToString(),
+                    Data["USERID"].ToString());
+
+                return strSql;
+            }
+            #endregion
+
+            #region WpborrowApprove
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="PrtFlag"></param>
+            /// <param name="Where"></param>
+            /// <param name="HaveReDate"></param>
+            /// <returns></returns>
+            public string WpborrowApprove(string PrtFlag, string Where, bool HaveReDate)
+            {
+                #region SQL Command
+
+                string UpdateSql = string.Format("PrtFlag = '{0}'", PrtFlag);
+
+                if (HaveReDate) UpdateSql += " ,ReDate = SYSDATE";
+
+                string strSql = "Update Wpborrow Set\n"
+                              + " {0}\n"
+                              + "Where 1=1 {1}";
+
+                #endregion
+
+                strSql = string.Format(strSql, UpdateSql, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region Wprec
+            /// <summary>
+            /// Wprec Table
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <param name="Where"></param>
+            /// <returns></returns>
+            public string Wprec(Hashtable Data, string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Update {0} Set\n"
+                    + " FileNo = '{1}',\n"
+                    + " FileDate = '{2}',\n"
+                    + " KeepYr = '{3}',\n"
+                    + " BoxNo = '{4}'\n"
+                    + "Where 1=1 {5}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql,
+                    PageUtility.WprecSchema,
+                    Data["FileNo"].ToString(),
+                    Data["FileDate"].ToString(),
+                    Data["KeepYr"].ToString(),
+                    Data["BoxNo"].ToString(),
+                    Where);
+
+                return strSql;
+            }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <param name="Where"></param>
+            /// <returns></returns>
+            public string WprecDelete(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Update {0} Set\n"
+                    + " FileNo = NULL,\n"
+                    + " FileDate = NULL,\n"
+                    + " KeepYr = NULL,\n"
+                    + " BoxNo = NULL\n"
+                    + "Where 1=1 {1}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql, PageUtility.WprecSchema, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region WptransDelete
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="Where"></param>
+            /// <returns></returns>
+            public string WptransDelete(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Update Wptrans Set\n"
+                    + " Marker = 'N'\n"
+                    + "Where 1=1 {0}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region UploadTimeTable
+            /// <summary>
+            /// UploadTimeTable
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <returns></returns>
+            public string UploadTimeTable(Hashtable Data)
+            {
+                #region SQL Command
+
+                string strSql = "Update UploadTimeTable Set\n"
+                    + "	UploadTH ={0},\n"
+                    + "	UploadTM = {1},\n"
+                    + "	Comments = @Comments\n"
+                    + "Where UserID = @UserID\n";
+
+                #endregion
+
+                strSql = string.Format(strSql,
+                    Data["UploadTH"].ToString(),
+                    Data["UploadTM"].ToString());
+
+                return strSql;
+            }
+            #endregion
+        }
+        #endregion
+
+        #region Delete
+        /// <summary>
+        /// Delete
+        /// </summary>
+        public class Delete
+        {
+            #region BarcodeTable
+            /// <summary>
+            /// 刪除 BarcodeTable
+            /// </summary>
+            /// <param name="BarcodeValue">收文文號</param>
+            /// <returns></returns>
+            public string BarcodeTable(string BarcodeValue)
+            {
+                #region SQL Command
+
+                string strSql = "Delete From BarcodeTable Where BarcodeValue = '{0}'";
+
+                #endregion
+
+                strSql = string.Format(strSql, BarcodeValue);
+
+                return strSql;
+            }
+            #endregion
+
+            #region BkwpfileTable
+            /// <summary>
+            /// 刪除 BkwpfileTable
+            /// </summary>
+            /// <param name="WpinNo">收文文號</param>
+            /// <returns></returns>
+            public string BkwpfileTable(string WpinNo)
+            {
+                #region SQL Command
+
+                string strSql = "Delete From BKWPFILE Where WPINNO = '{0}'";
+
+                #endregion
+
+                strSql = string.Format(strSql, WpinNo);
+
+                return strSql;
+            }
+            #endregion
+
+            #region RolePrivilege
+            /// <summary>
+            /// RolePrivilege
+            /// </summary>
+            /// <param name="FieldName">欄位名稱</param>
+            /// <returns></returns>
+            public string RolePrivilege(string FieldName)
+            {
+                #region SQL Command
+
+                string strSql = "Delete From RolePrivilege Where {0} = :{0}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql, FieldName);
+
+                return strSql;
+            }
+            #endregion
+
+            #region RoleTable
+
+            public string RoleTable(string RoleID)
+            {
+                #region SQL Command
+
+                string strSql = "Delete  RoleTable where RoleID ='{0}'";
+
+                #endregion
+
+                strSql = string.Format(strSql, RoleID);
+
+                return strSql;
+            }
+            #endregion
+
+            #region RolePrivilege
+            /// <summary>
+            /// RoleTable
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <returns></returns>
+            public string RolePrivilege(int Role)
+            {
+                #region SQL Command
+
+                string strSql = "Delete From RolePrivilege Where RoleID = {0}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql, Role);
+
+                return strSql;
+            }
+            #endregion
+
+            #region ViewerPrivilege
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <returns></returns>
+            public string ViewerPrivilege(int Role)
+            {
+                #region SQL Command
+
+                string strSql = "Delete From ViewerRolePrivilegeTable Where RoleID = {0}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql, Role);
+
+                return strSql;
+            }
+            #endregion
+
+            #region ViewerAreaRolePrivilegeTable
+            /// <summary>
+            /// ViewerAreaRolePrivilegeTable
+            /// </summary>
+            /// <param name="FieldName">欄位名稱</param>
+            /// <returns></returns>
+            public string ViewerAreaRolePrivilegeTable(string FieldName)
+            {
+                #region SQL Command
+
+                string strSql = "Delete From ViewerAreaRolePrivilegeTable Where {0} = @{0}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql, FieldName);
+
+                return strSql;
+            }
+            #endregion
+
+            #region ViewerRolePrivilegeTable
+            /// <summary>
+            /// ViewerRolePrivilegeTable
+            /// </summary>
+            /// <param name="FieldName">欄位名稱</param>
+            /// <returns></returns>
+            public string ViewerRolePrivilegeTable(string FieldName)
+            {
+                #region SQL Command
+
+                string strSql = "Delete From ViewerRolePrivilegeTable Where {0} = :{0}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql, FieldName);
+
+                return strSql;
+            }
+            #endregion
+
+            #region Wpborrow
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <returns></returns>
+            public string Wpborrow(Hashtable Data)
+            {
+                #region SQL Command
+
+                string strSql = "Delete WPBORROW Where wpinno = '{0}' And transt = (Select MAX(t.transt) From WPBORROW t Where t.wpinno = '{0}')";
+
+                #endregion
+
+                strSql = string.Format(strSql,
+                    Data["WpinNo"].ToString().ToString());
+
+                return strSql;
+            }
+            #endregion
+
+            #region UploadTimeTable
+
+            public string UploadTimeTable(string UserID)
+            {
+                #region SQL Command
+
+                string strSql = @"Delete  UploadTimeTable where UserID ='{0}'";
+
+                #endregion
+
+                strSql = string.Format(strSql, UserID);
+
+                return strSql;
+            }
+            #endregion
+        }
+        #endregion
+
+        #region Insert
+        /// <summary>
+        /// Insert
+        /// </summary>
+        public class Insert
+        {
+            #region BackPiecesTable
+            /// <summary>
+            /// 退卷資料表
+            /// </summary>
+            /// <returns></returns>
+            public string BackPiecesTable()
+            {
+                #region SQL Command
+
+                string strSql = "Insert Into BackPiecesTable\n"
+                    + "("
+                    + "SystemCodeID,"
+                    + "Comments,"
+                    + "CaseID,"
+                    + "BackPiecesStatus,"
+                    + "UserID"
+                    + ")\n"
+                    + "Values"
+                    + "("
+                    + "@SystemCodeID,\n"
+                    + "@Comments,\n"
+                    + "@CaseID,\n"
+                    + "@BackPiecesStatus,\n"
+                    + "@UserID\n"
+                    + ")";
+
+                #endregion
+
+                return strSql;
+            }
+            #endregion
+
+            #region BarcodeTable
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <param name="Where"></param>
+            /// <returns></returns>
+            public string BarcodeTable(Hashtable Data, string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Update BarcodeTable Set\n"
+                    + " WpoutNo = '{0}',\n"
+                    + " FileNo = '{1}',\n"
+                    + " FileDate = '{2}',\n"
+                    + " KeepYr = '{3}',\n"
+                    + " BoxNo = '{4}',\n"
+                    + " OnFile = N'{5}',\n"
+                    + " LastModifyUserID = '{6}',\n"
+                    + " LastModifyTime = {7}\n"
+                    + "Where 1=1 {8}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql,
+                    Data["WpoutNo"].ToString(),
+                    Data["FileNo"].ToString(),
+                    Data["FileDate"].ToString(),
+                    Data["KeepYr"].ToString(),
+                    Data["BoxNo"].ToString(),
+                    Data["OnFile"].ToString(),
+                    Data["LastModifyUserID"].ToString(),
+                    Data["LastModifyTime"].ToString(),
+                    Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region CaseTable
+            /// <summary>
+            ///
+            /// </summary>
+            /// <returns></returns>
+            public string CaseTable(Hashtable Data)
+            {
+                #region SQL Command
+
+                string strSql = "INSERT INTO [dbo].[CaseTable]\n"
+                              + "([RepNo]\n"
+                              + ",[CaseStatus]\n"
+                              + ",[JobItemID]\n"
+                              + ",[UserID]\n"
+                              + ",[CaseUnit]\n"
+                              + ",[UserUnit]\n"
+                              + ",[CreateTime]\n"
+                              + ",[FileTableID]\n"
+                              + ",[CasePlace]\n"
+                              + ",[CaseJobItemID])\n"
+                              + "VALUES\n"
+                              + "('{0}'\n"
+                              + ",{1}\n"
+                              + ",{2}\n"
+                              + ",{3}\n"
+                              + ",{4}\n"
+                              + ",{5}\n"
+                              + ",GetDate()\n"
+                              + ",{6}\n"
+                              + ",{7}\n"
+                              + ",{8})";
+                #endregion
+
+                strSql = string.Format(strSql,
+                   Data["RepNo"].ToString(),
+                   Data["CaseStatus"].ToString(),
+                   Data["JobItemID"].ToString(),
+                   Data["UserID"].ToString(),
+                   Data["CaseUnit"].ToString(),
+                   Data["UserUnit"].ToString(),
+                   Data["FileTableID"].ToString(),
+                   Data["CasePlace"].ToString(),
+                   Data["CaseJobItemID"].ToString());
+
+                return strSql;
+            }
+            #endregion
+
+            #region FILEBORO
+            /// <summary>
+            /// FILEBORO
+            /// </summary>
+            /// <param name="SqlParamList"></param>
+            /// <returns></returns>
+            public string FILEBORO(Hashtable Data)
+            {
+                #region SQL Command
+
+                string strSql = "Insert Into Fileboro Select wpb.wpinno, SYSDATE,wpr.wpoutno,SYSDATE,wpr.caseno,wpr.applkind\n"
+                                + ",wpr.commname,wpb.receiver,wpb.transt,\n"
+                                + "CASE wpb.VIEWTYPE\n"
+                                + "WHEN N'1' THEN 'N'\n"
+                                + "WHEN N'2' THEN 'Y'\n"
+                                + "ELSE 'N' END,\n"
+                                + "SYSDATE,'{1}'\n"
+                                + "From Wpborrow wpb\n"
+                                + "Inner Join {2} wpr On wpb.wpinno = wpr.wpinno\n"
+                                + "Where wpb.wpinno ='{0}' And not exists (Select wpinno from Fileboro Where CHK ='N' And wpb.wpinno = fileboro.wpinno )\n"
+                                + "AND wpb.REDATE Is NULL AND PRTFLAG In('P','T') AND viewtype=1";
+                #endregion
+
+                strSql = string.Format(strSql,
+               Data["WPINNO"].ToString(),
+               Data["WORKERID"].ToString(), PageUtility.WprecSchema);
+
+                return strSql;
+            }
+            #endregion
+
+            #region FileboroByElec
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <returns></returns>
+            public string FileboroByElec(Hashtable Data)
+            {
+                #region SQL Command
+
+                string strSql = "Insert Into Fileboro Select wpb.wpinno, SYSDATE,wpr.wpoutno,SYSDATE,wpr.caseno,wpr.applkind\n"
+                              + ",wpr.commname,wpb.receiver,wpb.transt, 'Y',\n"
+                              + "SYSDATE,'{2}'\n"
+                              + "From Wpborrow wpb\n"
+                              + "Inner Join {3} wpr On wpb.wpinno = wpr.wpinno\n"
+                              + "Where wpb.wpinno ='{0}' And Transt = TO_DATE('{1}', 'YYYY/MM/DD HH24:MI:SS') And wpb.redate Is Null And wpb.Prtflag = 'N' And wpb.viewtype = '2'";
+
+                #endregion
+
+                strSql = string.Format(strSql,
+                    Data["WPINNO"].ToString(),
+                    Data["TRANST"].ToString(),
+                    Data["WORKERID"].ToString(),
+                    PageUtility.WprecSchema);
+
+                return strSql;
+            }
+            #endregion
+
+            #region LapTable
+            /// <summary>
+            /// 層級資料表
+            /// </summary>
+            /// <returns></returns>
+            public string LapTable()
+            {
+                #region SQL Command
+
+                string strSql = "WITH ParentTable(LapID,ParentID,Visible,LevelID,LapName,Seq,BcValue,CreateTime,CreateUserID,LastModifyTime,LastModifyUserID) AS (\n"
+                                + "Select ( Select (isnull(Max(LapID),0) + 1) As LapID From LapTable) ,0,0,0,@branchName,0,@branchCode,Getdate(),0,Getdate(),0\n"
+                                + "UNION ALL\n"
+                                + "Select (Select (isnull(Max(LapID),0) + 1) As LapID From LapTable)+ROW_NUMBER() OVER(ORDER BY CorpID) ,(Select (isnull(Max(LapID),0) + 1) As LapID From LapTable),0,1,ct.CorpName,ROW_NUMBER() OVER(ORDER BY CorpID),ct.CorpID,Getdate(),0,Getdate(),0  From CorpTable ct\n"
+                              + ")\n"
+                            + "INSERT INTO LapTable\n"
+                            + "SELECT *\n"
+                            + "FROM ParentTable";
+
+                #endregion
+
+                return strSql;
+            }
+            #endregion
+
+            #region RolePrivilege
+            /// <summary>
+            /// RolePrivilege
+            /// </summary>
+            /// <param name="SqlParamList"></param>
+            /// <returns></returns>
+            public string RolePrivilege(List<System.Data.IDataParameter> SqlParamList)
+            {
+                #region SQL Command
+
+                string strSql = "Insert Into RolePrivilege\n"
+                    + "("
+                    + "RoleID,"
+                    + "PrivID"
+                    + ")\n"
+                    + "Values\n"
+                    + "("
+                    + "{0}"
+                    + ")";
+
+                #endregion
+
+                #region SqlParameter
+
+                string strSqlParameter = string.Empty;
+                for (int i = 0; i < SqlParamList.Count; i++)
+                {
+                    if (i == 0)
+                        strSqlParameter += ":" + SqlParamList[i].ParameterName;
+                    else
+                        strSqlParameter += ",:" + SqlParamList[i].ParameterName;
+                }
+
+                #endregion
+
+                strSql = string.Format(strSql, strSqlParameter);
+
+                return strSql;
+            }
+            #endregion
+
+            #region RoleTable
+            /// <summary>
+            /// RoleTable
+            /// </summary>
+            /// <param name="SqlParamList"></param>
+            /// <returns></returns>
+            public string RoleTable(List<System.Data.IDataParameter> SqlParamList)
+            {
+                #region SQL Command
+
+                string strSql = "Insert Into RoleTable\n"
+                    + "("
+                    + "RoleID,"
+                    + "RoleName,"
+                    + "Comments"
+                    + ")\n"
+                    + "Values\n"
+                    + "("
+                    + "{0}"
+                    + ")";
+
+                #endregion
+
+                #region SqlParameter
+
+                string strSqlParameter = string.Empty;
+                for (int i = 0; i < SqlParamList.Count; i++)
+                {
+                    if (i == 0)
+                        strSqlParameter += ":" + SqlParamList[i].ParameterName;
+                    else
+                        strSqlParameter += ",:" + SqlParamList[i].ParameterName;
+                }
+
+                #endregion
+
+                strSql = string.Format(strSql, strSqlParameter);
+
+                return strSql;
+            }
+            #endregion
+
+            #region SystemCodeTable
+            /// <summary>
+            /// 系統代碼資料表
+            /// </summary>
+            /// <returns></returns>
+            public string SystemCodeTable()
+            {
+                #region SQL Command
+
+                string strSql = "Insert Into SystemCodeTable\n"
+                    + "("
+                    + "ParentID,"
+                    + "LevelID,"
+                    + "SystemCodeName,"
+                    + "SystemCode,"
+                    + "SystemCodeStatus"
+                    + ")\n"
+                    + "Values"
+                    + "("
+                    + "@ParentID,\n"
+                    + "1,\n"
+                    + "@SystemCodeName,\n"
+                    + "@SystemCode,\n"
+                    + "@SystemCodeStatus\n"
+                    + ")";
+
+                #endregion
+
+                return strSql;
+            }
+            #endregion
+
+            #region IndexClassTable
+            /// <summary>
+            /// UserTable
+            /// </summary>
+            /// <param name="SqlParamList"></param>
+            /// <returns></returns>
+            public string IndexClassTable(Hashtable Data)
+            {
+                #region SQL Command
+
+                string strSql = "Insert Into IndexClassTable\n"
+                    + "("
+                    + "IndexClassCode,"
+                    + "IndexClassName,"
+                    + "Attrib,"
+                    + "BarcodePreFixedName,"
+                    + "CheckRuleID,"
+                    + "CheckType"
+                    + ")\n"
+                    + "Values\n"
+                    + "("
+                    + "'{0}',"
+                    + "'{1}'\n,"
+                    + "{2},"
+                    + "'{3}',"
+                    + "{4},"
+                   + "{5}"
+                    + ")";
+
+                #endregion
+
+                strSql = string.Format(strSql,
+               Data["IndexClassCode"].ToString(),
+               Data["IndexClassName"].ToString(),
+               Data["Attrib"].ToString(),
+               Data["BarcodePreFixedName"].ToString(),
+               Data["CheckRuleID"].ToString(),
+               Data["CheckType"].ToString());
+
+                return strSql;
+            }
+            #endregion
+
+            #region IndexTreeTable
+            /// <summary>
+            /// UserTable
+            /// </summary>
+            /// <param name="SqlParamList"></param>
+            /// <returns></returns>
+            public string IndexTreeTable(Hashtable Data)
+            {
+                #region SQL Command
+
+                string strSql = "INSERT INTO [dbo].[IndexTreeTable]\n"
+                                + "([CaseID]\n"
+                                + ",[FileID]\n"
+                                + ",[LapID]\n"
+                                + ",[IndexClassID]\n"
+                                + ",[IndexText]\n"
+                                + ",[CreateUserID]\n"
+                                + ",[CreateTime])\n"
+                                + "VALUES\n"
+                                + "({0}\n"
+                                + ",{1}\n"
+                                + ",{2}\n"
+                                + ",{3}\n"
+                                + ",'{4}'\n"
+                                + ",{5}\n"
+                                + ",GetDate())";
+
+                #endregion
+
+                strSql = string.Format(strSql,
+               Data["CaseID"].ToString(),
+               Data["FileID"].ToString(),
+               Data["LapID"].ToString(),
+               Data["IndexClassID"].ToString(),
+               Data["IndexText"].ToString(),
+               Data["CreateUserID"].ToString());
+
+                return strSql;
+            }
+            #endregion
+
+            #region UserTable
+            /// <summary>
+            /// UserTable
+            /// </summary>
+            /// <param name="SqlParamList"></param>
+            /// <returns></returns>
+            public string UserTable(Hashtable Data)
+            {
+                #region SQL Command
+
+                string strSql = "Insert Into UserTable\n"
+                    + "("
+                    + "UserID,"
+                    + "UserName,"
+                    + "Password,"
+                    + "RealName,"
+                    + "CreateUserID,"
+                    + "RoleID,"
+                    + "UserStatus,"
+                    + "CreateTime,"
+                    + "TEL"
+                    + ")\n"
+                    + "Values\n"
+                    + "("
+                    + "'{0}',"
+                    + "'{1}',"
+                    + "N'{2}'\n,"
+                    + "'{3}',"
+                    + "{4},"
+                    + "{5},"
+                    + "0,"
+                    + "SYSDATE,"
+                    + "{6}"
+                    + ")";
+
+                #endregion
+
+                strSql = string.Format(strSql,
+               Data["UserID"].ToString(),
+               Data["UserName"].ToString(),
+               Data["Password"].ToString(),
+               Data["RealName"].ToString(),
+               Data["CreateUserID"].ToString(),
+               Data["RoleID"].ToString(),
+               Data["TEL"].ToString());
+
+                return strSql;
+            }
+            #endregion
+
+            #region UploadTimeTable
+            /// <summary>
+            /// UploadTimeTable
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <returns></returns>
+            public string UploadTimeTable(Hashtable Data)
+            {
+                #region SQL Command
+
+                string strSql = "Insert Into UploadTimeTable (\n"
+                    + "UserID\n"
+                    + ",UploadTH\n"
+                    + ",UploadTM\n"
+                    + ",Comments\n"
+                    + ")\n"
+                    + "Values\n"
+                    + "(\n"
+                    + "	'{0}'\n"
+                    + "	,{1}\n"
+                    + "	,{2}\n"
+                    + ",@Comments\n"
+                    + ")\n";
+
+                #endregion
+
+                strSql = string.Format(strSql
+                    , Data["UserID"].ToString()
+                    , Data["UploadTH"].ToString()
+                    , Data["UploadTM"].ToString()
+                );
+
+                return strSql;
+            }
+            #endregion
+
+            #region ViewerRolePrivilegeTable
+            /// <summary>
+            /// ViewerRolePrivilegeTable
+            /// </summary>
+            /// <param name="SqlParamList"></param>
+            /// <returns></returns>
+            public string ViewerRolePrivilegeTable(List<System.Data.IDataParameter> SqlParamList)
+            {
+                #region SQL Command
+
+                string strSql = "Insert Into ViewerRolePrivilegeTable\n"
+                    + "("
+                    + "RoleID,"
+                    + "ViewerPrivID"
+                    + ")\n"
+                    + "Values\n"
+                    + "("
+                    + "{0}"
+                    + ")";
+
+                #endregion
+
+                #region SqlParameter
+
+                string strSqlParameter = string.Empty;
+                for (int i = 0; i < SqlParamList.Count; i++)
+                {
+                    if (i == 0)
+                        strSqlParameter += ":" + SqlParamList[i].ParameterName;
+                    else
+                        strSqlParameter += ",:" + SqlParamList[i].ParameterName;
+                }
+
+                #endregion
+
+                strSql = string.Format(strSql, strSqlParameter);
+
+                return strSql;
+            }
+            #endregion
+
+            #region Wpborrow
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <returns></returns>
+            public string Wpborrow(Hashtable Data)
+            {
+                #region SQL Command
+
+                string strSql = "Insert Into Wpborrow (WPINNO, TRANST, RECEIVER, PRTFLAG, WPOUTNO, REDATE, KIND, VIEWTYPE, EXTEN, HURRYDATE, HURRYTIME, USERID, APPROVEUSERID)\n"
+                              + "Values('{0}', {1}, '{2}', 'N', '{3}', NULL, '{4}', '{5}', 'N', NULL, 0, NULL, '{6}')";
+
+                #endregion
+
+                strSql = string.Format(strSql,
+                    Data["WpinNo"].ToString(),
+                    Data["Transt"].ToString(),
+                    Data["Receiver"].ToString(),
+                    Data["WpoutNo"].ToString(),
+                    Data["Kind"].ToString(),
+                    Data["ViewType"].ToString(),
+                    Data["ApproveUserID"].ToString());
+
+                return strSql;
+            }
+            #endregion
+
+            #region Wptrans
+            /// <summary>
+            /// Wptrans Table
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <returns></returns>
+            public string Wptrans(Hashtable Data)
+            {
+                #region SQL Command
+
+                string strSql = "Insert Into Wptrans (WPINNO, TRANST, RECEIVER, PRTFLAG, MARKER)\n"
+                              + "Values('{0}', '{1}', N'{2}', 'F', 'R')";
+
+                #endregion
+
+                strSql = string.Format(strSql,
+                    Data["BarcodeValue"].ToString(),
+                    Data["FileDate"].ToString(),
+                    Data["OnFile"].ToString());
+
+                return strSql;
+            }
+            #endregion
+        }
+
+        #endregion
+    }
+}

@@ -1,0 +1,319 @@
+﻿body {
+    margin-top: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+}
+
+td.mustInput1 {
+    height: 32px;
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    white-space: nowrap;
+    padding: 0;
+    padding-left: 4px;
+    padding-right: 4px;
+    text-align: left;
+}
+
+td.mustInput2 {
+    height: 32px;
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    white-space: nowrap;
+    padding: 0;
+    padding-left: 4px;
+    padding-right: 4px;
+    text-align: left;
+}
+
+td.mustButton {
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    height: 42px;
+    text-align: left;
+    white-space: nowrap;
+    padding: 0;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.key:focus {
+    background: green;
+    color: red;
+    font-size: 120%;
+    width: 300px;
+}
+/*******************************
+   Font Setup
+ *******************************/
+.t12_red {
+    font-size: 12px;
+    font-weight: normal;
+    color: #FF0000;
+}
+
+.t15_red {
+    font-size: 15px;
+    font-weight: normal;
+    color: #FF0000;
+}
+
+.t12_green {
+    font-size: 12px;
+    font-weight: normal;
+    color: #006600;
+}
+
+.t12_blue {
+    font-size: 12px;
+    font-weight: normal;
+    color: #003399;
+}
+
+.t12_red_B {
+    font-size: 12px;
+    font-weight: bold;
+    color: #FF0000;
+}
+
+.t12_green_B {
+    font-size: 12px;
+    font-weight: bold;
+    color: #006600;
+}
+
+.t12_blue_B {
+    font-size: 12px;
+    font-weight: bold;
+    color: #003399;
+}
+
+.t15_red {
+    font-size: 15px;
+    font-weight: normal;
+    color: #FF0000;
+}
+
+.t15_darkred {
+    font-size: 15px;
+    font-weight: normal;
+    color: #990000;
+}
+
+.t15_darkblue_B {
+    font-size: 16px;
+    font-weight: bold;
+    color: #003366;
+}
+
+.t16_red_B {
+	font-size: 16px;
+	font-weight: bold;
+	color: #C30061;
+}
+
+.t16_blue_B {
+    font-size: 16px;
+    font-weight: bold;
+    color: #0066CC;
+}
+
+.t18_darkred_B {
+    font-size: 18px;
+    font-weight: bold;
+    color: #990000;
+}
+/*******************************
+   Calendar
+ *******************************/
+.divCalendar th {
+    background: #CCCCCC;
+}
+
+.divCalendar .holiday {
+    color: #FF0000;
+}
+
+.divCalendar td {
+    background: #FFFFFF;
+}
+/*******************************
+   Tab
+ *******************************/
+.divTab {
+    border-right: #a8a8a8 thin solid;
+    border-top: #a8a8a8 thin solid;
+    border-left: #a8a8a8 thin solid;
+    border-bottom: #a8a8a8 thin solid;
+    background-color: #fff;
+}
+
+.tdTab {
+    padding-right: 4px;
+    padding-left: 4px;
+    padding-bottom: 0px;
+    width: 172px;
+    cursor: pointer;
+    color: #000;
+    padding-top: 0px;
+    height: 26px;
+}
+/*******************************
+ Boby
+ *******************************/
+.t8g {
+    font-size: 8pt;
+    line-height: 1.4em;
+    letter-spacing: 0.1em;
+    color: #666666;
+}
+
+/*******************************
+  GridView
+ *******************************/
+.GridViewStyle {
+    border-color: #F7F6F3;
+    border-style: solid;
+    color: #000000;
+}
+
+    .GridViewStyle a {
+        color: #0000FF;
+    }
+
+    .GridViewStyle .HeaderStyle {
+        background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, rgb(217,233,243)),color-stop(1, rgb(153,193,217)));
+        background-image: -webkit-linear-gradient(top, #babbbb 0%, #e6e6e6 100%);
+        background-image: -moz-linear-gradient(top, #babbbb 0%, #e6e6e6 100%);
+        background-image: -ms-linear-gradient(top, #babbbb 0%, #e6e6e6 100%);
+        background-image: -o-linear-gradient(top, #babbbb 0%, #e6e6e6 100%);
+        background-image: linear-gradient(top, #babbbb 0%, #e6e6e6 100%);
+        background-color: #B5F942;
+        font-weight: bold;
+        color: #000000;
+        background-color: #B5F942;
+        font-weight: bold;
+    }
+
+        .GridViewStyle .HeaderStyle a {
+            color: #5755FF;
+        }
+
+        .GridViewStyle .HeaderStyle th {
+            padding: 9px 10px 9px 10px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+    .GridViewStyle .RowStyle {
+        background-color: #eeffdd;
+        color: #000000;
+    }
+
+        .GridViewStyle .RowStyle td {
+            height: 25px;
+            padding: 4px 10px 4px 10px;
+            text-align: center;
+        }
+
+    .GridViewStyle .AlternatingRowStyle {
+        background-color: #FFFFFF;
+        color: #000000;
+    }
+
+        .GridViewStyle .AlternatingRowStyle td {
+            height: 25px;
+            padding: 4px 10px 4px 10px;
+            text-align: center;
+        }
+
+    .GridViewStyle .FooterStyle {
+        background-color: #B5F942;
+        color: #FFFFFF;
+        height: 25px;
+    }
+
+        .GridViewStyle .FooterStyle td {
+            padding: 4px 10px 4px 10px;
+        }
+
+    .GridViewStyle .PagerStyle {
+        background-image: -webkit-linear-gradient(top, #698844 0%, #8eb758 100%);
+        background-image: -moz-linear-gradient(top, #698844 0%, #8eb758 100%);
+        background-image: -ms-linear-gradient(top, #698844 0%, #8eb758 100%);
+        background-image: -o-linear-gradient(top, #698844 0%, #8eb758 100%);
+        background-image: linear-gradient(top, #698844 0%, #8eb758 100%);
+        color: #000000;
+    }
+
+        .GridViewStyle .PagerStyle td {
+            padding: 4px 3px 4px 3px;
+        }
+
+    .GridViewStyle .MouseOver {
+        background: #82C129; /* Old browsers */
+        background: -moz-linear-gradient(top, #b4ddb4 0%, #83c783 17%, #52b152 33%, #008a00 67%, #00D06E 83%, #002400 100%); /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#b4ddb4), color-stop(17%,#83c783), color-stop(33%,#52b152), color-stop(67%,#008a00), color-stop(83%,#005700), color-stop(100%,#002400)); /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(top, #b4ddb4 0%,#83c783 17%,#52b152 33%,#008a00 67%,#00D06E 83%,#002400 100%); /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(top, #b4ddb4 0%,#83c783 17%,#52b152 33%,#008a00 67%,#00D06E 83%,#002400 100%); /* Opera 11.10+ */
+        background: -ms-linear-gradient(top, #b4ddb4 0%,#83c783 17%,#52b152 33%,#008a00 67%,#00D06E 83%,#002400 100%); /* IE10+ */
+        background: linear-gradient(to bottom, #b4ddb4 0%,#83c783 17%,#52b152 33%,#008a00 67%,#00D06E 83%,#002400 100%); /* W3C */
+        /*background-color: #82C129;*/
+        color: #ffffff;
+    }
+
+        .GridViewStyle .MouseOver td {
+            height: 25px;
+            padding: 4px 10px 4px 10px;
+            text-align: center;
+        }
+/*******************************
+  table
+ *******************************/
+.HeadTD_green {
+    background-color: #AED385;
+    color: #003300;
+    border-top-color: #FFFF99;
+    border-left-color: #FFFF99;
+    border-bottom-color: #FFCC66;
+    border-right-color: #FFCC66;
+    Text-Align: left;
+    border-width: 0px;
+    border-style: solid;
+    padding: 0;
+    white-space: nowrap;
+    width:25%;
+}
+
+.AlternativeTD_green {
+    color: Black;
+    BACKGROUND-COLOR: #DEEDCD;
+    border-color: #CC9900;
+    border-style: solid;
+    border-width: 0px;
+    padding: 0;
+    Text-Align: center;
+}
+
+.ItemTD_green {
+    color: Black;
+    BACKGROUND-COLOR: #DEEDCD;
+    border-color: #CC9900;
+    border-style: solid;
+    border-width: 0px;
+    padding: 0;
+    Text-Align: center;
+}
+
+darkredtable {
+    border: 1px solid #CCCCCC;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.darkredtable td {
+    border: 1px solid #CCCCCC;
+    color: #990000;
+    line-height: 28px;
+}
