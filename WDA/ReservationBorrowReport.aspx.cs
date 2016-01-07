@@ -118,7 +118,7 @@ namespace WDA
 
                         if (dtWpr.Rows.Count > 0)
                         {
-                            DataRow[] row = dt.Select(string.Format("WPINNO ={0}", dt.Rows[i]["WPINNO"].ToString()));
+                            DataRow[] row = dt.Select(string.Format("WPINNO ='{0}'", dt.Rows[i]["WPINNO"].ToString()));
                             row[0]["wpoutno"] = dtWpr.Rows[0]["wpoutno"].ToString();
                             row[0]["commname"] = dtWpr.Rows[0]["commname"].ToString();
                             row[0]["boxno"] = dtWpr.Rows[0]["boxno"].ToString();

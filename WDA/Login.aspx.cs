@@ -208,13 +208,6 @@ namespace WDA
 
                 for (int a = 0; a < wpinnoArray.Length; a++)
                 {
-                    string wpinnoSingle = this.GetWPINNO(wpinnoArray[a], userName);
-
-                    if (string.IsNullOrEmpty(wpinnoSingle))
-                    {
-                        this.DrawMessage(this, "wpinno參數有問題可能已還檔或查無此文號，請檢查參數(wpinno)", 800, 300); return;
-                    }
-
                     string caseID = this.GetCaseID(wpinnoArray[a], userName);
 
                     if (!string.IsNullOrEmpty(caseSet))
@@ -288,42 +281,6 @@ namespace WDA
                 bmp.Dispose();
             }
             GC.Collect(); GC.WaitForPendingFinalizers();
-        }
-        #endregion
-
-        #region GetWPINNO()
-        private string GetWPINNO(string Wpinno, string UserName)
-        {
-            string strSql = string.Empty;
-
-            try
-            {
-                strSql = this.Select.GetWPINNO();
-
-                this.WriteLog(Mode.LogMode.DEBUG, strSql);
-
-                OleDbCommand command = (OleDbCommand)this.DBConn.GeneralSqlCmd.Command;
-
-                command.Parameters.Clear();
-                command.Parameters.Add(new OleDbParameter("Wpinno", OleDbType.VarChar)).Value = Wpinno;
-                command.Parameters.Add(new OleDbParameter("UserName", OleDbType.VarChar)).Value = UserName;
-
-                DataTable dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
-
-                if (dt != null && dt.Rows.Count > 0)
-                {
-                    return dt.Rows[0]["Wpinno"].ToString();
-                }
-                else { return string.Empty; }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            finally
-            {
-                this.DBConn.Dispose(); this.DBConn = null;
-            }
         }
         #endregion
 

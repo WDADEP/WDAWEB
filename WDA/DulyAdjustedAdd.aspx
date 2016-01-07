@@ -155,10 +155,11 @@
                 <table border="0" style="width: 100%; border-collapse: collapse">
                     <tr style="text-align: center">
                         <td style="text-align: right">
-                            
                             <asp:Button ID="BtnOK" runat="server" Text="新 增" class="btn btn-large btn-success" OnClientClick="JavaScript:if(!ImageBtnOKClick()) {return false} ;" OnClick="BtnOK_Click" />
                         </td>
-                        <td style="text-align: center"></td>
+                        <td style="text-align: center">
+                            <asp:Button ID="BtnScan" runat="server" Text="掃 描" class="btn btn-large btn-success" OnClick="BtnScan_Click" OnClientClick="JavaScript:if(!ImageBtnOKClick()) {return false} ;"/>
+                        </td>
                         <td style="text-align: left">
                             <asp:Button ID="BtnClear" runat="server" Text="取 消" class="btn btn-large btn-success" OnClick="BtnClear_Click" />
                         </td>

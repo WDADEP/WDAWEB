@@ -145,6 +145,19 @@ namespace WDA
             if (this.UpdateData())
             {
                 this.DataBind(true, false);
+
+                #region Monitor
+                string wpinno = string.Empty;
+
+                if (!string.IsNullOrEmpty(this.txtBarcodeValue.Text.Trim()))
+                {
+                    wpinno = this.txtBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql);
+                }
+
+                string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+
+                this.MonitorLog.LogMonitor(wpinno, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA05, string.Empty);
+                #endregion
             }
         }
         #endregion
@@ -231,8 +244,14 @@ namespace WDA
 
                         this.txtFileNo.Text = this.FileNo;
 
-                        this.txtBoxNo.Text = (this.BoxNo.Length == 0) ? "" : (Convert.ToInt64(this.BoxNo) + 1).ToString().PadLeft(this.BoxNo.Length, '0');
-
+                        if (this.RadioButtonList1.SelectedValue == "0")
+                        {
+                            this.txtBoxNo.Text = (this.BoxNo.Length == 0) ? "" : (Convert.ToInt64(this.BoxNo) + 1).ToString().PadLeft(this.BoxNo.Length, '0');
+                        }
+                        else if (this.RadioButtonList1.SelectedValue == "1")
+                        {
+                            this.txtBoxNo.Text = this.BoxNo;
+                        }
                         this.txtKeepYr.Text = this.KeepYr;
 
                         this.txtFileDate.Text = DateTime.Now.ToString("yyyyMMdd");
@@ -311,7 +330,7 @@ namespace WDA
                 ht.Add("FileNo", this.FileNo);
                 ht.Add("KeepYr", this.KeepYr);
                 ht.Add("BoxNo", this.BoxNo);
-                ht.Add("OnFile", UserInfo.UserName);
+                ht.Add("OnFile", UserInfo.RealName);
                 ht.Add("LastModifyUserID", UserInfo.UserID);
                 ht.Add("LastModifyTime", "SYSDATE");
 

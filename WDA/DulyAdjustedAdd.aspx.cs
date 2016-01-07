@@ -59,7 +59,7 @@ namespace WDA
                 //ht.Add("TRANST", this.lblTranst.Text);
                 //ht.Add("CHK", "N");
                 //ht.Add("GETIME", this.lblGetime.Text);
-                ht.Add("WORKERID", this.UserInfo.UserName);
+                ht.Add("WORKERID", this.UserInfo.RealName);
 
                 strSql = this.Insert.FILEBORO(ht);
 
@@ -71,9 +71,19 @@ namespace WDA
 
                 #endregion
 
-                string strUrl = string.Format("DulyAdjustedAdd.aspx?RePage=1");
+                #region Monitor
+                string wpinno = string.Empty;
 
-                Response.Redirect(strUrl, true);
+                if (!string.IsNullOrEmpty(this.txtWpinno.Text.Trim()))
+                {
+                    wpinno = this.txtWpinno.Text.Trim().Replace(StringFormatException.Mode.Sql);
+                }
+
+                string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+
+                this.MonitorLog.LogMonitor(wpinno, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA09, string.Empty);
+                #endregion
+              
             }
             catch (System.Exception ex)
             {
@@ -83,6 +93,10 @@ namespace WDA
             {
                 this.DBConn.Dispose(); this.DBConn = null;
             }
+
+            string strUrl = string.Format("DulyAdjustedAdd.aspx?RePage=1");
+
+            Response.Redirect(strUrl, false);
         }
         #endregion
 
@@ -90,6 +104,18 @@ namespace WDA
         protected void BtnClear_Click(object sender, EventArgs e)
         {
             this.Response.Redirect(this.Request.Url.AbsoluteUri);
+        } 
+        #endregion
+
+        #region BtnScan_Click()
+        protected void BtnScan_Click(object sender, EventArgs e)
+        {
+            string wpinno = this.txtWpinno.Text.Trim().Replace(StringFormatException.Mode.Sql);
+
+            string strUrl = string.Format("ActiveXScan.aspx?caseSet=-1&wpinno={0}", wpinno);
+            string sScript = string.Format("window.open('{0}');", strUrl);
+
+            System.Web.UI.ScriptManager.RegisterStartupScript(this, typeof(System.Web.UI.Page), "BtnScan_Click", sScript, true);
         } 
         #endregion
     }

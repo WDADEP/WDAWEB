@@ -239,7 +239,16 @@ namespace WDA.Class
         {
             get
             {
-                if (this._DBConnLog == null) this._DBConnLog = new DBLib.DBConn(); return this._DBConnLog;
+                if (this._DBConnLog == null)
+                {
+                    this._DBConnLog = new DBLib.DBConn(new DBLibUtility.Mode.FreeMode()
+                    {
+                        APMode = DBLibUtility.Mode.APMode.Web,
+                        DBMode = DBLibUtility.Mode.DBMode.OleDb,
+                        ConnectionString = WebConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString.ToString().DecryptDES()
+                    });
+                }
+                return this._DBConnLog;
             }
             set
             {
@@ -1014,6 +1023,33 @@ namespace WDA.Class
                 DTCopy.ImportRow(rows[i]);
 
                 this.BindPrivChildItem(ref DTCopy, DT, rows[i]["PrivID"].ToString());
+            }
+        }
+        #endregion
+
+        #region bkwpfileSchema
+        /// <summary>
+        ///  Cirlm Table Schema
+        /// </summary>
+        public static string bkwpfileSchema
+        {
+            get
+            {
+                string bkwpfileSchema = "bkwpfile";
+
+                if (ConfigurationManager.AppSettings["Location"] == null) return bkwpfileSchema;
+
+                switch (ConfigurationManager.AppSettings["Location"].Trim())
+                {
+                    case "1":
+                        bkwpfileSchema = "bkwpfile"; break;
+                    case "2":
+                        bkwpfileSchema = "fpv.bkwpfile@FILESCANUSER_TESTFPV"; break;
+                    case "3":
+                        bkwpfileSchema = "fpv.bkwpfile@FILESCANUSER_FPV"; break;
+                }
+
+                return bkwpfileSchema;
             }
         }
         #endregion

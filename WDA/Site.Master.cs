@@ -289,6 +289,9 @@ namespace WDA
                     if (pageUtility.UserInfo.Privilege.Tables[0].Select(string.Format("PrivID={0}", 24)).Length > 0)
                     { this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"SystemSet.aspx\">環境設定</a></li>"; }
 
+                    if (pageUtility.UserInfo.Privilege.Tables[0].Select(string.Format("PrivID={0}", 29)).Length > 0)
+                    { this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"LogQueryMenu.aspx\">交易紀錄管理</a></li>"; }
+
                     this.LiteralMenu.Text += "</ol>";
                     this.LiteralMenu.Text += "</div>";
                     this.LiteralMenu.Text += "</div>";

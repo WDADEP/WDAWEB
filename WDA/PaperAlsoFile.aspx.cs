@@ -91,10 +91,11 @@ namespace WDA
 
                 result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
 
-                //if (result < 1)
-                //{
-                //    this.ShowMessage("電子還檔失敗"); return;
-                //} 
+                strSql = this.Update.wpborrowByViewTypeExten(userID);
+
+                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+                result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
                 #endregion
 
                 this.DBConnTransac.GeneralSqlCmd.Transaction.Commit();
@@ -118,6 +119,18 @@ namespace WDA
                 this.DBConnTransac.Dispose(); this.DBConnTransac = null;
             }
 
+            #region Monitor
+            string wpinno = string.Empty;
+
+            if (!string.IsNullOrEmpty(this.txtWpinno.Text.Trim()))
+            {
+                wpinno = this.txtWpinno.Text.Trim().Replace(StringFormatException.Mode.Sql);
+            }
+
+            string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+
+            this.MonitorLog.LogMonitor(wpinno, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA13, string.Empty);
+            #endregion
         } 
         #endregion
 

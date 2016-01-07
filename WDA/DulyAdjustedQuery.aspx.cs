@@ -40,6 +40,19 @@ namespace WDA
             try
             {
                 this.DataBind(true,false);
+
+                #region Monitor
+                string wpinno = string.Empty;
+
+                if (!string.IsNullOrEmpty(this.txtWpinno.Text.Trim()))
+                {
+                    wpinno = this.txtWpinno.Text.Trim().Replace(StringFormatException.Mode.Sql);
+                }
+
+                string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+
+                this.MonitorLog.LogMonitor(wpinno, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA11, string.Empty);
+                #endregion
             }
             catch (Exception ex)
             {
@@ -225,14 +238,52 @@ namespace WDA
         #region ImgBtnProduction_Click()
         protected void ImgBtnProduction_Click(object sender, ImageClickEventArgs e)
         {
-            GridViewRow gridViewRow = (GridViewRow)((ImageButton)sender).NamingContainer;
+            string strSql = string.Empty;
+            string where = string.Empty;
 
-            string caseID = gridViewRow.Cells[1].Text + "(*)";
+            DataTable dt = null;
+            string priv = "0";
+            try
+            {
 
-            string strUrl = string.Format("ActiveXViewer.aspx?caseSet={0}", caseID);
-            string sScript = string.Format("window.open('{0}');", strUrl);
+                GridViewRow gridViewRow = (GridViewRow)((ImageButton)sender).NamingContainer;
 
-            System.Web.UI.ScriptManager.RegisterStartupScript(this, typeof(System.Web.UI.Page), "ImageBtnQuery", sScript, true);
+                where = string.Format("And ct.CASEID='{0}'", gridViewRow.Cells[1].Text);
+
+                string caseID = gridViewRow.Cells[1].Text + "(*)";
+
+                strSql = this.Select.GetAllWpinno(where);
+
+                dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    //if (dt.Rows[i]["IMAGEPRIV"].ToString() == "1" || dt.Rows[i]["IMAGEPRIV"].ToString() == "0")
+                    if (dt.Rows[i]["IMAGEPRIV"].ToString() == "1")
+                    {
+                        priv = "1";
+                        break;
+                    }
+
+                    if (dt.Rows[i]["IMAGEPRIV"].ToString() == "2") { priv = "2561"; }
+                    //priv = dt.Rows[i]["IMAGEPRIV"].ToString().CompareTo(priv) > 0 ? dt.Rows[i]["IMAGEPRIV"].ToString() : priv;
+                }
+
+                string strUrl = string.Format("ActiveXViewer.aspx?caseSet={0}&Mode=D&PriID={1}", caseID, priv);
+                string sScript = string.Format("window.open('{0}');", strUrl);
+
+                System.Web.UI.ScriptManager.RegisterStartupScript(this, typeof(System.Web.UI.Page), "ImageBtnQuery", sScript, true);
+            }
+            catch (Exception ex)
+            {
+                this.ShowMessage(ex);
+            }
+            finally
+            {
+                this.DBConn.Dispose(); this.DBConn = null;
+            }
+
+
         } 
         #endregion
 

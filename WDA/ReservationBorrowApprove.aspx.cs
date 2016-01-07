@@ -39,9 +39,9 @@ namespace WDA
             {
                 for (int i = 0; i < this.GridView1.Rows.Count; i++)
                 {
-                    string wpinNo = this.GridView1.Rows[i].Cells[5].Text.Trim();
-                    string viewtype = this.GridView1.Rows[i].Cells[10].Text.Trim();
-                    DateTime transt = Convert.ToDateTime(this.GridView1.Rows[i].Cells[11].Text.Trim());
+                    string wpinNo = this.GridView1.Rows[i].Cells[1].Text.Trim();
+                    string viewtype = this.GridView1.Rows[i].Cells[9].Text.Trim();
+                    DateTime transt = Convert.ToDateTime(this.GridView1.Rows[i].Cells[10].Text.Trim());
 
                     string prtflag = ((RadioButtonList)this.GridView1.Rows[i].Cells[0].FindControl("rBtnListApprove")).SelectedValue;
 
@@ -72,7 +72,7 @@ namespace WDA
                             Hashtable ht = new Hashtable();
                             ht.Add("WPINNO", wpinNo);
                             ht.Add("TRANST", transt.ToString("yyyy/MM/dd HH:mm:ss"));
-                            ht.Add("WORKERID", this.UserInfo.UserName);
+                            //ht.Add("WORKERID", this.UserInfo.UserName);
 
                             strSql = this.Insert.FileboroByElec(ht);
                             this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
@@ -83,6 +83,13 @@ namespace WDA
 
                         #endregion
                     }
+
+                    #region Monitor
+
+                    string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+
+                    this.MonitorLog.LogMonitor(wpinNo, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA08, string.Empty);
+                    #endregion
                 }
 
                 if (result >= 1)
@@ -109,6 +116,10 @@ namespace WDA
                 if (this.DBConnTransac != null)
                 {
                     this.DBConnTransac.Dispose(); this.DBConnTransac = null;
+                }
+                if (this.DBConn != null)
+                {
+                    this.DBConn.Dispose(); this.DBConn = null;
                 }
             }
         }
@@ -174,7 +185,7 @@ namespace WDA
         #region GridView1_RowCreated()
         protected void GridView1_RowCreated(object sender, GridViewRowEventArgs e)
         {
-            e.RowVisible(sender, new int[] { 10, 11 });
+            e.RowVisible(sender, new int[] { 9});
         }
         #endregion
 

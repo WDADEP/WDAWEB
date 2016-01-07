@@ -65,23 +65,22 @@
             <div class="panel-heading">
                 <h3 class="panel-title">歸檔登入(新增)─查詢</h3>
             </div>
-            <div class="panel-body">
-                <table class="ItemTD_green" style="width: 98%; float: right; border-collapse: separate; border-spacing: 1px;" border="1">
-                    <tr>
-                        <td class="HeadTD_green" style="padding: 5px;"><span class="t15_red">＊</span>收文文號：</td>
-                        <td style="padding: 5px; text-align: left;">
-                            <asp:TextBox ID="txtQueryBarcodeValue" runat="server" MaxLength="10"></asp:TextBox>
-                        </td>
-                    </tr>
-                </table>
+            <div class="alert alert-success">
+                <div class="row">
+                    <div class="col-md-6">
+                        收文文號：
+                        <asp:TextBox ID="txtQueryBarcodeValue" runat="server" MaxLength="10"></asp:TextBox>
+                         <asp:Button ID="BtnOK" runat="server" Text="確 定" CssClass="btn btn-large btn-success" OnClientClick="JavaScript:if(!ImageBtnOKClick()) {return false};" OnClick="BtnOK_Click" />
+                    </div>
+                    <div class="col-md-6">
+                       卷宗號是否自動加號：
+                        <asp:RadioButtonList ID="RadioButtonList1" runat="server" RepeatDirection="Horizontal">
+                            <asp:ListItem Value="0">是</asp:ListItem>
+                            <asp:ListItem Value="1">否</asp:ListItem>
+                        </asp:RadioButtonList>
+                    </div>
+                </div>
             </div>
-            <table border="0" style="width: 100%; border-collapse: collapse">
-                <tr style="text-align: center">
-                    <td style="text-align: center">
-                        <asp:Button ID="BtnOK" runat="server" Text="確 定" CssClass="btn btn-large btn-success" OnClientClick="JavaScript:if(!ImageBtnOKClick()) {return false};" OnClick="BtnOK_Click" />
-                    </td>
-                </tr>
-            </table>
         </div>
         <div id="divPanel">
             <br>

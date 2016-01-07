@@ -10,124 +10,70 @@
 namespace WDA {
     
     
-    public partial class ReservationBorrowCancel {
+    public partial class LogQueryMenu {
         
         /// <summary>
-        /// divQuery 控制項。
+        /// BtnClearLog 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divQuery;
+        protected global::System.Web.UI.WebControls.Button BtnClearLog;
         
         /// <summary>
-        /// txtWpinNo 控制項。
+        /// txtCreateTime 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtWpinNo;
+        protected global::System.Web.UI.WebControls.TextBox txtCreateTime;
         
         /// <summary>
-        /// ddlViewType 控制項。
+        /// txtEndTime 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlViewType;
+        protected global::System.Web.UI.WebControls.TextBox txtEndTime;
         
         /// <summary>
-        /// BtnQuery 控制項。
+        /// txtWPINNO 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button BtnQuery;
+        protected global::System.Web.UI.WebControls.TextBox txtWPINNO;
         
         /// <summary>
-        /// txtWpoutNo 控制項。
+        /// txtUserName 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtWpoutNo;
+        protected global::System.Web.UI.WebControls.TextBox txtUserName;
         
         /// <summary>
-        /// txtTel 控制項。
+        /// LiteralSystemOperatingMenu 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtTel;
+        protected global::System.Web.UI.WebControls.Literal LiteralSystemOperatingMenu;
         
         /// <summary>
-        /// ddlKind 控制項。
+        /// HiddenSystemOperatingPrivilegeList 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlKind;
-        
-        /// <summary>
-        /// txtReceiver 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtReceiver;
-        
-        /// <summary>
-        /// txtWpindate 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtWpindate;
-        
-        /// <summary>
-        /// txtCirlName 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCirlName;
-        
-        /// <summary>
-        /// txtCaseNo 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCaseNo;
-        
-        /// <summary>
-        /// txtCommName 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtCommName;
-        
-        /// <summary>
-        /// txtNote 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtNote;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden HiddenSystemOperatingPrivilegeList;
         
         /// <summary>
         /// BtnOK 控制項。
@@ -137,6 +83,42 @@ namespace WDA {
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button BtnOK;
+        
+        /// <summary>
+        /// BtnClear 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnClear;
+        
+        /// <summary>
+        /// GridView1 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView GridView1;
+        
+        /// <summary>
+        /// lblTotalPage_GridView1 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTotalPage_GridView1;
+        
+        /// <summary>
+        /// lblPage_GridView1 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblPage_GridView1;
         
         /// <summary>
         /// LiteralMessageBox1 控制項。

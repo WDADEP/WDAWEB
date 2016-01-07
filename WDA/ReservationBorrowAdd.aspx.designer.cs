@@ -130,6 +130,24 @@ namespace WDA {
         protected global::System.Web.UI.WebControls.DropDownList ddlViewType;
         
         /// <summary>
+        /// txtReason 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtReason;
+        
+        /// <summary>
+        /// ddlImagePriv 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlImagePriv;
+        
+        /// <summary>
         /// ddlApproveUser 控制項。
         /// </summary>
         /// <remarks>

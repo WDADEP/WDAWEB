@@ -91,19 +91,18 @@ namespace WDA
         protected void BtnOK_Click(object sender, EventArgs e)
         {
             string strSql = string.Empty;
-            string Where = string.Empty;
+            string where = string.Empty;
 
             Hashtable ht = new Hashtable();
             try
             {
-                if (!string.IsNullOrEmpty(this.txtWpinno.Text)) { Where = string.Format("WPINNO ='{0}'", this.txtWpinno.Text); }
-                if (!string.IsNullOrEmpty(this.txtWpoutNo.Text)) { Where = string.Format("WPOUTNO ='{0}'", this.txtWpinno.Text); }
+                if (!string.IsNullOrEmpty(this.txtWpinno.Text)) { where = string.Format("And wpinno ='{0}' And ViewType ='{1}' And receiver ='{2}'", this.txtWpinno.Text.Trim(), this.ddlViewType.SelectedValue, this.UserInfo.UserName); }
 
                 ht.Clear();
                 ht.Add("EXTEN", "Y");
                 ht.Add("APPROVEUSERID", this.ddlApproveuserID.SelectedValue);
 
-                strSql = this.Update.wpborrow(ht, Where);
+                strSql = this.Update.wpborrow(ht,where);
 
                 this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
 
@@ -111,12 +110,26 @@ namespace WDA
 
                 if (result < 1)
                 {
-                    this.ShowMessage("展期成功失敗"); return;
+                    this.ShowMessage("申請展期成功失敗"); return;
                 }
 
-                this.ShowMessage("展期成功", MessageMode.INFO);
+                this.ShowMessage("申請展期成功", MessageMode.INFO);
 
-                this.txtWpinno.Text = string.Empty; this.txtWpoutNo.Text = string.Empty; 
+                this.txtWpinno.Text = string.Empty; this.ddlViewType.SelectedIndex = 0;
+
+                #region Monitor
+                string wpinno = string.Empty;
+
+                if (!string.IsNullOrEmpty(this.txtWpinno.Text.Trim()))
+                {
+                    wpinno = this.txtWpinno.Text.Trim().Replace(StringFormatException.Mode.Sql);
+                }
+
+                string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+
+                this.MonitorLog.LogMonitor(wpinno, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA14, string.Empty);
+                #endregion
+
             }
             catch (System.Exception ex) { this.ShowMessage(ex.Message); }
             finally

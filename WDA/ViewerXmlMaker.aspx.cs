@@ -114,6 +114,7 @@ namespace WDA
             string userSet = this.RequestQueryString("UserSet");
             string mode = this.RequestQueryString("Mode");
             string priID = this.RequestQueryString("PriID");
+            string wpinno = this.RequestQueryString("wpinno");
             //string fileID = this.RequestQueryString("FileID");
             #endregion
 
@@ -148,7 +149,13 @@ namespace WDA
 
                 viewerAttribute[2] = viewerMode;
 
-                XElement elViewer = Viewer_Doc.CreateViewerElement(viewerAttribute);
+                XElement elViewer = null;
+
+                if (!string.IsNullOrEmpty(wpinno))
+                {
+                    elViewer = Viewer_Doc.CreateViewerElementByDocNumbe(viewerAttribute, wpinno);
+                }
+                else {  elViewer = Viewer_Doc.CreateViewerElement(viewerAttribute); }
 
                 elChangingtec.AddFirst(elViewer);
 
@@ -262,6 +269,11 @@ namespace WDA
 
                 if (dtToolBar.Rows.Count > 0)
                 {
+                    if (!string.IsNullOrEmpty(wpinno))
+                    {
+                        dtToolBar.Rows[6]["Visible"] = "N";
+                    }
+
                     if (caseSet == "-1")
                     {
                         //dtToolBar.Rows[4]["Visible"] = "N";

@@ -213,7 +213,9 @@
     <Content Include="Images\view.gif" />
     <Content Include="Images\x1.jpg" />
     <Content Include="Images\x2.jpg" />
+    <Content Include="LogClear.aspx" />
     <Content Include="Login.aspx" />
+    <Content Include="LogQueryMenu.aspx" />
     <Content Include="packages.config" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -417,12 +419,26 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="LiteralMessageBox.cs" />
+    <Compile Include="LogClear.aspx.cs">
+      <DependentUpon>LogClear.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="LogClear.aspx.designer.cs">
+      <DependentUpon>LogClear.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="LogQueryMenu.aspx.cs">
+      <DependentUpon>LogQueryMenu.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="LogQueryMenu.aspx.designer.cs">
+      <DependentUpon>LogQueryMenu.aspx</DependentUpon>
     </Compile>
     <Compile Include="PaperAlsoFile.aspx.cs">
       <DependentUpon>PaperAlsoFile.aspx</DependentUpon>

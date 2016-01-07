@@ -81,7 +81,7 @@
             <table border="0" style="width: 100%; border-collapse: collapse">
                 <tr style="text-align: center">
                     <td style="text-align: center">
-                        <asp:Button ID="BtnQuery" runat="server" Text="查 詢" CssClass="btn btn-large btn-success" OnClientClick="JavaScript:if(!ImageBtnQueryClick()) {return false};" OnClick="BtnQuery_Click" />
+                        <asp:Button ID="BtnQuery" runat="server" Text="查 詢" CssClass="btn btn-large btn-success" OnClientClick="JavaScript:if(!ImageBtnQueryClick()) {return false};" OnClick="BtnQuery_Click"/>
                     </td>
                 </tr>
             </table>
@@ -115,6 +115,7 @@
                                     <asp:ListItem Value="2">2. 法制</asp:ListItem>
                                     <asp:ListItem Value="3">3. 行政救濟</asp:ListItem>
                                 </asp:DropDownList>
+                           <%--     <asp:Label ID="lblkindName" runat="server" Text="Label"></asp:Label>--%>
                             </td>
                         </tr>
                         <tr>
@@ -156,7 +157,23 @@
                         <tr>
                             <td class="HeadTD_green" style="padding: 5px;">調閱類型：</td>
                             <td style="padding: 5px; text-align: left;">
-                                <asp:DropDownList ID="ddlViewType" Style="width: 150px" runat="server">
+                                <asp:DropDownList ID="ddlViewType" Style="width: 150px" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlViewType_SelectedIndexChanged">
+                                </asp:DropDownList>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="HeadTD_green" style="padding: 5px;">理由：</td>
+                            <td style="padding: 5px; text-align: left;">
+                                <asp:TextBox ID="txtReason" runat="server" Width="90%"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="HeadTD_green" style="padding: 5px;">調閱權限：</td>
+                            <td style="padding: 5px; text-align: left;">
+                                <asp:DropDownList ID="ddlImagePriv" Style="width: 150px" runat="server" Enabled="False">
+                                    <asp:ListItem Value="0">請選擇</asp:ListItem>
+                                    <asp:ListItem Value="1">預覽 </asp:ListItem>
+                                    <asp:ListItem Value="2">匯出及列印 </asp:ListItem>
                                 </asp:DropDownList>
                             </td>
                         </tr>
@@ -167,6 +184,7 @@
                                 </asp:DropDownList>
                             </td>
                         </tr>
+                        
                     </table>
                 </div>
                 <table border="0" style="width: 100%; border-collapse: collapse">

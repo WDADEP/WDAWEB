@@ -8,7 +8,6 @@
             $('#ShowInfo').hide();
             showMessage();
         }
-
         function ImageBtnOKClick() {
             try {
                 if (!IsCheckNo) { alert('請先確認收文文號或發文文號!!'); return false; }
@@ -26,13 +25,13 @@
             };
         }
 
-        function GetAlsoFile(Type) {
-            var No = "";
-            if (Type == 0) { No = $get("MainContent_txtWpinno").value; $get("MainContent_txtWpoutNo").innerText = ""; }
-            else if (Type == 1) { No = $get("MainContent_txtWpoutNo").value; $get("MainContent_txtWpinno").innerText = ""; }
+        function GetAlsoFile() {
+            var No = $get("MainContent_txtWpinno").value;
+            var ViewType = $get("MainContent_ddlViewType").value;
+            var UserName = "<%= UserInfo.UserName %>";
           
-            if (No.length != 0) {
-                WDA.AspNetAjaxInAction.GetAlsoFile(No, Type, onGetAlsoFileSuccess, onGetAlsoFileFailure, "context", 1000);
+            if (No.length != 0 && ViewType.length !=0) {
+                WDA.AspNetAjaxInAction.GetAlsoFile(No, ViewType, UserName, onGetAlsoFileSuccess, onGetAlsoFileFailure, "context", 1000);
             }
             else { IsCheckNo = false; }
         }
@@ -41,7 +40,7 @@
             for (var i = 0; i < result.length; i++) {
                 var bev = result[i];
 
-                if (bev.ReturnMessage.length > 0) { alert("該文號已展期"); $('#ShowInfo').hide(); IsCheckNo = false; return; }
+                if (bev.ReturnMessage.length > 0) { alert(bev.ReturnMessage); $('#ShowInfo').hide(); IsCheckNo = false; return; }
                 else if (bev.Wpinno.length > 0) {
                     IsCheckNo = true;
                     $('#ShowInfo').show();
@@ -67,7 +66,7 @@
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <h4>說明：</h4>
         <ol>
-            <li>輸入「收文文號」或「發文文號」，完成後請按下「確認收文號」或 「確認發文號」</li>
+            <li>輸入「收文文號」及選擇「調閱類型」，完成後請按下「確認收文號」</li>
             <li>系統將自動帶出訊息</li>
             <li>按下「展期」按鈕完成展期作業</li>
         </ol>
@@ -82,12 +81,15 @@
                     <div class="col-md-6">
                         收文文號：
                         <asp:TextBox ID="txtWpinno" runat="server"></asp:TextBox>
-                        <input id="btnCheckWpinno" type="button" value="確認收文號" class="btn btn-large btn-danger" onclick="javascript: GetAlsoFile(0)" />
                     </div>
                     <div class="col-md-6">
-                        發文文號：
-                        <asp:TextBox ID="txtWpoutNo" runat="server"></asp:TextBox>
-                        <input id="btnCheckWpoutNo" type="button" value="確認發文號" class="btn btn-large btn-danger" onclick="javascript: GetAlsoFile(1)" />
+                        調閱類型：
+                         <asp:DropDownList ID="ddlViewType" Style="width: 150px" runat="server">
+                                    <asp:ListItem Value="0">請選擇</asp:ListItem>
+                                    <asp:ListItem Value="1">1. 紙本調閱</asp:ListItem>
+                                    <asp:ListItem Value="2">2. 電子調閱</asp:ListItem>
+                                </asp:DropDownList>
+                        <input id="btnCheckWpinno" type="button" value="確認收文號" class="btn btn-large btn-danger" onclick="javascript: GetAlsoFile()" />
                     </div>
                 </div>
             </div>
@@ -159,7 +161,7 @@
                 <tr style="text-align: center">
                     <td style="text-align: right">
 
-                        <asp:Button ID="BtnOK" runat="server" Text="展 期" class="btn btn-large btn-success" OnClick="BtnOK_Click" OnClientClick="JavaScript:if(!ImageBtnOKClick()) {return false} ;" style="height: 21px" />
+                        <asp:Button ID="BtnOK" runat="server" Text="展 期" class="btn btn-large btn-success" OnClick="BtnOK_Click" OnClientClick="JavaScript:if(!ImageBtnOKClick()) {return false} ;"  />
                     </td>
                     <td style="text-align: center"></td>
                     <td style="text-align: left">

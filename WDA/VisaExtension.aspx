@@ -3,161 +3,105 @@
 <%@ Register Assembly="WDA" Namespace="WDA" TagPrefix="cc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
      <script type="text/javascript">
-         var IsCheckNo = false;
          function pageLoad() {
-             $('#ShowInfo').hide();
              showMessage();
          }
 
-         function ImageBtnOKClick() {
-             try {
-                 if (!IsCheckNo) { alert('請先確認收文文號或發文文號!!'); return false; }
-                 return true;
-             }
-             catch (e) {
-                 alert(e.message);
-                 Sys.Debug.traceDump(e);
-             };
-         }
-
-         function GetAlsoFile(Type) {
-             var No = "";
-             if (Type == 0) { No = $get("MainContent_txtWpinno").value; $get("MainContent_txtWpoutNo").innerText = ""; }
-             else if (Type == 1) { No = $get("MainContent_txtWpoutNo").value; $get("MainContent_txtWpinno").innerText = ""; }
-
-             if (No.length != 0) {
-                 WDA.AspNetAjaxInAction.GetAlsoFileByVisa(No, Type, $("#MainContent_HiddenUserID").val(), onGetAlsoFileSuccess, onGetAlsoFileFailure, "context", 1000);
-             }
-             else { IsCheckNo = false; }
-         }
-
-         function onGetAlsoFileSuccess(result, context, methodName) {
-             for (var i = 0; i < result.length; i++) {
-                 var bev = result[i];
-
-                 if (bev.Wpinno.length > 0) {
-                     IsCheckNo = true;
-                     $('#ShowInfo').show();
+         function SelectAllCheckboxes(oCheckbox, a) {
+             var rBtnListApproveAll = $("input[id^='MainContent_GridView1_rBtnListApproveAll']:checked").val();
+             var grid = $get("<%= GridView1.ClientID %>");
+             for (i = 1; i < grid.rows.length; i++) {
+                 if (rBtnListApproveAll == 'D') {
+                     grid.rows[i].cells[a].getElementsByTagName("INPUT")[0].checked = true;
                  }
-                 else { alert("文號錯誤請重新輸入"); $('#ShowInfo').hide(); IsCheckNo = false; return; }
-
-                 $get("MainContent_lblWpinno").innerText = bev.Wpinno;
-                 $get("MainContent_lblWpoutNo").innerText = bev.Wpoutno;
-                 $get("MainContent_lblTranst").innerText = bev.Transt;
-                 $get("MainContent_lblReceiver").innerText = bev.Receiver;
-                 $get("MainContent_lblRname").innerText = bev.Rname;
-                 $get("MainContent_lblApplkind").innerText = bev.Kind;
-                 $get("MainContent_lblredate").innerText = bev.Redate;
-                 $get("MainContent_lblexten").innerText = bev.Exten;
-                 $get("MainContent_lblredate1").innerText = bev.ExtensionRedate;
+                 else if (rBtnListApproveAll == 'Z') {
+                     grid.rows[i].cells[a].getElementsByTagName("INPUT")[1].checked = true;
+                 }
              }
-         }
-         function onGetAlsoFileFailure(error, context, methodName) {
-             var errorMessage = error.get_message();
          }
          </script>
-    <div class="alert alert-info">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <h4>說明：</h4>
-        <ol>
-            <li>輸入「收文文號」或「發文文號」，完成後請按下<kbd>「確認收文號」或 「確認發文號」</kbd></li>
-            <li>系統將自動帶出訊息</li>
-            <li>按下「簽准展期」按鈕完成簽准展期作業</li>
-        </ol>
-    </div>
     <div class="well well-lg">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">還檔作業─簽准展期</h3>
-            </div>
-            <div class="alert alert-success">
-                <div class="row">
-                    <div class="col-md-6">
-                        收文文號：
-                        <asp:TextBox ID="txtWpinno" runat="server"></asp:TextBox>
-                        <input id="btnCheckWpinno" type="button" value="確認收文號" class="btn btn-large btn-danger" onclick="javascript: GetAlsoFile(0)" />
-                    </div>
-                    <div class="col-md-6">
-                        發文文號：
-                        <asp:TextBox ID="txtWpoutNo" runat="server"></asp:TextBox>
-                        <input id="btnCheckWpoutNo" type="button" value="確認發文號" class="btn btn-large btn-danger" onclick="javascript: GetAlsoFile(1)" />
-                    </div>
+        <div id="divPanel">
+            <br>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">還檔作業─簽准展期：</h3>
                 </div>
+                <asp:GridView ID="GridView1" runat="server" AllowSorting="True" AutoGenerateColumns="False" CssClass="GridViewStyle" Width="98%" OnPageIndexChanging="GridView1_PageIndexChanging" OnRowDataBound="GridView1_RowDataBound" OnSorting="GridView1_Sorting" OnRowCreated="GridView1_RowCreated">
+                    <AlternatingRowStyle CssClass="AlternatingRowStyle" />
+                    <Columns>
+                        <asp:TemplateField HeaderText="簽核">
+                            <HeaderTemplate>
+                                <asp:RadioButtonList ID="rBtnListApproveAll" ForeColor="#CC3300" runat="server" RepeatDirection="Horizontal" onclick="JavaScript:SelectAllCheckboxes(this,0);">
+                                    <asp:ListItem Value="D">同意</asp:ListItem>
+                                    <asp:ListItem Value="Z">不同意</asp:ListItem>
+                                </asp:RadioButtonList>
+                            </HeaderTemplate>
+                            <ItemTemplate>
+                                <asp:RadioButtonList ID="rBtnListApprove" runat="server" RepeatDirection="Horizontal">
+                                    <asp:ListItem Value="D">同意</asp:ListItem>
+                                    <asp:ListItem Value="Z">不同意</asp:ListItem>
+                                </asp:RadioButtonList>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField HeaderText="收文號" DataField="WpinNo" SortExpression="WpinNo"/>
+                        <asp:BoundField HeaderText="發文號" DataField="WpoutNo" SortExpression="WpoutNo"/>
+                        <asp:TemplateField HeaderText="預約時間">
+                            <ItemTemplate>
+                                <asp:Label ID="LblTranst" runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField HeaderText="預約人" DataField="RECEIVER" SortExpression="RECEIVER" />
+                        <asp:BoundField HeaderText="案件別" DataField="kindName" SortExpression="kindName"/>
+                        <asp:TemplateField HeaderText="原定還檔日">
+                            <ItemTemplate>
+                                <asp:Label ID="LblReDate" runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="是否已展期">
+                            <ItemTemplate>
+                                <asp:Label ID="LblExten" runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="展期還檔日">
+                            <ItemTemplate>
+                                <asp:Label ID="LblExtenReDate" runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField HeaderText="展期次數" DataField="EXTENSIONCOUNT" SortExpression="EXTENSIONCOUNT"/>
+                        <asp:BoundField DataField="TRANST" HeaderText="TRANST" SortExpression="TRANST" />
+                        <asp:BoundField DataField="RECEIVER" HeaderText="RECEIVER" SortExpression="RECEIVER" />
+                        <asp:BoundField DataField="RealName" HeaderText="RealName" SortExpression="RealName" />
+                        <asp:BoundField DataField="EXTEN" HeaderText="EXTEN" SortExpression="EXTEN" />
+                        <asp:BoundField DataField="EXTENSIONDATE" HeaderText="EXTENSIONDATE" SortExpression="EXTENSIONDATE" />
+                        <asp:BoundField DataField="EXTENSIONCOUNT" HeaderText="EXTENSIONCOUNT" SortExpression="EXTENSIONCOUNT" />
+                        <asp:BoundField DataField="KIND" HeaderText="KIND" SortExpression="KIND" />
+                        <asp:BoundField DataField="VIEWTYPE" HeaderText="VIEWTYPE" SortExpression="VIEWTYPE" />
+                    </Columns>
+                    <FooterStyle CssClass="FooterStyle" />
+                    <HeaderStyle CssClass="HeaderStyle" />
+                    <PagerStyle CssClass="PagerStyle" HorizontalAlign="Center" />
+                    <RowStyle CssClass="RowStyle" />
+                    <PagerSettings Mode="NumericFirstLast" FirstPageText="[第一頁]" LastPageText="[最末頁]" />
+                </asp:GridView>
+                <table id="tbPageLayer_GridView1" style="border-right: #ffffff 1px solid; border-top: #ffffff 1px solid; border-left: #e6e6e6 1px solid; border-bottom: #e6e6e6 1px solid; width: 100%;" border="1">
+                    <tr>
+                        <td style="padding: 0; float: none; background-color: #ffffff; text-align: right;" class="t12_blue">
+                            <asp:Label ID="lblTotalPage_GridView1" runat="server"></asp:Label>
+                            <asp:Label ID="lblPage_GridView1" runat="server"></asp:Label>
+                        </td>
+                    </tr>
+                </table>
+                <table border="0" style="width: 100%; border-collapse: collapse">
+                    <tr style="text-align: center">
+                        <td style="text-align: center">
+                            <asp:Button ID="BtnOK" runat="server" Text="確 定" CssClass="btn btn-large btn-success" OnClick="BtnOK_Click" />
+                        </td>
+                    </tr>
+                </table>
             </div>
-            <div class="panel-body">
-                <div id="ShowInfo">
-                    <div class="alert alert-success" role="alert">簽准展期詳細資料如下：</div>
-                    <table class="ItemTD_green" style="width: 98%; float: right; border-collapse: separate; border-spacing: 1px;" border="1">
-                          <tr>
-                            <td class="HeadTD_green" style="padding: 5px;">收文文號：</td>
-                            <td style="padding: 5px; text-align: left;">
-                                <asp:Label ID="lblWpinno" runat="server" Text=""></asp:Label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="HeadTD_green" style="padding: 5px;">發文文號：</td>
-                            <td style="padding: 5px; text-align: left;">
-                                <asp:Label ID="lblWpoutNo" runat="server" Text=""></asp:Label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="HeadTD_green" style="padding: 5px;">預約時間：</td>
-                            <td style="padding: 5px; text-align: left;">
-                                <asp:Label ID="lblTranst" runat="server" Text="20110506"></asp:Label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="HeadTD_green" style="padding: 5px;">預 約 人：</td>
-                            <td style="padding: 5px; text-align: left;">
-                                <asp:Label ID="lblReceiver" runat="server" Text="mo321"></asp:Label>
-                                <asp:Label ID="lblRname" runat="server" Text="何依玟"></asp:Label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="HeadTD_green" style="padding: 5px;">案 件 別：</td>
-                            <td style="padding: 5px; text-align: left;">
-                                <asp:Label ID="lblApplkind" runat="server" Text="法制"></asp:Label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="HeadTD_green" style="padding: 5px;">原定還檔日：</td>
-                            <td style="padding: 5px; text-align: left;">
-                                <asp:Label ID="lblredate" runat="server" Text="20110406"></asp:Label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="HeadTD_green" style="padding: 5px;">是否已展期：</td>
-                            <td style="padding: 5px; text-align: left;">
-
-                                <asp:Label ID="lblexten" runat="server" Text="否"></asp:Label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="HeadTD_green" style="padding: 5px;">展期還檔日：</td>
-                            <td style="padding: 5px; text-align: left;">
-                                <asp:Label ID="lblredate1" runat="server" Text="20110505"></asp:Label>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <table border="0" style="width: 100%; border-collapse: collapse">
-                <tr style="text-align: center">
-                    <td style="text-align: right">
-                        <asp:Button ID="BtnOK" runat="server" Text="簽 准" class="btn btn-large btn-success" OnClick="BtnOK_Click" OnClientClick="JavaScript:if(!ImageBtnOKClick()) {return false} ;" />
-                    </td>
-                    <td style="text-align: center"></td>
-                    <td style="text-align: left">
-                        <asp:Button ID="BtnClear" runat="server" Text="取 消" class="btn btn-large btn-success" OnClick="BtnClear_Click"/>
-                    </td>
-                </tr>
-            </table>
-            <br />
         </div>
-        <div id="btn1">
-        </div>
-        <cc1:LiteralMessageBox ID="LiteralMessageBox1" runat="server"></cc1:LiteralMessageBox>
+       <cc1:LiteralMessageBox ID="LiteralMessageBox1" runat="server"></cc1:LiteralMessageBox>
         <input id="HiddenMessage" type="Hidden" runat="server" />
-        <input id="HiddenUserID" type="Hidden" runat="server" />
     </div>
 </asp:Content>

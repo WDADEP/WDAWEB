@@ -38,6 +38,19 @@ namespace WDA
             try
             {
                 this.DataBind(true, false);
+
+                #region Monitor
+                string wpinno = string.Empty;
+
+                if (!string.IsNullOrEmpty(this.txtBarcodeValue.Text.Trim()))
+                {
+                    wpinno = this.txtBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql);
+                }
+
+                string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+
+                this.MonitorLog.LogMonitor(wpinno, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA04, string.Empty);
+                #endregion
             }
             catch (Exception ex)
             {

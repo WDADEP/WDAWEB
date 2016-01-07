@@ -146,7 +146,12 @@ namespace WDA
             try
             {
                 this.DataBind(true, false);
-       
+
+                #region Monitor
+                string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+
+                this.MonitorLog.LogMonitor(string.Empty, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA02, string.Empty); 
+                #endregion
             }
             catch (Exception ex)
             {

@@ -40,6 +40,19 @@ namespace WDA
             try
             {
                 this.InitSQL();
+
+                #region Monitor
+                string jicuiTime = string.Empty;
+
+                if (!string.IsNullOrEmpty(txtJicuiTime.Text))
+                {
+                    jicuiTime = this.txtJicuiTime.Text.Trim().Replace(StringFormatException.Mode.Sql);
+                }
+
+                string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+
+                this.MonitorLog.LogMonitor(string.Empty, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA12, string.Format("稽催日期：{0}", jicuiTime));
+                #endregion
             }
             catch (Exception ex)
             {
@@ -68,14 +81,14 @@ namespace WDA
                 {
                     string userName = this.txtUserName.Text.Trim();
 
-                    where += string.Format("And receiver ='{0}'", userName);
+                    where += string.Format("And wb.receiver ='{0}'", userName);
                 }
 
                 if (this.ddlKind.SelectedIndex > 0)
                 {
                     string kind = this.ddlKind.SelectedValue;
 
-                    where += string.Format("And Kind = {0} ", kind);
+                    where += string.Format("And wb.Kind = {0} ", kind);
                 }
 
                 strSql = this.Select.Wpborrow(where);

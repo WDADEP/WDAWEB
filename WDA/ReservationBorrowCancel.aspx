@@ -18,8 +18,10 @@
         function ImageBtnQueryClick() {
             try {
                 var txtWpinNo = $get('MainContent_txtWpinNo').value;
+                var ddlViewType = $get('MainContent_ddlViewType').value;
 
-                if (txtWpinNo.length == 0) {
+                if (ddlViewType == 0) { alert('請選擇調閱類型'); return false; }
+                else if (txtWpinNo.length == 0) {
                     alert('請輸入「局收文號」。');
                     return false;
                 }
@@ -51,6 +53,16 @@
                         <td class="HeadTD_green" style="padding: 5px;"><span class="t15_red">＊</span>局收文號</td>
                         <td style="padding: 5px; text-align: left;">
                             <asp:TextBox ID="txtWpinNo" runat="server"></asp:TextBox>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="HeadTD_green" style="padding: 5px;"><span class="t15_red">＊</span>調閱類型：</td>
+                        <td style="padding: 5px; text-align: left;">
+                                <asp:DropDownList ID="ddlViewType" Style="width: 150px" runat="server">
+                                    <asp:ListItem Value="0">請選擇</asp:ListItem>
+                                    <asp:ListItem Value="1">1. 紙本調閱</asp:ListItem>
+                                    <asp:ListItem Value="2">2. 電子調閱</asp:ListItem>
+                                </asp:DropDownList>
                         </td>
                     </tr>
                 </table>
@@ -130,16 +142,16 @@
                                 <asp:TextBox ID="txtNote" Style="width: 300px" runat="server"></asp:TextBox>
                             </td>
                         </tr>
-                        <tr>
+                        <%--<tr>
                             <td class="HeadTD_green" style="padding: 5px;">調閱類型：</td>
                             <td style="padding: 5px; text-align: left;">
-                                <asp:DropDownList ID="ddlViewType" Style="width: 150px" runat="server">
+                            <asp:DropDownList ID="ddlViewType" Style="width: 150px" runat="server">
                                     <asp:ListItem Value="0">請選擇</asp:ListItem>
                                     <asp:ListItem Value="1">1. 紙本調閱</asp:ListItem>
                                     <asp:ListItem Value="2">2. 電子調閱</asp:ListItem>
                                 </asp:DropDownList>
                             </td>
-                        </tr>
+                        </tr>--%>
                     </table>
                 </div>
                 <table border="0" style="width: 100%; border-collapse: collapse">

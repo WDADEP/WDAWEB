@@ -22,13 +22,13 @@ namespace WDA {
         protected global::System.Web.UI.WebControls.TextBox txtWpinno;
         
         /// <summary>
-        /// txtWpoutNo 控制項。
+        /// ddlViewType 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtWpoutNo;
+        protected global::System.Web.UI.WebControls.DropDownList ddlViewType;
         
         /// <summary>
         /// lblWpinno 控制項。

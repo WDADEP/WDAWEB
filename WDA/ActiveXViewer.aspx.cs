@@ -47,7 +47,18 @@ namespace WDA
 
                         requestText = string.Format("?CaseSet={0}&UserSet={1}", caseSet, userSet);
                     }
-                    else
+                    else if (mode == "D")
+                    {
+                        string caseSet = this.RequestQueryString("CaseSet");
+
+                        string priID = this.RequestQueryString("PriID");
+
+                        string userSet = this.UserInfo.UserID;
+
+                        requestText = string.Format("?Mode={0}&CaseSet={1}&UserSet={2}&PriID={3}", mode, caseSet, userSet,priID);
+ 
+                    }
+                    else 
                     {
                         string caseSet = this.RequestQueryString("CaseSet");
 

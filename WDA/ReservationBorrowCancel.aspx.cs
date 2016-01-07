@@ -27,7 +27,7 @@ namespace WDA
 
         protected void BtnQuery_Click(object sender, EventArgs e)
         {
-            this.DataBind(true);
+            this.UIDataBind();
         }
 
         protected void BtnOK_Click(object sender, EventArgs e)
@@ -37,6 +37,19 @@ namespace WDA
                 this.ShowMessage("預約借檔(取消) 成功", MessageMode.INFO);
 
                 this.HiddenShowPanel.Value = "false";
+
+                #region Monitor
+                string wpinno = string.Empty;
+
+                if (!string.IsNullOrEmpty(this.txtWpoutNo.Text.Trim()))
+                {
+                    wpinno = this.txtWpoutNo.Text.Trim().Replace(StringFormatException.Mode.Sql);
+                }
+
+                string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+
+                this.MonitorLog.LogMonitor(wpinno, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA07, string.Empty);
+                #endregion
             }
             else
             {
@@ -60,99 +73,87 @@ namespace WDA
             this.txtCirlName.Enabled =
             this.txtCaseNo.Enabled =
             this.txtCommName.Enabled =
-            this.txtNote.Enabled =
-            this.ddlViewType.Enabled = false;
+            this.txtNote.Enabled = false;
+            //this.ddlViewType.Enabled = false;
         }
         #endregion
 
-        #region DataBind()
+        #region UIDataBind()
         /// <summary>
         /// 資料繫結
         /// </summary>
         /// <param name="Anew">是否重新撈資料</param>
-        private void DataBind(bool Anew)
+        private void UIDataBind()
         {
-            string strSql = string.Empty, strWhere = string.Empty;
+            string strSql = string.Empty, where = string.Empty;
 
             DataTable dt = null;
             try
             {
-                if (Anew)
+                where = string.Format("And wb.WpinNo = '{0}' And wb.Receiver = '{1}' And wb.Prtflag != '{2}' And wb.Prtflag != '{3}' And wb.Viewtype ='{4}'",
+                    this.txtWpinNo.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim(),
+                    UserInfo.UserName,
+                    "P",
+                    "T",
+                    this.ddlViewType.SelectedValue);
+
+                strSql = this.Select.WpborrowQuery(where);
+
+                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+                this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
+
+                dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+
+                if (dt.Rows.Count == 0)
                 {
-                    strWhere += string.Format("And wb.WpinNo = '{0}' And wb.Receiver = '{1}' And wb.Prtflag != '{2}' And wb.Prtflag != '{3}'",
-                        this.txtWpinNo.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim(),
-                        UserInfo.UserName,
-                        "P",
-                        "T");
+                    this.HiddenShowPanel.Value = "false";
 
-                    strSql = this.Select.WpborrowQuery(strWhere);
+                    this.ShowMessage("目前查詢沒有任何資料", MessageMode.INFO);
+                }
+                else
+                {
+                    this.txtWpoutNo.Text = dt.Rows[0]["WpoutNo"].ToString();
 
-                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                    this.txtTel.Text = UserInfo.Tel;
 
-                    this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
+                    this.ddlKind.SelectedValue = dt.Rows[0]["Kind"].ToString();
 
-                    dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+                    this.txtReceiver.Text = UserInfo.UserName;
 
-                    if (dt.Rows.Count == 0)
+                    this.txtWpindate.Text = dt.Rows[0]["Wpindate"].ToString();
+
+                    this.txtCirlName.Text = dt.Rows[0]["CirlName"].ToString();
+
+                    this.txtCaseNo.Text = dt.Rows[0]["CaseNo"].ToString();
+
+                    this.txtCommName.Text = dt.Rows[0]["CommName"].ToString();
+
+                    bool check = false;
+
+                    #region 備註
+
+                    string note = string.Empty;
+                    switch (dt.Rows[0]["Prtflag"].ToString())
                     {
-                        this.HiddenShowPanel.Value = "false";
-
-                        this.ShowMessage("目前查詢沒有任何資料", MessageMode.INFO);
+                        case "N":
+                            check = true;
+                            note += "預約借檔簽核中"; break;
+                        case "F":
+                            check = false;
+                            note += "預約借檔簽核通過"; break;
+                        case "Z":
+                            check = false;
+                            note += "預約借檔簽核不通過"; break;
                     }
-                    else
-                    {
-                        this.txtWpoutNo.Text = dt.Rows[0]["WpoutNo"].ToString();
 
-                        this.txtTel.Text = UserInfo.Tel;
+                    this.txtNote.Text = note;
 
-                        this.ddlKind.SelectedValue = dt.Rows[0]["Kind"].ToString();
+                    #endregion
 
-                        this.txtReceiver.Text = UserInfo.UserName;
+                    this.BtnOK.Enabled = check;
 
-                        this.txtWpindate.Text = dt.Rows[0]["Wpindate"].ToString();
-
-                        this.txtCirlName.Text = dt.Rows[0]["CirlName"].ToString();
-
-                        this.txtCaseNo.Text = dt.Rows[0]["CaseNo"].ToString();
-
-                        this.txtCommName.Text = dt.Rows[0]["CommName"].ToString();
-
-                        bool check = false;
-
-                        #region 備註
-
-                        string note = string.Empty;
-                        switch (dt.Rows[0]["Marker"].ToString())
-                        {
-                            case "":
-                            case "N":
-                                note += "本件尚未歸檔"; break;
-                            case "R":
-                                note += "本件已歸檔"; break;
-                        }
-                        switch (dt.Rows[0]["Prtflag"].ToString())
-                        {
-                            case "N":
-                                check = true;
-                                note += "，預約借檔簽核中"; break;
-                            case "F":
-                                check = false;
-                                note += "，預約借檔簽核通過"; break;
-                            case "Z":
-                                check = false;
-                                note += "，預約借檔簽核不通過"; break;
-                        }
-
-                        this.txtNote.Text = note;
-
-                        #endregion
-
-                        this.ddlViewType.SelectedValue = dt.Rows[0]["ViewType"].ToString();
-
-                        this.BtnOK.Enabled = check;
-
-                        this.HiddenShowPanel.Value = "true";
-                    }
+                    this.HiddenShowPanel.Value = "true";
                 }
             }
             catch (System.Exception ex) { this.ShowMessage(ex); }

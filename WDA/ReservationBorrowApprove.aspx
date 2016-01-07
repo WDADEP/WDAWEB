@@ -49,17 +49,17 @@
                                 </asp:RadioButtonList>
                             </ItemTemplate>
                         </asp:TemplateField>
+                         <asp:BoundField HeaderText="收文號" DataField="WpinNo" SortExpression="WpinNo" />
+                        <asp:BoundField HeaderText="發文號" DataField="WpoutNo" SortExpression="WpoutNo" />
+                           <asp:BoundField HeaderText="檔號" DataField="FileNo" SortExpression="FileNo" />
+                        <asp:BoundField HeaderText="卷宗號" DataField="BoxNo" SortExpression="BoxNo" />
+                          <asp:BoundField HeaderText="雇主姓名" DataField="CommName" SortExpression="CommName" />
                         <asp:BoundField HeaderText="調卷人" DataField="RealName" SortExpression="RealName" />
                         <asp:BoundField HeaderText="分機" DataField="Tel" SortExpression="Tel" />
-                        <asp:BoundField HeaderText="檔號" DataField="FileNo" SortExpression="FileNo" />
-                        <asp:BoundField HeaderText="卷宗號" DataField="BoxNo" SortExpression="BoxNo" />
-                        <asp:BoundField HeaderText="收文號" DataField="WpinNo" SortExpression="WpinNo" />
-                        <asp:BoundField HeaderText="發文號" DataField="WpoutNo" SortExpression="WpoutNo" />
-                        <asp:BoundField HeaderText="雇主姓名" DataField="CommName" SortExpression="CommName" />
-                        <asp:BoundField HeaderText="歸檔人" DataField="OnFile" SortExpression="OnFile" />
                         <asp:BoundField HeaderText="調閱類型" DataField="ViewTypeName" SortExpression="ViewTypeName" />
                         <asp:BoundField HeaderText="調閱類型" DataField="ViewType" SortExpression="ViewType" />
                         <asp:BoundField HeaderText="預約時間" DataField="Transt" SortExpression="Transt" />
+                        <asp:BoundField DataField="REASON" HeaderText="理由" SortExpression="REASON" />
                     </Columns>
                     <FooterStyle CssClass="FooterStyle" />
                     <HeaderStyle CssClass="HeaderStyle" />

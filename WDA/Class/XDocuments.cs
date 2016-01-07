@@ -345,6 +345,25 @@ namespace WDA.Class
         }
         #endregion
 
+        #region CreateViewerElementByDocNumbe()
+        /// <summary>
+        /// 建立Changingtec下第一層
+        /// </summary>
+        /// <param name="Key"></param>
+        /// <returns></returns>
+        public XElement CreateViewerElementByDocNumbe(string[] Attribute, string DocNumber)
+        {
+            XElement el = new XElement("Viewer");
+
+            this.CreateAttribute(el, "UploadMode", Attribute[0]);
+            this.CreateAttribute(el, "DocClassDefMode", Attribute[1]);
+            this.CreateAttribute(el, "Type", Attribute[2]);
+            this.CreateAttribute(el, "DocNumber", DocNumber);
+
+            return el;
+        }
+        #endregion
+
         #region CreateConfigurationElement()
         /// <summary>
         /// 建立Tag Configuation

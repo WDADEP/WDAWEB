@@ -369,7 +369,7 @@ namespace WDA
 
         #region GetAlsoFile()
         [WebMethod]
-        public List<AspNetAjaxInAction.AlsoFile.AlsoFileInfos> GetAlsoFile(string No ,int Type)
+        public List<AspNetAjaxInAction.AlsoFile.AlsoFileInfos> GetAlsoFile(string No, string ViewType, string UserName)
         {
             string strSql = string.Empty;
             string where = string.Empty;
@@ -385,18 +385,11 @@ namespace WDA
             {
                 AlsoFileInfos = new AlsoFile.AlsoFileInfos();
 
-                if (Type == 0)
-                {
-                    where = string.Format("And wpb.wpinno ='{0}'", No);
-                }
-                else if (Type == 1)
-                {
-                    where = string.Format("And wpb.Wpoutno ='{0}'", No);
-                }
+                where = string.Format("And wpb.wpinno ='{0}' And wpb.ViewType ='{1}' And wpb.receiver ='{2}'", No, ViewType, UserName);
 
                 #region ReturnMessage
 
-                strSql = this.Select.AlsoFileInfosD(where);
+                strSql = this.Select.AlsoFileInfosExten(where);
 
                 this.WriteLog(Mode.LogMode.DEBUG, strSql);
 
@@ -404,15 +397,13 @@ namespace WDA
 
                 if (dt.Rows.Count > 0)
                 {
-
-                    AlsoFileInfos.ReturnMessage = "該文號已展期";
+                    AlsoFileInfos.ReturnMessage = "該筆資料申請展期中";
 
                     ListAlsoFileInfos.Add(AlsoFileInfos);
 
                     return ListAlsoFileInfos;
                 }
                 #endregion
-
 
                 strSql = this.Select.AlsoFileInfos(where);
 
@@ -422,21 +413,73 @@ namespace WDA
 
                 if (dt.Rows.Count > 0)
                 {
-                    switch (dt.Rows[0]["kind"].ToString())
+                    if (dt.Rows[0]["Viewtype"].ToString() == "1")
                     {
-                        case "1":
+                        if (string.IsNullOrEmpty(dt.Rows[0]["EXTENSIONDATE"].ToString()))
+                        {
+                            switch (dt.Rows[0]["kind"].ToString())
+                            {
+                                case "1":
+                                    Redate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
+                                    ExtensionRedate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(15).ToString("yyyy/MM/dd HH:mm:ss");
+                                    break;
+                                case "2":
+                                    Redate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
+                                    ExtensionRedate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(15).ToString("yyyy/MM/dd HH:mm:ss");
+                                    break;
+                                case "3":
+                                    Redate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(366).ToString("yyyy/MM/dd HH:mm:ss");
+                                    ExtensionRedate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(456).ToString("yyyy/MM/dd HH:mm:ss");
+                                    break;
+                                default: break;
+                            }
+                        }
+                        else
+                        {
+                            switch (dt.Rows[0]["kind"].ToString())
+                            {
+                                case "1":
+                                    Redate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
+                                    ExtensionRedate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(15).ToString("yyyy/MM/dd HH:mm:ss");
+                                    break;
+                                case "2":
+                                    Redate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
+                                    ExtensionRedate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(15).ToString("yyyy/MM/dd HH:mm:ss");
+                                    break;
+                                case "3":
+                                    Redate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(366).ToString("yyyy/MM/dd HH:mm:ss");
+                                    ExtensionRedate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(456).ToString("yyyy/MM/dd HH:mm:ss");
+                                    break;
+                                default: break;
+                            }
+                        }
+                    }
+                    else if (dt.Rows[0]["Viewtype"].ToString() == "2")
+                    {
+                        if (dt.Rows[0]["kind"].ToString() == "3" && !string.IsNullOrEmpty(dt.Rows[0]["EXTENSIONDATE"].ToString()))
+                        {
+                            DateTime STime = DateTime.Parse(DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(15).ToString("yyyy/MM/dd HH:mm:ss")); //起始日
+                            DateTime ETime = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString());
+                            TimeSpan Total = ETime.Subtract(STime); //日期相減
+
+                            if (Total.Days > 90)
+                            {
+                                AlsoFileInfos.ReturnMessage = "行政救濟案件展期天數則不得超過3個月";
+                                ListAlsoFileInfos.Add(AlsoFileInfos);
+                                return ListAlsoFileInfos;
+                            }
+                        }
+
+                        if (string.IsNullOrEmpty(dt.Rows[0]["EXTENSIONDATE"].ToString()))
+                        {
                             Redate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
                             ExtensionRedate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(15).ToString("yyyy/MM/dd HH:mm:ss");
-                            break;
-                        case "2":
-                            Redate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
-                            ExtensionRedate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(15).ToString("yyyy/MM/dd HH:mm:ss");
-                            break;
-                        case "3":
-                            Redate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(366).ToString("yyyy/MM/dd HH:mm:ss");
-                            ExtensionRedate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(456).ToString("yyyy/MM/dd HH:mm:ss");
-                            break;
-                        default: break;
+                        }
+                        else
+                        {
+                            Redate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
+                            ExtensionRedate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(15).ToString("yyyy/MM/dd HH:mm:ss");
+                        }
                     }
                      
                     AlsoFileInfos.Wpinno = dt.Rows[0]["Wpinno"].ToString();

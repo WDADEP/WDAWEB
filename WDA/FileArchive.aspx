@@ -202,7 +202,7 @@
                                 <asp:Label ID="lblBoxNo" runat="server" Text='<%# Eval("BoxNo") %>'></asp:Label>
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:BoundField HeaderText="歸檔作業者" DataField="RealName" SortExpression="RealName" ReadOnly="True" />
+                        <asp:BoundField HeaderText="歸檔作業者" DataField="onfile" SortExpression="onfile" ReadOnly="True" />
                     </Columns>
                     <FooterStyle CssClass="FooterStyle" />
                     <HeaderStyle CssClass="HeaderStyle" />
