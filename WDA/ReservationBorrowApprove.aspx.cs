@@ -52,9 +52,9 @@ namespace WDA
                             transt.ToString("yyyy/MM/dd HH:mm:ss"));
 
                         if (prtflag == "Z")
-                            strSql = this.Update.WpborrowApprove(prtflag, strWhere, true);
+                            strSql = this.Update.WpborrowApproveDate(prtflag, strWhere, true);
                         else
-                            strSql = this.Update.WpborrowApprove(prtflag, strWhere, false);
+                            strSql = this.Update.WpborrowApproveDate(prtflag, strWhere, false);
 
                         this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
 

@@ -135,7 +135,7 @@
             <table border="0" style="width: 100%; border-collapse: collapse">
                 <tr style="text-align: center">
                     <td style="text-align: center">
-                        <asp:Button ID="BtnOK" runat="server" Text="確 定" class="btn btn-large btn-success" OnClientClick="JavaScript:if(!ImageBtnOKClick()) {return false} ;" OnClick="BtnOK_Click" />
+                        <asp:Button ID="BtnOK" runat="server" Text="確 定" class="btn btn-large btn-success" OnClientClick="JavaScript:if(!ImageBtnOKClick()) {return false} ;" OnClick="BtnOK_Click" style="height: 21px" />
                     </td>
                 </tr>
             </table>
@@ -151,7 +151,7 @@
                         <asp:Button ID="BtnPrint" runat="server" Text="列 印" class="btn btn-large btn-success" OnClick="BtnPrint_Click" OnClientClick="JavaScript:if(!ImageBtnPringClick()) {return false} ;" PostBackUrl="~/FileArchivePrint.aspx" />
                     </div>
                 </div>
-                <asp:GridView ID="GridView1" runat="server" AllowSorting="True" AutoGenerateColumns="False" CssClass="GridViewStyle" Width="98%" OnPageIndexChanging="GridView1_PageIndexChanging" OnRowCommand="GridView1_RowCommand" OnRowDataBound="GridView1_RowDataBound" OnSorting="GridView1_Sorting">
+                <asp:GridView ID="GridView1" runat="server" AllowSorting="True" AutoGenerateColumns="False" CssClass="GridViewStyle" Width="98%" OnPageIndexChanging="GridView1_PageIndexChanging" OnRowCommand="GridView1_RowCommand" OnRowDataBound="GridView1_RowDataBound" OnSorting="GridView1_Sorting" OnRowCreated="GridView1_RowCreated">
                     <AlternatingRowStyle CssClass="AlternatingRowStyle" />
                     <Columns>
                         <asp:TemplateField HeaderText="編輯">
@@ -168,7 +168,7 @@
                                 <asp:ImageButton ID="ImageBtnDelete" runat="server" ImageUrl="Images/delete.gif" CommandName="Stop" />
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:BoundField HeaderText="收文文號" DataField="BarcodeValue" SortExpression="BarcodeValue" ReadOnly="True" />
+                        <asp:BoundField HeaderText="收文文號" DataField="WPINNO" SortExpression="WPINNO" ReadOnly="True" />
                         <asp:BoundField HeaderText="發文文號" DataField="WpoutNo" SortExpression="WpoutNo" ReadOnly="True" />
                         <asp:TemplateField HeaderText="歸檔檔號" SortExpression="FileNo">
                             <EditItemTemplate>
@@ -203,6 +203,7 @@
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:BoundField HeaderText="歸檔作業者" DataField="onfile" SortExpression="onfile" ReadOnly="True" />
+                        <asp:BoundField DataField="viewtype" HeaderText="文件類型" SortExpression="viewtype" />
                     </Columns>
                     <FooterStyle CssClass="FooterStyle" />
                     <HeaderStyle CssClass="HeaderStyle" />

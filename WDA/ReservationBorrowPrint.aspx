@@ -6,6 +6,25 @@
         var isPrint = false;
 
         function pageLoad() {
+            $("#MainContent_txtScanCreateTime").datepicker("option", $.datepicker.regional["zh-TW"]);
+            $("#MainContent_txtScanEndTime").datepicker("option", $.datepicker.regional["zh-TW"]);
+
+            $("#MainContent_txtScanCreateTime").datepicker({
+                defaultDate: new Date(),
+                changeMonth: true,
+                numberOfMonths: 1,
+                onClose: function (selectedDate) {
+                    $("#MainContent_txtScanEndTime").datepicker("option", "minDate", selectedDate);
+                }
+            });
+            $("#MainContent_txtScanEndTime").datepicker({
+                defaultDate: new Date(),
+                changeMonth: true,
+                numberOfMonths: 1,
+                onClose: function (selectedDate) {
+                    $("#MainContent_txtScanCreateTime").datepicker("option", "maxDate", selectedDate);
+                }
+            });
             showMessage();
         }
 
@@ -36,16 +55,34 @@
                 <div class="panel-body">
                     <table class="ItemTD_green" style="width: 98%; float: right; border-collapse: separate; border-spacing: 1px;" border="1">
                         <tr>
-                            <td class="HeadTD_green" style="padding: 5px; width: 25%">請選擇列印時間：</td>
-                            <td style="padding: 5px; text-align: left;">
+                            <td class="HeadTD_green" style="padding: 5px;">
+                                <span class="t15_red">＊</span>請選擇列印時間：
+                            </td>
+                            <td style="padding: 5px; text-align: left;">起：
+                                              <asp:TextBox ID="txtScanCreateTime" runat="server" pattern="\d{4}/\d{1,2}/\d{1,2}" title="日期格式"></asp:TextBox>
+                                <asp:DropDownList ID="ddlCreateTime" Style="width: 150px" runat="server">
+                                    <asp:ListItem Value="1">1. AM 09:30</asp:ListItem>
+                                    <asp:ListItem Value="2">2. AM 11:00</asp:ListItem>
+                                    <asp:ListItem Value="3">3. PM 02:30</asp:ListItem>
+                                    <asp:ListItem Value="4">4. PM 04:00</asp:ListItem>
+                                </asp:DropDownList>
+                                ～迄：
+                                            <asp:TextBox ID="txtScanEndTime" runat="server" pattern="\d{4}/\d{1,2}/\d{1,2}" title="日期格式"></asp:TextBox>
+                                <asp:DropDownList ID="ddlEndTime" Style="width: 150px" runat="server">
+                                    <asp:ListItem Value="1">1. AM 09:30</asp:ListItem>
+                                    <asp:ListItem Value="2">2. AM 11:00</asp:ListItem>
+                                    <asp:ListItem Value="3">3. PM 02:30</asp:ListItem>
+                                    <asp:ListItem Value="4">4. PM 04:00</asp:ListItem>
+                                </asp:DropDownList>
+                            </td>
+                            <%--     <td style="padding: 5px; text-align: left;">
                                 <asp:DropDownList ID="ddlBorrowType" Style="width: 150px" runat="server">
                                     <asp:ListItem Value="1">1. AM 09:30</asp:ListItem>
                                     <asp:ListItem Value="2">2. AM 11:00</asp:ListItem>
                                     <asp:ListItem Value="3">3. PM 02:30</asp:ListItem>
                                     <asp:ListItem Value="4">4. PM 04:00</asp:ListItem>
-                                    <asp:ListItem Value="5">5. PM 06:00</asp:ListItem>
                                 </asp:DropDownList>
-                            </td>
+                            </td>--%>
                         </tr>
                     </table>
                 </div>

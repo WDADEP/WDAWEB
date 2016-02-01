@@ -15,13 +15,13 @@
     <script src="Scripts/Utility/initPageLoad.js"></script>
     <script type="text/javascript">
         function pageLoad() {
-            LoginShowMessage();
+            LoginShowMessage();    
         }
         function Login_Check() {
             if ($('#txtUserName').val().length == 0) {
                 alert('請輸入帳號'); return false;
             }
-            if ($('#txtPassWord').val().length == 0) {
+            if ($('#txtPd').val().length == 0) {
                 alert('請輸入密碼'); return false;
             }
 
@@ -71,7 +71,7 @@
                                                                 <span id="Txt_Password" style="white-space: nowrap">使用者密碼：</span>
                                                             </td>
                                                             <td>
-                                                                <asp:TextBox ID="txtPassWord" runat="server" TextMode="Password" ClientIDMode="Static"></asp:TextBox>
+                                                                <asp:TextBox ID="txtPd" runat="server" TextMode="Password" ClientIDMode="Static"></asp:TextBox>
                                                             </td>
                                                         </tr>
                                                         <tr>

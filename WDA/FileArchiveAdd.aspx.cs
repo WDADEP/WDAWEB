@@ -14,6 +14,21 @@ namespace WDA
     {
         #region Property
 
+        #region ViewType
+        /// <summary>
+        /// CaseID
+        /// </summary>
+        protected string ViewType
+        {
+            get
+            {
+                if (ViewState["ViewType"] == null) { return string.Empty; }
+                else { return ViewState["ViewType"].ToString(); }
+            }
+            set { ViewState["ViewType"] = value; }
+        }
+        #endregion
+
         #region CaseID
         /// <summary>
         /// CaseID
@@ -126,14 +141,33 @@ namespace WDA
         #region BtnOK_Click()
         protected void BtnOK_Click(object sender, EventArgs e)
         {
-            if (!this.GetCaseID())
+            if (!this.CheckWprec())
             {
                 this.HiddenShowPanel.Value = "false";
 
-                this.ShowMessage("查詢不到對應的案件編號", MessageMode.INFO);
+                this.ShowMessage("查詢不到對應的發文編號，或此發文編號已歸檔", MessageMode.INFO); return;
+            }
+
+
+            if (!this.GetCaseID())
+            {
+                this.ViewType = "1";//紙本
+
+                //this.HiddenShowPanel.Value = "false";
+
+                //this.ShowMessage("查詢不到對應的案件編號", MessageMode.INFO);
+
+                this.txtBarcodeValue.Text = this.txtQueryBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
+                this.txtFileDate.Text = DateTime.Now.ToString("yyyyMMdd");
+
+                this.txtOnFile.Text = UserInfo.RealName;
+
+                this.HiddenShowPanel.Value = "true";
             }
             else
             {
+                this.ViewType = "2";//電子
+
                 this.DataBind(true, true);
             }
         }
@@ -142,22 +176,58 @@ namespace WDA
         #region BtnAdd_Click()
         protected void BtnAdd_Click(object sender, EventArgs e)
         {
-            if (this.UpdateData())
+            if (this.ViewType == "1")
             {
-                this.DataBind(true, false);
-
-                #region Monitor
-                string wpinno = string.Empty;
-
-                if (!string.IsNullOrEmpty(this.txtBarcodeValue.Text.Trim()))
+                if (this.UpdateDataByWprec())
                 {
-                    wpinno = this.txtBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql);
+                    #region Monitor
+                    string wpinno = string.Empty;
+
+                    if (!string.IsNullOrEmpty(this.txtBarcodeValue.Text.Trim()))
+                    {
+                        wpinno = this.txtBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql);
+                    }
+
+                    string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+
+                    this.MonitorLog.LogMonitor(wpinno, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA05, string.Empty);
+                    #endregion
+
+                    this.txtBarcodeValue.Text = string.Empty;
+                    this.txtBarcodeValue.Enabled = true;
+                    if (this.RadioButtonList1.SelectedValue == "0")
+                    {
+                        this.txtBoxNo.Text = (this.BoxNo.Length == 0) ? "" : (Convert.ToInt64(this.BoxNo) + 1).ToString().PadLeft(this.BoxNo.Length, '0');
+                    }
+                    else if (this.RadioButtonList1.SelectedValue == "1")
+                    {
+                        this.txtBoxNo.Text = this.BoxNo;
+                    }
+
+                    this.txtFileNo.Text = this.FileNo;
+                    this.txtKeepYr.Text = this.KeepYr;
+                    //this.HiddenShowPanel.Value = "false";
                 }
+            }
+            else if (this.ViewType == "2")
+            {
+                if (this.UpdateData())
+                {
+                    this.DataBind(true, false);
 
-                string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+                    #region Monitor
+                    string wpinno = string.Empty;
 
-                this.MonitorLog.LogMonitor(wpinno, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA05, string.Empty);
-                #endregion
+                    if (!string.IsNullOrEmpty(this.txtBarcodeValue.Text.Trim()))
+                    {
+                        wpinno = this.txtBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql);
+                    }
+
+                    string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+
+                    this.MonitorLog.LogMonitor(wpinno, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA05, string.Empty);
+                    #endregion
+                }
             }
         }
         #endregion
@@ -173,6 +243,40 @@ namespace WDA
             this.txtBarcodeValue.Enabled =
             this.txtFileDate.Enabled =
             this.txtOnFile.Enabled = false;
+        }
+        #endregion
+
+        #region CheckWprec()
+        /// <summary>
+        /// 檢查Wprec
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckWprec()
+        {
+            string strSql = string.Empty, where = string.Empty;
+
+            bool result = false;
+            DataTable dt = null;
+            try
+            {
+                where = string.Format("And wpinno = '{0}'\n And FILENO is null And FILEDATE is null And KEEPYR is null And BOXNO is null", this.txtQueryBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim());
+
+                strSql = this.Select.WprecCheck(where);
+
+                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+                this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
+
+                dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+
+                if (dt.Rows.Count > 0) { result = true; }
+            }
+            catch (System.Exception ex) { this.ShowMessage(ex); }
+            finally
+            {
+                if (this.DBConn != null) { this.DBConn.Dispose(); this.DBConn = null; }
+            }
+            return result;
         }
         #endregion
 
@@ -377,6 +481,84 @@ namespace WDA
                 else
                 {
                     this.WriteLog(global::Log.Mode.LogMode.ERROR, "Update BARCODETABLE Fail");
+                }
+            }
+            catch (System.Exception ex)
+            {
+                try
+                {
+                    if (this.DBConnTransac.GeneralSqlCmd.Transaction != null) this.DBConnTransac.GeneralSqlCmd.Transaction.Rollback();
+                }
+                catch { }
+
+                this.ShowMessage(ex);
+            }
+            finally
+            {
+                if (ht != null) { ht.Clear(); ht = null; }
+
+                if (this.DBConnTransac != null) { this.DBConnTransac.Dispose(); this.DBConnTransac = null; }
+            }
+            return Convert.ToBoolean(result);
+        }
+        #endregion
+
+        #region UpdateDataByWprec
+        /// <summary>
+        /// 更新資料
+        /// </summary>
+        /// <returns></returns>
+        private bool UpdateDataByWprec()
+        {
+            string strSql = string.Empty, strWhere = string.Empty;
+
+            int result = 0;
+
+            Hashtable ht = new Hashtable();
+            try
+            {
+                this.BarcodeValue = this.txtBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
+                this.FileDate = this.txtFileDate.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
+                this.FileNo = this.txtFileNo.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
+                this.KeepYr = this.txtKeepYr.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
+                this.BoxNo = this.txtBoxNo.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
+
+                ht.Add("BarcodeValue", this.BarcodeValue);
+                ht.Add("FileDate", this.FileDate);
+                ht.Add("FileNo", this.FileNo);
+                ht.Add("KeepYr", this.KeepYr);
+                ht.Add("BoxNo", this.BoxNo);
+                ht.Add("OnFile", UserInfo.RealName);
+                ht.Add("LastModifyUserID", UserInfo.UserID);
+                ht.Add("LastModifyTime", "SYSDATE");
+
+                this.DBConnTransac.GeneralSqlCmd.Command.CommandTimeout = 90;
+
+                //Wprec
+                strWhere = string.Format("And WpinNo = '{0}'\n", this.BarcodeValue);
+                strSql = this.Update.Wprec(ht, strWhere);
+                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
+                if (result < 1)
+                {
+                    this.ShowMessage("WPREC Table 找不到對應的發文文號");
+                    this.WriteLog(global::Log.Mode.LogMode.ERROR, "Update WPREC Fail");
+                    return false;
+                }
+
+                //Wptrans
+                strSql = this.Insert.Wptrans(ht);
+                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
+                if (result < 1)
+                {
+                    this.WriteLog(global::Log.Mode.LogMode.ERROR, "Insert WPTRANS Fail");
+                    return false;
+                }
+
+                if (result > 0)
+                {
+                    this.DBConnTransac.GeneralSqlCmd.Transaction.Commit();
                 }
             }
             catch (System.Exception ex)

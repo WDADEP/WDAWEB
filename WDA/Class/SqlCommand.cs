@@ -170,6 +170,105 @@ namespace WDA.Class
             }
             #endregion
 
+            #region FileArchiveCheck
+            /// <summary>
+            /// 
+            /// </summary>
+            public string FileArchiveCheck(string WprecWhere, string WptransWhere)
+            {
+                #region SQL Command
+
+                string strSql = "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,bk.onfile,'1' as viewtype\n"
+                                + " From {1} wp\n"
+                                + "Left Join {2} bk\n"
+                                + "On wp.wpinno = bk.wpinno\n"
+                                + "WHERE  1=1 {0}\n"
+                                + " Union\n"
+                                + "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,wps.RECEIVER As OnFile,'1' as viewtype\n"
+                                + " From {1} wp\n"
+                                + "Inner Join WPTRANS wps\n"
+                                + "On wp.wpinno = wps.wpinno\n"
+                                + "WHERE  1=1 {3}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql, WprecWhere, PageUtility.WprecSchema, PageUtility.bkwpfileSchema, WptransWhere);
+
+                return strSql;
+            }
+            #endregion
+
+            #region FileArchive2
+            /// <summary>
+            /// 
+            /// </summary>
+            public string FileArchive2(string BarWhere, string WprecWhere)
+            {
+                #region SQL Command
+
+                string strSql = "Select cast( bt.BarcodeValue as nvarchar2(10)) as WPINNO,bt.WpoutNo,bt.FileNo,cast(to_char(bt.FileDate,'YYYYMMDD')as nvarchar2(8) ) as FileDate,bt.KeepYr,bt.BoxNo,bt.onfile,'2' as viewtype\n"
+                                + "From BarcodeTable bt \n"
+                                + "Where 1=1 {0}"
+                                + " Union\n"
+                                + "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,wps.RECEIVER As OnFile,'1' as viewtype\n"
+                                + " From {2} wp\n"
+                                + "Inner Join WPTRANS wps\n"
+                                + "On wp.wpinno = wps.wpinno\n"
+                                + "WHERE  1=1 {1}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql, BarWhere, WprecWhere, PageUtility.WprecSchema, PageUtility.bkwpfileSchema);
+
+                return strSql;
+            }
+            #endregion
+
+            #region FileArchive
+            /// <summary>
+            /// 
+            /// </summary>
+            public string FileArchive(string BarWhere, string WprecWhere)
+            {
+                #region SQL Command
+
+                //string strSql = "Select cast( bt.BarcodeValue as nvarchar2(10)) as WPINNO,bt.WpoutNo,bt.FileNo,cast(to_char(bt.FileDate,'YYYYMMDD')as nvarchar2(8) ) as FileDate,bt.KeepYr,bt.BoxNo,bt.onfile,'2' as viewtype\n"
+                //                + "From BarcodeTable bt \n"
+                //                + "Where 1=1 {0}"
+                //                + " Union\n"
+                //                + "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,bk.onfile,'1' as viewtype\n"
+                //                + " From {2} wp\n"
+                //                + "Left Join {3} bk\n"
+                //                + "On wp.wpinno = bk.wpinno\n"
+                //                + "WHERE  1=1 {1}\n"
+                //                + " Union\n"
+                //                + "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,wps.RECEIVER As OnFile,'1' as viewtype\n"
+                //                + " From {2} wp\n"
+                //                + "Inner Join WPTRANS wps\n"
+                //                + "On wp.wpinno = wps.wpinno\n"
+                //                + "WHERE  1=1 {1}\n";
+
+
+                string strSql = "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,bk.onfile,'1' as viewtype\n"
+                              + " From {2} wp\n"
+                              + "Left Join {3} bk\n"
+                              + "On wp.wpinno = bk.wpinno\n"
+                              + "WHERE  1=1 {1}\n"
+                              + " Union\n"
+                              + "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,wps.RECEIVER As OnFile,'1' as viewtype\n"
+                              + " From {2} wp\n"
+                              + "Inner Join WPTRANS wps\n"
+                              + "On wp.wpinno = wps.wpinno\n"
+                              + "WHERE  1=1 {1}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql, BarWhere, WprecWhere, PageUtility.WprecSchema, PageUtility.bkwpfileSchema);
+          
+                return strSql;
+            }
+            #endregion
+
             #region Wpborrow
             /// <summary>
             /// 
@@ -178,7 +277,7 @@ namespace WDA.Class
             {
                 #region SQL Command
 
-                string strSql = "Select wb.WPINNO,wb.WPOUTNO,fb.commname,fb.transt,wb.hurrytime,fb.receiver,wb.EXTENSIONDATE,wb.EXTENSIONCOUNT\n"
+                string strSql = "Select wb.WPINNO,wb.WPOUTNO,fb.commname,fb.transt,NVL(wb.hurrytime,0) as hurrytime,fb.receiver,wb.EXTENSIONDATE,wb.EXTENSIONCOUNT\n"
                                 + " From Wpborrow wb\n"
                                 + "Inner Join (Select wb.WPINNO,\n"
                                 + "CASE wb.kind\n"
@@ -194,7 +293,7 @@ namespace WDA.Class
                                 + "On wb.wpinno = fb.wpinno\n"
                                 + "WHERE  wb.REDATE IS null  And fb.chk ='N' And wb.EXTEN In('D','N','Z') And wb.ViewType = 1  {0}\n"
                                 + " Union\n"
-                                + "Select wb.WPINNO,wb.WPOUTNO,fb.commname,fb.transt,wb.hurrytime,fb.receiver,wb.EXTENSIONDATE,wb.EXTENSIONCOUNT\n"
+                                + "Select wb.WPINNO,wb.WPOUTNO,fb.commname,fb.transt,NVL(wb.hurrytime,0) as hurrytime,fb.receiver,wb.EXTENSIONDATE,wb.EXTENSIONCOUNT\n"
                                 + " From Wpborrow wb\n"
                                 + "Inner Join (Select wb.WPINNO,\n"
                                 + "CASE wb.kind\n"
@@ -247,6 +346,42 @@ namespace WDA.Class
                 #region SQL Command
 
                 string strSql = "Select * From {1} Where 1=1 {0}";
+
+                #endregion
+
+                strSql = string.Format(strSql, Where, PageUtility.WprecSchema);
+
+                return strSql;
+            }
+            #endregion
+
+            #region WprecBkwfile
+            /// <summary>
+            /// 
+            /// </summary>
+            public string WprecBkwfile(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select * From {1} wp Inner Join {2} bk On wp.wpinno = bk.wpinno Where 1=1 {0}";
+
+                #endregion
+
+                strSql = string.Format(strSql, Where, PageUtility.WprecSchema,PageUtility.bkwpfileSchema);
+
+                return strSql;
+            }
+            #endregion
+
+            #region WprecWptrans
+            /// <summary>
+            /// 
+            /// </summary>
+            public string WprecWptrans(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select * From {1} wp Inner Join WPTRANS  wps On wp.wpinno = wps.wpinno Where 1=1 {0}";
 
                 #endregion
 
@@ -1165,16 +1300,19 @@ namespace WDA.Class
                 string strSql = "Select\n"
                               + " ROW_NUMBER() OVER(ORDER BY wb.wpinno) AS RID,\n"
                               + " wb.wpinno,\n"
-                              + " wb.receiver,\n"
-                              + " bt.onfile,\n"
-                              + " ut.tel\n"
+                              //+ " wb.receiver,\n"
+                              //+ " bk.onfile,\n"
+                              + " ut.tel,\n"
+                              + " ut.RealName As receiver\n"
                               + "From Wpborrow wb\n"
-                              + "Left Join BarcodeTable bt On wb.wpinno = bt.barcodevalue\n"
+                              //+ "Inner Join {0} wpr On wb.wpinno = wpr.wpinno\n"
+                              //+ "Inner Join {1} bk On wb.wpinno = bk.wpinno\n"
                               + "Inner Join Usertable ut On wb.receiver = ut.username\n"
-                              + "Where 1=1 {1}";
+                              + "Where 1=1 {2}"
+                              + "Order By wb.wpinno";
                 #endregion
 
-                strSql = string.Format(strSql, PageUtility.WprecSchema, Where);
+                strSql = string.Format(strSql, PageUtility.WprecSchema, PageUtility.bkwpfileSchema, Where);
 
                 return strSql;
             }
@@ -1864,6 +2002,31 @@ namespace WDA.Class
             }
             #endregion
 
+            #region wpborrowByHurry
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <returns></returns>
+            public string wpborrowByHurry(Hashtable Data, string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Update wpborrow Set\n"
+                    + "	HURRYDATE ='{1}',\n"
+                    + "	HURRYTIME ='{2}'\n"
+                    + "Where 1=1 {0}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql, Where,
+                    Data["HURRYDATE"].ToString(),
+                     Data["HURRYTIME"].ToString());
+
+                return strSql;
+            }
+            #endregion
+
             #region wpborrowByViewType
             /// <summary>
             /// 
@@ -2025,6 +2188,35 @@ namespace WDA.Class
 
                 string strSql = "Update Wpborrow Set\n"
                               + " {0}\n"
+                              + "Where 1=1 {1}";
+
+                #endregion
+
+                strSql = string.Format(strSql, UpdateSql, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region WpborrowApproveDate
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="PrtFlag"></param>
+            /// <param name="Where"></param>
+            /// <param name="HaveReDate"></param>
+            /// <returns></returns>
+            public string WpborrowApproveDate(string PrtFlag, string Where, bool HaveReDate)
+            {
+                #region SQL Command
+
+                string UpdateSql = string.Format("PrtFlag = '{0}'", PrtFlag);
+
+                if (HaveReDate) UpdateSql += " ,ReDate = SYSDATE";
+
+                string strSql = "Update Wpborrow Set\n"
+                              + " {0}\n"
+                              + " ,APPROVEDATE = SYSDATE\n"
                               + "Where 1=1 {1}";
 
                 #endregion

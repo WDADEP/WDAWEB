@@ -122,18 +122,28 @@ namespace WDA
 
                 //BarcodeTable
                 strWhere = string.Format("And BarcodeValue = '{0}'", gridViewRow.Cells[2].Text.Trim());
-                strSql = this.Update.BarcodeTable(ht, strWhere);
+
+                strSql = this.Select.BarcodeTable(strWhere);
+
                 this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
-                result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
-                if (result <= 0)
+
+                this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
+
+                string caseID = this.DBConn.GeneralSqlCmd.ExecuteByColumnName(strSql, "CaseID");
+
+                if (caseID.Length > 0)
                 {
-                    this.ShowMessage("修改失敗"); return;
+                    strSql = this.Update.BarcodeTable(ht, strWhere);
+                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                    result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
+
+                    if (result <= 0)
+                    {
+                        this.ShowMessage("修改失敗"); return;
+                    }
                 }
-                else
-                {
-                    this.DBConnTransac.GeneralSqlCmd.Transaction.Commit();
-                    this.ShowMessage("修改成功", MessageMode.INFO);
-                }
+                this.DBConnTransac.GeneralSqlCmd.Transaction.Commit();
+                this.ShowMessage("修改成功", MessageMode.INFO);
 
                 #endregion
             }
@@ -183,9 +193,9 @@ namespace WDA
         /// <param name="LockPageNum">是否保留目前頁數</param>
         private void DataBind(bool Anew, bool LockPageNum)
         {
-            string strSql = string.Empty, strWhere = string.Empty;
+            string strSql = string.Empty, barWhere = string.Empty, wprecWhere = string.Empty, wptransWhere = string.Empty;
 
-            DataTable dt = null;
+            DataTable dt = null; bool isWpnno = false;
             try
             {
                 if (Anew)
@@ -198,17 +208,79 @@ namespace WDA
                     string boxNo = this.txtBoxNo.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
                     string onFile = this.txtOnFile.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
 
-                    strWhere += string.Format("And bt.FileNo != ' '\n");
+                    barWhere += string.Format("And bt.FileNo is not null\n");
+                    wprecWhere += string.Format("And wp.FileNo is not null\n");
 
-                    if (barcodeValue.Length > 0) strWhere += string.Format("And bt.BarcodeValue = '{0}'\n", barcodeValue);
-                    if (wpoutNo.Length > 0) strWhere += string.Format("And bt.WpoutNo = '{0}'\n", wpoutNo);
-                    if (fileNo.Length > 0) strWhere += string.Format("And bt.FileNo = '{0}'\n", fileNo);
-                    if (fileDate.Length > 0) strWhere += string.Format("And bt.FileDate = '{0}'\n", fileDate);
-                    if (keepYr.Length > 0) strWhere += string.Format("And bt.KeepYr = '{0}'\n", keepYr);
-                    if (boxNo.Length > 0) strWhere += string.Format("And bt.BoxNo = '{0}'\n", boxNo);
-                    if (onFile.Length > 0) strWhere += string.Format("And bt.OnFile = N'{0}'\n", onFile);
+                    //strWhere += string.Format("And bt.FileNo != ' '\n");
 
-                    strSql = this.Select.BarcodeTable(strWhere);
+                    if (barcodeValue.Length > 0)
+                    {
+                        isWpnno = true;
+                        barWhere += string.Format("And bt.BarcodeValue = '{0}'\n", barcodeValue);
+                        wprecWhere += string.Format("And wp.wpinno = '{0}'\n", barcodeValue);
+                        wptransWhere += string.Format("And wp.wpinno = '{0}'\n", barcodeValue);
+ 
+                    }
+
+                    if (wpoutNo.Length > 0)
+                    {
+                        barWhere += string.Format("And bt.WpoutNo = '{0}'\n", wpoutNo);
+                        wprecWhere += string.Format("And wp.WpoutNo = '{0}'\n", wpoutNo);
+                        wptransWhere += string.Format("And wp.WpoutNo = '{0}'\n", wpoutNo);
+                    }
+
+                    if (fileNo.Length > 0)
+                    {
+                        barWhere += string.Format("And bt.FileNo = '{0}'\n", fileNo);
+                        wprecWhere += string.Format("And wp.FileNo = '{0}'\n", fileNo);
+                        wptransWhere += string.Format("And wp.FileNo = '{0}'\n", fileNo);
+                    }
+
+                    if (fileDate.Length > 0) 
+                    {
+                        barWhere += string.Format("And bt.FileDate = '{0}'\n", fileDate);
+                        wprecWhere += string.Format("And wp.FileDate = '{0}'\n", fileDate);
+                        wptransWhere += string.Format("And wp.FileDate = '{0}'\n", fileDate); 
+                    }
+
+                    if (keepYr.Length > 0)
+                    {
+                        barWhere += string.Format("And bt.KeepYr = '{0}'\n", keepYr);
+                        wprecWhere += string.Format("And wp.KeepYr = '{0}'\n", keepYr);
+                        wptransWhere += string.Format("And wp.KeepYr = '{0}'\n", keepYr);
+                    }
+
+                    if (boxNo.Length > 0)
+                    {
+                        barWhere += string.Format("And bt.BoxNo = '{0}'\n", boxNo);
+                        wprecWhere += string.Format("And wp.BoxNo = '{0}'\n", boxNo);
+                        wptransWhere += string.Format("And wp.BoxNo = '{0}'\n", boxNo);
+ 
+                    }
+
+                    if (onFile.Length > 0)
+                    {
+                        barWhere += string.Format("And bt.OnFile = N'{0}'\n", onFile);
+                        wprecWhere += string.Format("And OnFile = N'{0}'\n", onFile);
+                        wptransWhere += string.Format("And RECEIVER = N'{0}'\n", onFile);
+
+                    }
+                    strSql = this.Select.FileArchiveCheck(wprecWhere, wptransWhere);
+
+                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+                    this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
+
+                    dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+
+                    if (dt.Rows.Count == 2 && isWpnno)
+                    {
+                        strSql = this.Select.FileArchive2(barWhere, wprecWhere);
+                    }
+                    else
+                    {
+                        strSql = this.Select.FileArchive(barWhere, wprecWhere);
+                    }
 
                     this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
 
@@ -245,8 +317,8 @@ namespace WDA
         private void InitSQL()
         {
             string strSql = string.Empty;
-            string where = string.Empty;
-            string strWhere = string.Empty;
+            string where = string.Empty, barWhere = string.Empty, wprecWhere = string.Empty, wptransWhere = string.Empty;
+            DataTable dt = null;
 
             try
             {
@@ -258,17 +330,80 @@ namespace WDA
                 string boxNo = this.txtBoxNo.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
                 string onFile = this.txtOnFile.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
 
-                strWhere += string.Format("And bt.FileNo != ' '\n");
+                barWhere += string.Format("And bt.FileNo is not null\n");
+                wprecWhere += string.Format("And wp.FileNo is not null\n");
 
-                if (barcodeValue.Length > 0) strWhere += string.Format("And bt.BarcodeValue = '{0}'\n", barcodeValue);
-                if (wpoutNo.Length > 0) strWhere += string.Format("And bt.WpoutNo = '{0}'\n", wpoutNo);
-                if (fileNo.Length > 0) strWhere += string.Format("And bt.FileNo = '{0}'\n", fileNo);
-                if (fileDate.Length > 0) strWhere += string.Format("And bt.FileDate = '{0}'\n", fileDate);
-                if (keepYr.Length > 0) strWhere += string.Format("And bt.KeepYr = '{0}'\n", keepYr);
-                if (boxNo.Length > 0) strWhere += string.Format("And bt.BoxNo = '{0}'\n", boxNo);
-                if (onFile.Length > 0) strWhere += string.Format("And bt.OnFile = N'{0}'\n", onFile);
+                //strWhere += string.Format("And bt.FileNo != ' '\n");
 
-                strSql = this.Select.BarcodeTable(strWhere);
+                if (barcodeValue.Length > 0)
+                {
+                    barWhere += string.Format("And bt.BarcodeValue = '{0}'\n", barcodeValue);
+                    wprecWhere += string.Format("And wp.wpinno = '{0}'\n", barcodeValue);
+                    wptransWhere += string.Format("And wp.wpinno = '{0}'\n", barcodeValue);
+
+                }
+
+                if (wpoutNo.Length > 0)
+                {
+                    barWhere += string.Format("And bt.WpoutNo = '{0}'\n", wpoutNo);
+                    wprecWhere += string.Format("And wp.WpoutNo = '{0}'\n", wpoutNo);
+                    wptransWhere += string.Format("And wp.WpoutNo = '{0}'\n", wpoutNo);
+                }
+
+                if (fileNo.Length > 0)
+                {
+                    barWhere += string.Format("And bt.FileNo = '{0}'\n", fileNo);
+                    wprecWhere += string.Format("And wp.FileNo = '{0}'\n", fileNo);
+                    wptransWhere += string.Format("And wp.FileNo = '{0}'\n", fileNo);
+                }
+
+                if (fileDate.Length > 0)
+                {
+                    barWhere += string.Format("And bt.FileDate = '{0}'\n", fileDate);
+                    wprecWhere += string.Format("And wp.FileDate = '{0}'\n", fileDate);
+                    wptransWhere += string.Format("And wp.FileDate = '{0}'\n", fileDate);
+                }
+
+                if (keepYr.Length > 0)
+                {
+                    barWhere += string.Format("And bt.KeepYr = '{0}'\n", keepYr);
+                    wprecWhere += string.Format("And wp.KeepYr = '{0}'\n", keepYr);
+                    wptransWhere += string.Format("And wp.KeepYr = '{0}'\n", keepYr);
+                }
+
+                if (boxNo.Length > 0)
+                {
+                    barWhere += string.Format("And bt.BoxNo = '{0}'\n", boxNo);
+                    wprecWhere += string.Format("And wp.BoxNo = '{0}'\n", boxNo);
+                    wptransWhere += string.Format("And wp.BoxNo = '{0}'\n", boxNo);
+
+                }
+
+                if (onFile.Length > 0)
+                {
+                    barWhere += string.Format("And bt.OnFile = N'{0}'\n", onFile);
+                    wprecWhere += string.Format("And OnFile = N'{0}'\n", onFile);
+                    wptransWhere += string.Format("And RECEIVER = N'{0}'\n", onFile);
+
+                }
+                strSql = this.Select.FileArchiveCheck(wprecWhere, wptransWhere);
+
+
+                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+                this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
+
+                dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+
+                if (dt.Rows.Count > 1)
+                {
+                    strSql = this.Select.FileArchive2(barWhere, wprecWhere);
+
+                }
+                else
+                {
+                    strSql = this.Select.FileArchive(barWhere, wprecWhere);
+                }
 
                 this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
 
@@ -325,19 +460,29 @@ namespace WDA
                     }
 
                     //BarcodeTable
-                    strSql = this.Delete.BarcodeTable(barcodeValue);
+                    strWhere = string.Format("And BarcodeValue = '{0}'", barcodeValue);
+
+                    strSql = this.Select.BarcodeTable(strWhere);
+
                     this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
-                    result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
-                    if (result < 1)
+
+                    this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
+
+                    string caseID = this.DBConn.GeneralSqlCmd.ExecuteByColumnName(strSql, "CaseID");
+
+                    if (caseID.Length > 0)
                     {
-                        this.ShowMessage("刪除失敗");
+                        strSql = this.Delete.BarcodeTable(barcodeValue);
+                        this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                        result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
+                        if (result < 1)
+                        {
+                            this.ShowMessage("刪除失敗");
+                        }
                     }
-                    else
-                    {
-                        this.DBConnTransac.GeneralSqlCmd.Transaction.Commit();
-                        this.ShowMessage("刪除成功", MessageMode.INFO);
-                        this.DataBind(true, true);
-                    }
+                    this.DBConnTransac.GeneralSqlCmd.Transaction.Commit();
+                    this.ShowMessage("刪除成功", MessageMode.INFO);
+                    this.DataBind(true, true);
                     #endregion
                 }
             }
@@ -371,6 +516,16 @@ namespace WDA
                 ImageButton btnDelete = (ImageButton)e.Row.Cells[1].FindControl("ImageBtnDelete");
 
                 this.Confirm(btnDelete, ConfirmMode.Delete);
+
+                switch (e.Row.Cells[9].Text)
+                {
+                    case "1": e.Row.Cells[9].Text = "紙本"; 
+                        break;
+                    case "2": e.Row.Cells[9].Text = "電子"; 
+                        break;
+                    case "99": e.Row.Cells[9].Text = "其它";
+                        break;
+                }
             }
         }
         #endregion
@@ -391,6 +546,13 @@ namespace WDA
 
             this.DataBind(false, true);
         }
+        #endregion
+
+        #region GridView1_RowCreated()
+        protected void GridView1_RowCreated(object sender, GridViewRowEventArgs e)
+        {
+            e.RowVisible(sender, new int[] { 1 });
+        } 
         #endregion
 
         #endregion

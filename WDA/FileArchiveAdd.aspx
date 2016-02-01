@@ -33,10 +33,12 @@
         function ImageBtnAddClick() {
             try {
                 var txtFileNo = $get('MainContent_txtFileNo').value;
+                var txtFileDate = $get('MainContent_txtFileDate').value;
                 var txtBoxNo = $get('MainContent_txtBoxNo').value;
                 var txtKeepYr = $get('MainContent_txtKeepYr').value;
 
                 if (txtFileNo.length == 0 ||
+                    txtFileDate.length ==0 ||
                     txtBoxNo.length == 0 ||
                     txtKeepYr.length == 0) {
                     alert('請輸入必填欄位。');

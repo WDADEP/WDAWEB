@@ -226,6 +226,7 @@
     <Content Include="ReportDB.xsc">
       <DependentUpon>ReportDB.xsd</DependentUpon>
     </Content>
+    <Content Include="FileDownload\問題提報單.docx" />
     <None Include="ReportDB.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
@@ -596,7 +597,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="FileDownload\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="RptFileArchive.rdlc" />

@@ -75,7 +75,7 @@ namespace WDA
             string userID = string.Empty;
 
             string userName = this.txtUserName.Text.Trim();
-            string possword = this.txtPassWord.Text.Trim();
+            string possword = this.txtPd.Text.Trim();
 
             string strSql = string.Empty;
             string where = string.Empty;

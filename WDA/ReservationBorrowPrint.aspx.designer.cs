@@ -22,13 +22,40 @@ namespace WDA {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divPanel;
         
         /// <summary>
-        /// ddlBorrowType 控制項。
+        /// txtScanCreateTime 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlBorrowType;
+        protected global::System.Web.UI.WebControls.TextBox txtScanCreateTime;
+        
+        /// <summary>
+        /// ddlCreateTime 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlCreateTime;
+        
+        /// <summary>
+        /// txtScanEndTime 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtScanEndTime;
+        
+        /// <summary>
+        /// ddlEndTime 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlEndTime;
         
         /// <summary>
         /// BtnPrint 控制項。

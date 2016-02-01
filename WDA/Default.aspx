@@ -13,21 +13,16 @@
             </div>
             <table class="table table-hover">
                 <tr>
-                    <td>日期：</td>
-                    <td>說明：</td>
+                    <td>文件名稱：</td>
+                    <td>連接：</td>
                 </tr>
                 <tr class="success">
-                    <td>2015/10/20</td>
-                    <td>第一階段交付</td>
+                    <td>問題提報單</td>
+                    <td><a href="FileDownload/問題提報單.docx">問題提報單</a></td>
                 </tr>
                 <tr>
-                    <td>2015/10/21</td>
-                    <td>掃描測試</td>
-                </tr>
-                  <tr class="success">
-                    <td>2015/11/06</td>
-                    <td>整合測試</td>
-                </tr>
+                    <td>操作手冊</td>
+                    <td><a href="FileDownload/操作手冊.pdf">操作手冊</a></td>
             </table>
         </div>
         <%-- </a>--%>

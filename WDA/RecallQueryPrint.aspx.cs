@@ -1,5 +1,6 @@
 ﻿using Microsoft.Reporting.WebForms;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
@@ -99,6 +100,8 @@ namespace WDA
                 {
                     dt.Columns.Add("boxno", System.Type.GetType("System.String"));
 
+                    Hashtable ht = new Hashtable();
+
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
                         where = string.Format("And WPINNO='{0}'", dt.Rows[i]["WPINNO"].ToString());
@@ -114,6 +117,22 @@ namespace WDA
                         }
 
                         dtBoxno.Dispose(); dtBoxno = null;
+
+                        string transt = DateTime.Parse(dt.Rows[i]["TRANST"].ToString()).ToString("yyyy/MM/dd tt hh:mm:ss");
+
+                        where = string.Format("And WPINNO='{0}' And RECEIVER='{1}' And to_char(TRANST,'YYYY/MM/DD AM HH:MI:SS')='{2}'", dt.Rows[i]["WPINNO"].ToString(), dt.Rows[i]["RECEIVER"].ToString(), transt);
+
+                        int count = Convert.ToInt32(dt.Rows[i]["HURRYTIME"].ToString()) + 1;
+
+                        ht.Clear();
+                        ht.Add("HURRYDATE", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
+                        ht.Add("HURRYTIME", count);
+
+                        strSql = this.Update.wpborrowByHurry(ht, where);
+
+                        this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+                        int result = this.DBConn.GeneralSqlCmd.ExecuteNonQuery(strSql);
                     }
                 }
             }

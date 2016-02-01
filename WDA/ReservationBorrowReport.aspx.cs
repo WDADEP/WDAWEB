@@ -52,7 +52,7 @@ namespace WDA
 
                         for (int i = 0; i < dt.Rows.Count; i++)
                         {
-                            strSql = this.Update.WpborrowApprove("P", string.Format("And wpinno = '{0}'", dt.Rows[i]["wpinno"].ToString()), false);
+                            strSql = this.Update.WpborrowApprove("P", string.Format("And wpinno = '{0}' And PrtFlag ='F'", dt.Rows[i]["wpinno"].ToString()), false);
 
                             this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
 
@@ -105,28 +105,51 @@ namespace WDA
                     dt.Columns.Add("commname", System.Type.GetType("System.String"));
                     dt.Columns.Add("boxno", System.Type.GetType("System.String"));
                     dt.Columns.Add("fileno", System.Type.GetType("System.String"));
+                    dt.Columns.Add("onfile", System.Type.GetType("System.String"));
 
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
-                        where = string.Format("And WPINNO='{0}'", dt.Rows[i]["WPINNO"].ToString());
+                        where = string.Format("And wp.WPINNO='{0}'", dt.Rows[i]["WPINNO"].ToString());
 
-                        strSql = this.Select.WprecInfos(where);
+                        strSql = this.Select.WprecBkwfile(where);
 
                         this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
 
                         DataTable dtWpr = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
 
+                        DataRow[] row = dt.Select(string.Format("WPINNO ='{0}'", dt.Rows[i]["WPINNO"].ToString()));
+
                         if (dtWpr.Rows.Count > 0)
                         {
-                            DataRow[] row = dt.Select(string.Format("WPINNO ='{0}'", dt.Rows[i]["WPINNO"].ToString()));
+                            //DataRow[] row = dt.Select(string.Format("wp.WPINNO ='{0}'", dt.Rows[i]["WPINNO"].ToString()));
                             row[0]["wpoutno"] = dtWpr.Rows[0]["wpoutno"].ToString();
                             row[0]["commname"] = dtWpr.Rows[0]["commname"].ToString();
                             row[0]["boxno"] = dtWpr.Rows[0]["boxno"].ToString();
                             row[0]["fileno"] = dtWpr.Rows[0]["fileno"].ToString();
+                            row[0]["onfile"] = dtWpr.Rows[0]["onfile"].ToString();
+                        }
+                        else
+                        {
+                            strSql = this.Select.WprecWptrans(where);
+
+                            this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+                            DataTable dtWps = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+
+                            if (dtWps.Rows.Count > 0)
+                            {
+                                row[0]["wpoutno"] = dtWps.Rows[0]["wpoutno"].ToString();
+                                row[0]["commname"] = dtWps.Rows[0]["commname"].ToString();
+                                row[0]["boxno"] = dtWps.Rows[0]["boxno"].ToString();
+                                row[0]["fileno"] = dtWps.Rows[0]["fileno"].ToString();
+                                row[0]["onfile"] = dtWps.Rows[0]["receiver"].ToString();
+                            }
                         }
 
                         dtWpr.Dispose(); dtWpr = null;
                     }
+
+                    dt.DefaultView.Sort = "boxno ASC";
                 }
             }
             catch (Exception ex)
