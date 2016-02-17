@@ -9,7 +9,7 @@
     <Shape ID="DesignTable:ScanListTable" ZOrder="3" X="30" Y="61" Height="124" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="120" />
     <Shape ID="DesignTable:RecallQueryTable" ZOrder="2" X="223" Y="61" Height="181" Width="170" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="177" />
     <Shape ID="DesignTable:ReservationBorrowTable" ZOrder="1" X="425" Y="59" Height="219" Width="212" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="215" />
-    <Shape ID="DesignTable:FileArchiveTable" ZOrder="4" X="680" Y="61" Height="162" Width="164" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="158" />
+    <Shape ID="DesignTable:FileArchiveTable" ZOrder="4" X="680" Y="61" Height="143" Width="164" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="139" />
   </Shapes>
   <Connectors />
 </DiagramLayout>

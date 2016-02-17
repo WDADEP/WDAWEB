@@ -202,23 +202,30 @@ namespace WDA.Class
             /// <summary>
             /// 
             /// </summary>
-            public string FileArchive2(string BarWhere, string WprecWhere)
+            public string FileArchive2(string WptransWhere)
             {
                 #region SQL Command
 
-                string strSql = "Select cast( bt.BarcodeValue as nvarchar2(10)) as WPINNO,bt.WpoutNo,bt.FileNo,cast(to_char(bt.FileDate,'YYYYMMDD')as nvarchar2(8) ) as FileDate,bt.KeepYr,bt.BoxNo,bt.onfile,'2' as viewtype\n"
-                                + "From BarcodeTable bt \n"
-                                + "Where 1=1 {0}"
-                                + " Union\n"
-                                + "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,wps.RECEIVER As OnFile,'1' as viewtype\n"
-                                + " From {2} wp\n"
-                                + "Inner Join WPTRANS wps\n"
-                                + "On wp.wpinno = wps.wpinno\n"
-                                + "WHERE  1=1 {1}\n";
+                //string strSql = "Select cast( bt.BarcodeValue as nvarchar2(10)) as WPINNO,bt.WpoutNo,bt.FileNo,cast(to_char(bt.FileDate,'YYYYMMDD')as nvarchar2(8) ) as FileDate,bt.KeepYr,bt.BoxNo,bt.onfile,'2' as viewtype\n"
+                //                + "From BarcodeTable bt \n"
+                //                + "Where 1=1 {0}"
+                //                + " Union\n"
+                //                + "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,wps.RECEIVER As OnFile,'1' as viewtype\n"
+                //                + " From {2} wp\n"
+                //                + "Inner Join WPTRANS wps\n"
+                //                + "On wp.wpinno = wps.wpinno\n"
+                //                + "WHERE  1=1 {4}\n";
+
+                string strSql = "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,wps.RECEIVER As OnFile,'1' as viewtype\n"
+                   + " From {0} wp\n"
+                   + "Inner Join WPTRANS wps\n"
+                   + "On wp.wpinno = wps.wpinno\n"
+                   + "WHERE  1=1 {1}\n";
 
                 #endregion
 
-                strSql = string.Format(strSql, BarWhere, WprecWhere, PageUtility.WprecSchema, PageUtility.bkwpfileSchema);
+                strSql = string.Format(strSql, PageUtility.WprecSchema, WptransWhere);
+                //strSql = string.Format(strSql, BarWhere, WprecWhere, PageUtility.WprecSchema, PageUtility.bkwpfileSchema,WptransWhere);
 
                 return strSql;
             }
@@ -228,7 +235,7 @@ namespace WDA.Class
             /// <summary>
             /// 
             /// </summary>
-            public string FileArchive(string BarWhere, string WprecWhere)
+            public string FileArchive(string BarWhere, string WprecWhere, string WptransWhere)
             {
                 #region SQL Command
 
@@ -249,21 +256,29 @@ namespace WDA.Class
                 //                + "WHERE  1=1 {1}\n";
 
 
-                string strSql = "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,bk.onfile,'1' as viewtype\n"
-                              + " From {2} wp\n"
-                              + "Left Join {3} bk\n"
-                              + "On wp.wpinno = bk.wpinno\n"
-                              + "WHERE  1=1 {1}\n"
-                              + " Union\n"
-                              + "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,wps.RECEIVER As OnFile,'1' as viewtype\n"
-                              + " From {2} wp\n"
-                              + "Inner Join WPTRANS wps\n"
-                              + "On wp.wpinno = wps.wpinno\n"
-                              + "WHERE  1=1 {1}\n";
+                //string strSql = "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,bk.onfile,'1' as viewtype\n"
+                //              + " From {2} wp\n"
+                //              + "Left Join {3} bk\n"
+                //              + "On wp.wpinno = bk.wpinno\n"
+                //              + "WHERE  1=1 {1}\n"
+                //              + " Union\n"
+                //              + "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,wps.RECEIVER As OnFile,'1' as viewtype\n"
+                //              + " From {2} wp\n"
+                //              + "Inner Join WPTRANS wps\n"
+                //              + "On wp.wpinno = wps.wpinno\n"
+                //              + "WHERE  1=1 {4}\n";
+
+                string strSql = "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,NVL(wps.RECEIVER,bk.onfile) As OnFile,'1' as viewtype\n"
+                                + "From {2} wp\n"
+                                + "left Join {3} bk\n"
+                                + "On wp.wpinno = bk.wpinno\n"
+                                + "left Join WPTRANS wps\n"
+                                + "On wp.wpinno = wps.wpinno\n"
+                                + "WHERE  1=1 And wp.FileNo is not null {4}\n";
 
                 #endregion
 
-                strSql = string.Format(strSql, BarWhere, WprecWhere, PageUtility.WprecSchema, PageUtility.bkwpfileSchema);
+                strSql = string.Format(strSql, BarWhere, WprecWhere, PageUtility.WprecSchema, PageUtility.bkwpfileSchema, WptransWhere);
           
                 return strSql;
             }
@@ -904,7 +919,7 @@ namespace WDA.Class
                     + "Inner Join Usertable ut On ct.CreateUserID = ut.UserID\n"
                     + "Inner Join (Select COUNT(*) AS FileCount,a.CaseID From FileTable a GROUP BY CaseID) ft ON ct.CaseID =ft.CaseID\n"
                     + " Where 1=1\n"
-                    + " {0} Order BY bt.CaseID\n";
+                    + " {0} Order BY bt.CREATETIME\n";
 
                 #endregion
 
@@ -2227,6 +2242,37 @@ namespace WDA.Class
             }
             #endregion
 
+            #region WprecEdit
+            /// <summary>
+            /// Wprec Table
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <param name="Where"></param>
+            /// <returns></returns>
+            public string WprecEdit(Hashtable Data, string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Update {0} Set\n"
+                    + " FileNo = '{1}',\n"
+                    + " FileDate = '{2}',\n"
+                    + " KeepYr = '{3}',\n"
+                    + " BoxNo = '{4}'\n"
+                    + "Where 1=1 {5}\n";
+                #endregion
+
+                strSql = string.Format(strSql,
+                    PageUtility.WprecSchema,
+                    Data["FileNo"].ToString(),
+                    Data["FileDate"].ToString(),
+                    Data["KeepYr"].ToString(),
+                    Data["BoxNo"].ToString(),
+                    Where);
+
+                return strSql;
+            }
+            #endregion
+
             #region Wprec
             /// <summary>
             /// Wprec Table
@@ -2243,7 +2289,11 @@ namespace WDA.Class
                     + " FileDate = '{2}',\n"
                     + " KeepYr = '{3}',\n"
                     + " BoxNo = '{4}'\n"
-                    + "Where 1=1 {5}\n";
+                    + "Where 1=1 {5}\n"
+                    + "And FILENO is null\n"
+                    + "And FILEDATE is null\n"
+                    + "And KEEPYR is null\n"
+                    + "And BOXNO is null\n";
 
                 #endregion
 
@@ -2510,6 +2560,22 @@ namespace WDA.Class
 
                 strSql = string.Format(strSql,
                     Data["WpinNo"].ToString().ToString());
+
+                return strSql;
+            }
+            #endregion
+
+            #region WptransDelete
+
+            public string WptransDelete(string WPINNO)
+            {
+                #region SQL Command
+
+                string strSql = @"Delete From WPTRANS Where WPINNO ='{0}'";
+
+                #endregion
+
+                strSql = string.Format(strSql, WPINNO);
 
                 return strSql;
             }

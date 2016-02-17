@@ -49,7 +49,10 @@
                    $get("MainContent_lblTel").innerText = bev.Tel;
                    $get("MainContent_lblWpstatus").innerText = bev.Wpstatus;
 
-                   if (bev.Wpstatus == '未還檔') { IsCheckWpstatus = true; }
+                   if (bev.Wpstatus == '未還檔') {
+                       IsCheckWpstatus = true;
+                   }
+                   else { alert("已還檔"); $('#ShowInfo').hide(); IsCheckNo = false; return; }
 
                    $get("MainContent_lblBorrdate").innerText = bev.Borrdate;
                    $get("MainContent_lblRedate").innerText = bev.Redate;
@@ -128,7 +131,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="HeadTD_green" style="padding: 5px;">(原訂)還檔日期：</td>
+                            <td class="HeadTD_green" style="padding: 5px;">還檔日期：</td>
                             <td style="padding: 5px; text-align: left;">
                                 <asp:Label ID="lblRedate" runat="server" Text="lblRedate"></asp:Label>
                             </td>

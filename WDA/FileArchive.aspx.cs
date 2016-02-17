@@ -112,7 +112,7 @@ namespace WDA
 
                 //Wprec
                 strWhere = string.Format("And WpinNo = '{0}'\n", gridViewRow.Cells[2].Text.Trim());
-                strSql = this.Update.Wprec(ht, strWhere);
+                strSql = this.Update.WprecEdit(ht, strWhere);
                 this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
                 result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
                 if (result < 1)
@@ -275,11 +275,11 @@ namespace WDA
 
                     if (dt.Rows.Count == 2 && isWpnno)
                     {
-                        strSql = this.Select.FileArchive2(barWhere, wprecWhere);
+                        strSql = this.Select.FileArchive2(wptransWhere);
                     }
                     else
                     {
-                        strSql = this.Select.FileArchive(barWhere, wprecWhere);
+                        strSql = this.Select.FileArchive(barWhere, wprecWhere, wptransWhere);
                     }
 
                     this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
@@ -318,7 +318,7 @@ namespace WDA
         {
             string strSql = string.Empty;
             string where = string.Empty, barWhere = string.Empty, wprecWhere = string.Empty, wptransWhere = string.Empty;
-            DataTable dt = null;
+            DataTable dt = null; bool isWpnno = false;
 
             try
             {
@@ -337,6 +337,7 @@ namespace WDA
 
                 if (barcodeValue.Length > 0)
                 {
+                    isWpnno = true;
                     barWhere += string.Format("And bt.BarcodeValue = '{0}'\n", barcodeValue);
                     wprecWhere += string.Format("And wp.wpinno = '{0}'\n", barcodeValue);
                     wptransWhere += string.Format("And wp.wpinno = '{0}'\n", barcodeValue);
@@ -395,14 +396,14 @@ namespace WDA
 
                 dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
 
-                if (dt.Rows.Count > 1)
-                {
-                    strSql = this.Select.FileArchive2(barWhere, wprecWhere);
 
+                if (dt.Rows.Count == 2 && isWpnno)
+                {
+                    strSql = this.Select.FileArchive2(wptransWhere);
                 }
                 else
                 {
-                    strSql = this.Select.FileArchive(barWhere, wprecWhere);
+                    strSql = this.Select.FileArchive(barWhere, wprecWhere, wptransWhere);
                 }
 
                 this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
@@ -437,13 +438,13 @@ namespace WDA
                 {
                     #region Delete
 
-                    this.DBConnTransac.GeneralSqlCmd.Command.CommandTimeout = 90;
+                    this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
 
                     //Wprec
                     strWhere = string.Format("And WpinNo = '{0}'\n", barcodeValue);
                     strSql = this.Update.WprecDelete(strWhere);
                     this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
-                    result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
+                    result = this.DBConn.GeneralSqlCmd.ExecuteNonQuery(strSql);
                     if (result < 1)
                     {
                         this.ShowMessage("修改失敗"); return;
@@ -451,36 +452,10 @@ namespace WDA
 
                     //Wptrans
                     strWhere = string.Format("And WpinNo = '{0}'\n", barcodeValue);
-                    strSql = this.Update.WptransDelete(strWhere);
+                    strSql = this.Delete.WptransDelete(barcodeValue);
                     this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
                     result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
-                    if (result < 1)
-                    {
-                        this.ShowMessage("修改失敗"); return;
-                    }
 
-                    //BarcodeTable
-                    strWhere = string.Format("And BarcodeValue = '{0}'", barcodeValue);
-
-                    strSql = this.Select.BarcodeTable(strWhere);
-
-                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
-
-                    this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
-
-                    string caseID = this.DBConn.GeneralSqlCmd.ExecuteByColumnName(strSql, "CaseID");
-
-                    if (caseID.Length > 0)
-                    {
-                        strSql = this.Delete.BarcodeTable(barcodeValue);
-                        this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
-                        result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
-                        if (result < 1)
-                        {
-                            this.ShowMessage("刪除失敗");
-                        }
-                    }
-                    this.DBConnTransac.GeneralSqlCmd.Transaction.Commit();
                     this.ShowMessage("刪除成功", MessageMode.INFO);
                     this.DataBind(true, true);
                     #endregion
@@ -488,19 +463,13 @@ namespace WDA
             }
             catch (System.Exception ex)
             {
-                try
-                {
-                    if (this.DBConnTransac.GeneralSqlCmd.Transaction != null) this.DBConnTransac.GeneralSqlCmd.Transaction.Rollback();
-                }
-                catch { }
-
                 this.ShowMessage(ex);
             }
             finally
             {
-                if (this.DBConnTransac != null)
+                if (this.DBConn != null)
                 {
-                    this.DBConnTransac.Dispose(); this.DBConnTransac = null;
+                    this.DBConn.Dispose(); this.DBConn = null;
                 }
             }
         }
@@ -551,7 +520,7 @@ namespace WDA
         #region GridView1_RowCreated()
         protected void GridView1_RowCreated(object sender, GridViewRowEventArgs e)
         {
-            e.RowVisible(sender, new int[] { 1 });
+            //e.RowVisible(sender, new int[] { 1 });
         } 
         #endregion
 

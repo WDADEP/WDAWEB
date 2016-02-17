@@ -306,7 +306,7 @@ namespace WDA
                     strWhere += string.Format("And bt.FileDate IS NULL\n");
                     strWhere += string.Format("And bt.KeepYr IS NULL\n");
                     strWhere += string.Format("And bt.BoxNo IS NULL\n");
-                    strWhere += string.Format("And bt.OnFile IS NULL\n");
+                    //strWhere += string.Format("And bt.OnFile IS NULL\n");
 
                     strSql = this.Select.BarcodeTable(strWhere);
 
@@ -322,7 +322,7 @@ namespace WDA
 
                         this.HiddenShowPanel.Value = "false";
 
-                        this.ShowMessage("目前沒有已掃描而未新增資料", MessageMode.INFO);
+                        this.ShowMessage("已完成歸檔", MessageMode.INFO);
                     }
                     else
                     {
@@ -541,7 +541,7 @@ namespace WDA
                 result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
                 if (result < 1)
                 {
-                    this.ShowMessage("WPREC Table 找不到對應的發文文號");
+                    this.ShowMessage("WPREC Table 找不到對應的發文文號或是此文號已經歸檔");
                     this.WriteLog(global::Log.Mode.LogMode.ERROR, "Update WPREC Fail");
                     return false;
                 }

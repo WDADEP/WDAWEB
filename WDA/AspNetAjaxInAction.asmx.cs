@@ -657,7 +657,8 @@ namespace WDA
 
                     PaperAlsoFileInfos.Wpstatus = Wpstatus;
                     PaperAlsoFileInfos.Borrdate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).ToString("yyyy/MM/dd HH:mm:ss");
-                    PaperAlsoFileInfos.Redate = Redate;
+                    //PaperAlsoFileInfos.Redate = Redate;
+                    PaperAlsoFileInfos.Redate = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
                 }
 
                 ListPaperAlsoFileInfos.Add(PaperAlsoFileInfos);

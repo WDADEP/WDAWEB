@@ -149,7 +149,9 @@ namespace WDA
                         dtWpr.Dispose(); dtWpr = null;
                     }
 
-                    dt.DefaultView.Sort = "boxno ASC";
+                    DataView dv = dt.DefaultView;
+                    dv.Sort = "boxno Desc,WPINNO Desc";
+                    dt = dv.ToTable();
                 }
             }
             catch (Exception ex)

@@ -135,7 +135,7 @@
             <table border="0" style="width: 100%; border-collapse: collapse">
                 <tr style="text-align: center">
                     <td style="text-align: center">
-                        <asp:Button ID="BtnOK" runat="server" Text="確 定" class="btn btn-large btn-success" OnClientClick="JavaScript:if(!ImageBtnOKClick()) {return false} ;" OnClick="BtnOK_Click" style="height: 21px" />
+                        <asp:Button ID="BtnOK" runat="server" Text="確 定" class="btn btn-large btn-success" OnClientClick="JavaScript:if(!ImageBtnOKClick()) {return false} ;" OnClick="BtnOK_Click"/>
                     </td>
                 </tr>
             </table>
