@@ -57,6 +57,8 @@ namespace WDA
             {
                 strSql = Session["FileArchive"].ToString();
 
+                this.WriteLog(global::Log.Mode.LogMode.DEBUG, "FileArchive：Session：GetReportData");
+
                 this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
 
                 this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;

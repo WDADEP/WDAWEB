@@ -125,6 +125,8 @@ namespace WDA
         protected void Page_Load(object sender, EventArgs e)
         {
             this.LoadPage(true);
+
+            this.Form.DefaultButton = this.Button1.UniqueID;
             try
             {
                 if (!IsPostBack)

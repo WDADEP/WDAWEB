@@ -216,11 +216,11 @@ namespace WDA.Class
                 //                + "On wp.wpinno = wps.wpinno\n"
                 //                + "WHERE  1=1 {4}\n";
 
-                string strSql = "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,wps.RECEIVER As OnFile,'1' as viewtype\n"
+                string strSql = "Select ROW_NUMBER() OVER(ORDER BY wp.BoxNo) AS RID,wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,wps.RECEIVER As OnFile,'1' as viewtype\n"
                    + " From {0} wp\n"
                    + "Inner Join WPTRANS wps\n"
                    + "On wp.wpinno = wps.wpinno\n"
-                   + "WHERE  1=1 {1}\n";
+                   + "WHERE  1=1 {1} Order By wp.BoxNo\n";
 
                 #endregion
 
@@ -268,13 +268,13 @@ namespace WDA.Class
                 //              + "On wp.wpinno = wps.wpinno\n"
                 //              + "WHERE  1=1 {4}\n";
 
-                string strSql = "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,NVL(wps.RECEIVER,bk.onfile) As OnFile,'1' as viewtype\n"
+                string strSql = "Select  ROW_NUMBER() OVER(ORDER BY wp.BoxNo) AS RID,wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,NVL(wps.RECEIVER,bk.onfile) As OnFile,'1' as viewtype\n"
                                 + "From {2} wp\n"
                                 + "left Join {3} bk\n"
                                 + "On wp.wpinno = bk.wpinno\n"
-                                + "left Join WPTRANS wps\n"
+                                + "Left Join WPTRANS wps\n"
                                 + "On wp.wpinno = wps.wpinno\n"
-                                + "WHERE  1=1 And wp.FileNo is not null {4}\n";
+                                + "WHERE  1=1 And wp.FileNo is not null And  ROWNUM <=300 {4} Order By wp.BoxNo\n";
 
                 #endregion
 
@@ -292,7 +292,7 @@ namespace WDA.Class
             {
                 #region SQL Command
 
-                string strSql = "Select wb.WPINNO,wb.WPOUTNO,fb.commname,fb.transt,NVL(wb.hurrytime,0) as hurrytime,fb.receiver,wb.EXTENSIONDATE,wb.EXTENSIONCOUNT\n"
+                string strSql = "Select wb.WPINNO,wb.WPOUTNO,fb.commname,fb.transt,NVL(wb.hurrytime,0) as hurrytime,ut.RealName as receiver,wb.EXTENSIONDATE,wb.EXTENSIONCOUNT\n"
                                 + " From Wpborrow wb\n"
                                 + "Inner Join (Select wb.WPINNO,\n"
                                 + "CASE wb.kind\n"
@@ -308,7 +308,7 @@ namespace WDA.Class
                                 + "On wb.wpinno = fb.wpinno\n"
                                 + "WHERE  wb.REDATE IS null  And fb.chk ='N' And wb.EXTEN In('D','N','Z') And wb.ViewType = 1  {0}\n"
                                 + " Union\n"
-                                + "Select wb.WPINNO,wb.WPOUTNO,fb.commname,fb.transt,NVL(wb.hurrytime,0) as hurrytime,fb.receiver,wb.EXTENSIONDATE,wb.EXTENSIONCOUNT\n"
+                                + "Select wb.WPINNO,wb.WPOUTNO,fb.commname,fb.transt,NVL(wb.hurrytime,0) as hurrytime,ut.RealName as receiver,wb.EXTENSIONDATE,wb.EXTENSIONCOUNT\n"
                                 + " From Wpborrow wb\n"
                                 + "Inner Join (Select wb.WPINNO,\n"
                                 + "CASE wb.kind\n"
@@ -322,7 +322,8 @@ namespace WDA.Class
                                 + "On wb.receiver = ut.username\n"
                                 + "Inner Join Fileboro fb\n"
                                 + "On wb.wpinno = fb.wpinno\n"
-                                + "WHERE  wb.REDATE IS null  And fb.chk ='N' And wb.EXTEN In('D','N','Z') And wb.ViewType = 1  {0}\n";
+                                + "WHERE  wb.REDATE IS null  And fb.chk ='N' And wb.EXTEN In('D','N','Z') And wb.ViewType = 1  {0}\n"
+                                + "Order By receiver,transt";
 
                 #endregion
 
@@ -463,9 +464,10 @@ namespace WDA.Class
             {
                 #region SQL Command
 
-                string strSql = "Select wpb.wpinno,wpb.wpoutno,wpb.transt,wpb.receiver,ut.TEL,wpb.kind,wpb.redate\n"
+                string strSql = "Select wpb.wpinno,wpb.wpoutno,wpb.transt,ut.RealName as receiver,ut.TEL,wpb.kind,wpb.redate,ut2.RealName\n"
                                 + "From wpborrow wpb\n"
                                 + "Inner Join UserTable ut On wpb.receiver = ut.UserName\n"
+                                + "Left Join UserTable ut2 On wpb.USERID = ut2.USERID\n"
                                 + "Inner Join FILEBORO fb On wpb.wpinno = fb.wpinno AND wpb.TRANST = fb.TRANST AND wpb.RECEIVER = fb.RECEIVER\n"
                                 + "Where 1=1 And ViewType =1 {0} Order By wpb.transt DESC";
                 #endregion
@@ -1558,6 +1560,31 @@ namespace WDA.Class
             }
             #endregion
 
+            #region FileQuery
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="Where"></param>
+            /// <returns></returns>
+            public string FileQuery(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "SELECT ROW_NUMBER() OVER(ORDER BY WP.TRANST DESC) AS RID,WP.TRANST,WP.RECEIVER,UT.REALNAME as REALNAME1,WP.REDATE,WP.USERID,UT2.REALNAME as REALNAME2,WP.APPROVEUSERID,UT3.REALNAME as REALNAME3,WP.APPROVEDATE,FB.WORKERID,FB.GETIME FROM WPBORROW WP\n"
+                                + "Left JOIN FILEBORO FB ON WP.WPINNO=FB.WPINNO AND WP.TRANST=FB.TRANST AND WP.RECEIVER=FB.RECEIVER\n"
+                                + "Left JOIN USERTABLE UT ON WP.RECEIVER=UT.USERNAME\n"
+                                + "Left JOIN USERTABLE UT2 ON WP.USERID=UT2.USERID\n"
+                                + "Left JOIN USERTABLE UT3 ON WP.APPROVEUSERID=UT3.USERID\n"
+                                + "Where 1=1 {1}\n"
+                                + "ORDER BY WP.TRANST DESC";
+                #endregion
+
+                strSql = string.Format(strSql, PageUtility.WprecSchema, Where);
+
+                return strSql;
+            }
+            #endregion
+
             #region WprecQuery
             /// <summary>
             /// 
@@ -1607,6 +1634,7 @@ namespace WDA.Class
                 return strSql;
             }
             #endregion
+
         }
         #endregion
 
@@ -1666,6 +1694,26 @@ namespace WDA.Class
             #endregion
 
             #region BarcodeTable
+            public string BarcodeTable(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Update BarcodeTable Set\n"
+                    + " FileNo = null,\n"
+                    + " FileDate = null,\n"
+                    + " KeepYr = null,\n"
+                    + " BoxNo = null,\n"
+                    + " WPOUTNO = null,\n"
+                    + " ONFILE = null\n"
+                    + "Where 1=1 {0}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql,
+                    Where);
+
+                return strSql;
+            }
             /// <summary>
             /// 
             /// </summary>
@@ -2237,6 +2285,30 @@ namespace WDA.Class
                 #endregion
 
                 strSql = string.Format(strSql, UpdateSql, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region WptransEdit
+            /// <summary>
+            /// Wprec Table
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <param name="Where"></param>
+            /// <returns></returns>
+            public string WptransEdit(string Receiver, string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Update WPTRANS Set\n"
+                    + "receiver = '{0}'\n"
+                    + "Where 1=1 {1}\n";
+                #endregion
+
+                strSql = string.Format(strSql,
+                    Receiver,
+                    Where);
 
                 return strSql;
             }

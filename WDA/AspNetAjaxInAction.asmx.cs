@@ -99,6 +99,8 @@ namespace WDA
                 public string Wpstatus = string.Empty;
                 public string Borrdate = string.Empty;
                 public string Redate = string.Empty;
+                public string Redated = string.Empty;
+                public string RealName = string.Empty;
             }
             #endregion
 
@@ -657,8 +659,9 @@ namespace WDA
 
                     PaperAlsoFileInfos.Wpstatus = Wpstatus;
                     PaperAlsoFileInfos.Borrdate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).ToString("yyyy/MM/dd HH:mm:ss");
-                    //PaperAlsoFileInfos.Redate = Redate;
+                    PaperAlsoFileInfos.Redated = dt.Rows[0]["Redate"].ToString();
                     PaperAlsoFileInfos.Redate = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                    PaperAlsoFileInfos.RealName = dt.Rows[0]["RealName"].ToString();
                 }
 
                 ListPaperAlsoFileInfos.Add(PaperAlsoFileInfos);

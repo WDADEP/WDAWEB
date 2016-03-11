@@ -7,21 +7,29 @@
             $("#MainContent_txtScanCreateTime").datepicker("option", $.datepicker.regional["zh-TW"]);
             $("#MainContent_txtScanEndTime").datepicker("option", $.datepicker.regional["zh-TW"]);
 
-            $("#MainContent_txtScanCreateTime").datepicker({
+            $("#MainContent_txtScanCreateTime").datetimepicker({
                 defaultDate: new Date(),
                 changeMonth: true,
                 numberOfMonths: 1,
                 onClose: function (selectedDate) {
-                    $("#MainContent_txtScanEndTime").datepicker("option", "minDate", selectedDate);
-                }
+                    $("#MainContent_txtScanEndTime").datetimepicker("option", "minDate", selectedDate);
+                },
+                hourText: "時",
+                minuteText: "分",
+                currentText: "現在時間",
+                closeText: "確定"
             });
-            $("#MainContent_txtScanEndTime").datepicker({
+            $("#MainContent_txtScanEndTime").datetimepicker({
                 defaultDate: new Date(),
                 changeMonth: true,
                 numberOfMonths: 1,
                 onClose: function (selectedDate) {
-                    $("#MainContent_txtScanCreateTime").datepicker("option", "maxDate", selectedDate);
-                }
+                    $("#MainContent_txtScanCreateTime").datetimepicker("option", "maxDate", selectedDate);
+                },
+                hourText: "時",
+                minuteText: "分",
+                currentText: "現在時間",
+                closeText: "確定"
             });
             showMessage();
         }
@@ -72,9 +80,9 @@
                                <span class="t15_red">＊</span>掃描起訖日：
                            </td>
                            <td style="padding: 5px; text-align: left;">起：
-                                              <asp:TextBox ID="txtScanCreateTime" runat="server" pattern="\d{4}/\d{1,2}/\d{1,2}" title="日期格式"></asp:TextBox>
-                               ～迄：
-                                            <asp:TextBox ID="txtScanEndTime" runat="server" pattern="\d{4}/\d{1,2}/\d{1,2}" title="日期格式"></asp:TextBox>
+     <asp:TextBox ID="txtScanCreateTime" runat="server" pattern="(\d{4})/(\d{1,2})/(\d{1,2}) (\d{2}):(\d{2})" title="日期格式"></asp:TextBox>
+                                ～迄：
+                                            <asp:TextBox ID="txtScanEndTime" runat="server" pattern="(\d{4})/(\d{1,2})/(\d{1,2}) (\d{2}):(\d{2})" title="日期格式"></asp:TextBox>
                            </td>
                        </tr>
                    </table>

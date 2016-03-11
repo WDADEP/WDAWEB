@@ -16,6 +16,7 @@ namespace WDA
         {
             this.LoadPage(true);
 
+            this.Form.DefaultButton = this.Button1.UniqueID;
             int rePage = this.Request.QueryString["RePage"] != null ? Convert.ToInt16(this.Request.QueryString["RePage"].Trim()) : 0;
             try
             {
@@ -46,12 +47,13 @@ namespace WDA
             string Where = string.Empty;
             int result = -1;
             string userID = this.UserInfo.UserID;
+            string strUrl = string.Empty;
 
             Hashtable ht = new Hashtable();
             try
             {
-                if (!string.IsNullOrEmpty(this.txtWpinno.Text)) { Where = string.Format("WPINNO ='{0}'", this.txtWpinno.Text); }
-                if (!string.IsNullOrEmpty(this.txtWpoutNo.Text)) { Where = string.Format("WPOUTNO ='{0}'", this.txtWpoutNo.Text); }
+                if (!string.IsNullOrEmpty(this.txtWpinno.Text)) { Where = string.Format("CHK ='N' And WPINNO ='{0}'", this.txtWpinno.Text); }
+                if (!string.IsNullOrEmpty(this.txtWpoutNo.Text)) { Where = string.Format("CHK ='N' And WPOUTNO ='{0}'", this.txtWpoutNo.Text); }
 
                 ht.Clear();
                 ht.Add("CHK", "Y");
@@ -66,6 +68,9 @@ namespace WDA
                 {
                     this.ShowMessage("更新Table：FILEBORO失敗"); return;
                 }
+
+                if (!string.IsNullOrEmpty(this.txtWpinno.Text)) { Where = string.Format("REDATE Is Null And WPINNO ='{0}'", this.txtWpinno.Text); }
+                if (!string.IsNullOrEmpty(this.txtWpoutNo.Text)) { Where = string.Format("REDATE Is Null And WPOUTNO ='{0}'", this.txtWpoutNo.Text); }
 
                 string reDate = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
 
@@ -100,9 +105,7 @@ namespace WDA
 
                 this.DBConnTransac.GeneralSqlCmd.Transaction.Commit();
 
-                string strUrl = string.Format("PaperAlsoFile.aspx?RePage=1");
-
-                Response.Redirect(strUrl, true);
+                strUrl = string.Format("PaperAlsoFile.aspx?RePage=1");
             }
              catch (System.Exception ex)
             {
@@ -118,6 +121,8 @@ namespace WDA
             {
                 this.DBConnTransac.Dispose(); this.DBConnTransac = null;
             }
+
+            Response.Redirect(strUrl, true);
 
             #region Monitor
             string wpinno = string.Empty;

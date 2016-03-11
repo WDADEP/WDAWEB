@@ -113,7 +113,7 @@ namespace WDA
                         if (dtBoxno.Rows.Count > 0)
                         {
                             DataRow[] boxnoRow = dt.Select(string.Format("WPINNO ='{0}'",dt.Rows[i]["WPINNO"].ToString()));
-                            boxnoRow[0]["boxno"] = dtBoxno.Rows[0]["WPINNO"].ToString();
+                            boxnoRow[0]["boxno"] = dtBoxno.Rows[0]["boxno"].ToString();
                         }
 
                         dtBoxno.Dispose(); dtBoxno = null;

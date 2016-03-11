@@ -58,13 +58,22 @@ namespace WDA {
         protected global::System.Web.UI.WebControls.TextBox txtKeepYr;
         
         /// <summary>
-        /// txtBoxNo 控制項。
+        /// txtBoxNoS 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtBoxNo;
+        protected global::System.Web.UI.WebControls.TextBox txtBoxNoS;
+        
+        /// <summary>
+        /// txtBoxNoE 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtBoxNoE;
         
         /// <summary>
         /// txtOnFile 控制項。
@@ -146,5 +155,14 @@ namespace WDA {
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden HiddenShowPanel;
+        
+        /// <summary>
+        /// HiddenShowAlert 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden HiddenShowAlert;
     }
 }

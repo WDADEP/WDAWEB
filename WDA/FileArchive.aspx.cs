@@ -120,6 +120,16 @@ namespace WDA
                     this.ShowMessage("修改失敗"); return;
                 }
 
+                //Wptrans
+                strWhere = string.Format("And WpinNo = '{0}'\n", gridViewRow.Cells[2].Text.Trim());
+                strSql = this.Update.WptransEdit(this.UserInfo.RealName, strWhere);
+                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
+                //if (result < 1)
+                //{
+                //    this.ShowMessage("修改失敗"); return;
+                //}
+
                 //BarcodeTable
                 strWhere = string.Format("And BarcodeValue = '{0}'", gridViewRow.Cells[2].Text.Trim());
 
@@ -205,7 +215,8 @@ namespace WDA
                     string fileNo = this.txtFileNo.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
                     string fileDate = this.txtFileDate.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
                     string keepYr = this.txtKeepYr.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
-                    string boxNo = this.txtBoxNo.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
+                    string boxNoS = this.txtBoxNoS.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
+                    string boxNoE = this.txtBoxNoE.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
                     string onFile = this.txtOnFile.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
 
                     barWhere += string.Format("And bt.FileNo is not null\n");
@@ -219,7 +230,6 @@ namespace WDA
                         barWhere += string.Format("And bt.BarcodeValue = '{0}'\n", barcodeValue);
                         wprecWhere += string.Format("And wp.wpinno = '{0}'\n", barcodeValue);
                         wptransWhere += string.Format("And wp.wpinno = '{0}'\n", barcodeValue);
- 
                     }
 
                     if (wpoutNo.Length > 0)
@@ -231,16 +241,16 @@ namespace WDA
 
                     if (fileNo.Length > 0)
                     {
-                        barWhere += string.Format("And bt.FileNo = '{0}'\n", fileNo);
-                        wprecWhere += string.Format("And wp.FileNo = '{0}'\n", fileNo);
-                        wptransWhere += string.Format("And wp.FileNo = '{0}'\n", fileNo);
+                        barWhere += string.Format("And bt.FileNo Like '{0}%'\n", fileNo);
+                        wprecWhere += string.Format("And wp.FileNo Like '{0}%'\n", fileNo);
+                        wptransWhere += string.Format("And wp.FileNo Like '{0}%'\n", fileNo);
                     }
 
                     if (fileDate.Length > 0) 
                     {
-                        barWhere += string.Format("And bt.FileDate = '{0}'\n", fileDate);
-                        wprecWhere += string.Format("And wp.FileDate = '{0}'\n", fileDate);
-                        wptransWhere += string.Format("And wp.FileDate = '{0}'\n", fileDate); 
+                        barWhere += string.Format("And bt.FileDate = '{0}'\n", fileDate.Replace("/", string.Empty));
+                        wprecWhere += string.Format("And wp.FileDate = '{0}'\n", fileDate.Replace("/", string.Empty));
+                        wptransWhere += string.Format("And wp.FileDate = '{0}'\n", fileDate.Replace("/", string.Empty)); 
                     }
 
                     if (keepYr.Length > 0)
@@ -250,12 +260,11 @@ namespace WDA
                         wptransWhere += string.Format("And wp.KeepYr = '{0}'\n", keepYr);
                     }
 
-                    if (boxNo.Length > 0)
+                    if (boxNoS.Length > 0 && boxNoE.Length > 0)
                     {
-                        barWhere += string.Format("And bt.BoxNo = '{0}'\n", boxNo);
-                        wprecWhere += string.Format("And wp.BoxNo = '{0}'\n", boxNo);
-                        wptransWhere += string.Format("And wp.BoxNo = '{0}'\n", boxNo);
- 
+                        barWhere += string.Format("And bt.BoxNo >= '{0}' And bt.BoxNo <='{1}'\n", boxNoS,boxNoE);
+                        wprecWhere += string.Format("And wp.BoxNo >= '{0}' And wp.BoxNo <='{1}'\n", boxNoS, boxNoE);
+                        wptransWhere += string.Format("And wp.BoxNo >= '{0}' And wp.BoxNo <='{1}'\n", boxNoS, boxNoE);
                     }
 
                     if (onFile.Length > 0)
@@ -263,19 +272,26 @@ namespace WDA
                         barWhere += string.Format("And bt.OnFile = N'{0}'\n", onFile);
                         wprecWhere += string.Format("And OnFile = N'{0}'\n", onFile);
                         wptransWhere += string.Format("And RECEIVER = N'{0}'\n", onFile);
-
                     }
-                    strSql = this.Select.FileArchiveCheck(wprecWhere, wptransWhere);
 
-                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
-
-                    this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
-
-                    dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
-
-                    if (dt.Rows.Count == 2 && isWpnno)
+                    if (isWpnno)
                     {
-                        strSql = this.Select.FileArchive2(wptransWhere);
+                        strSql = this.Select.FileArchiveCheck(wprecWhere, wptransWhere);
+
+                        this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+                        this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
+
+                        dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+
+                        if (dt.Rows.Count == 2)
+                        {
+                            strSql = this.Select.FileArchive2(wptransWhere);
+                        }
+                        else
+                        {
+                            strSql = this.Select.FileArchive(barWhere, wprecWhere, wptransWhere);
+                        }
                     }
                     else
                     {
@@ -327,7 +343,8 @@ namespace WDA
                 string fileNo = this.txtFileNo.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
                 string fileDate = this.txtFileDate.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
                 string keepYr = this.txtKeepYr.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
-                string boxNo = this.txtBoxNo.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
+                string boxNoS = this.txtBoxNoS.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
+                string boxNoE = this.txtBoxNoE.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
                 string onFile = this.txtOnFile.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
 
                 barWhere += string.Format("And bt.FileNo is not null\n");
@@ -353,16 +370,16 @@ namespace WDA
 
                 if (fileNo.Length > 0)
                 {
-                    barWhere += string.Format("And bt.FileNo = '{0}'\n", fileNo);
-                    wprecWhere += string.Format("And wp.FileNo = '{0}'\n", fileNo);
-                    wptransWhere += string.Format("And wp.FileNo = '{0}'\n", fileNo);
+                    barWhere += string.Format("And bt.FileNo Like '{0}%'\n", fileNo);
+                    wprecWhere += string.Format("And wp.FileNo Like '{0}%'\n", fileNo);
+                    wptransWhere += string.Format("And wp.FileNo Like '{0}%'\n", fileNo);
                 }
 
                 if (fileDate.Length > 0)
                 {
-                    barWhere += string.Format("And bt.FileDate = '{0}'\n", fileDate);
-                    wprecWhere += string.Format("And wp.FileDate = '{0}'\n", fileDate);
-                    wptransWhere += string.Format("And wp.FileDate = '{0}'\n", fileDate);
+                    barWhere += string.Format("And bt.FileDate = '{0}'\n", fileDate.Replace("/", string.Empty));
+                    wprecWhere += string.Format("And wp.FileDate = '{0}'\n", fileDate.Replace("/", string.Empty));
+                    wptransWhere += string.Format("And wp.FileDate = '{0}'\n", fileDate.Replace("/", string.Empty)); 
                 }
 
                 if (keepYr.Length > 0)
@@ -372,11 +389,11 @@ namespace WDA
                     wptransWhere += string.Format("And wp.KeepYr = '{0}'\n", keepYr);
                 }
 
-                if (boxNo.Length > 0)
+                if (boxNoS.Length > 0 && boxNoE.Length > 0)
                 {
-                    barWhere += string.Format("And bt.BoxNo = '{0}'\n", boxNo);
-                    wprecWhere += string.Format("And wp.BoxNo = '{0}'\n", boxNo);
-                    wptransWhere += string.Format("And wp.BoxNo = '{0}'\n", boxNo);
+                    barWhere += string.Format("And bt.BoxNo >= '{0}' And bt.BoxNo <='{1}'\n", boxNoS, boxNoE);
+                    wprecWhere += string.Format("And wp.BoxNo >= '{0}' And wp.BoxNo <='{1}'\n", boxNoS, boxNoE);
+                    wptransWhere += string.Format("And wp.BoxNo >= '{0}' And wp.BoxNo <='{1}'\n", boxNoS, boxNoE);
 
                 }
 
@@ -387,19 +404,25 @@ namespace WDA
                     wptransWhere += string.Format("And RECEIVER = N'{0}'\n", onFile);
 
                 }
-                strSql = this.Select.FileArchiveCheck(wprecWhere, wptransWhere);
 
-
-                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
-
-                this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
-
-                dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
-
-
-                if (dt.Rows.Count == 2 && isWpnno)
+                if (isWpnno)
                 {
-                    strSql = this.Select.FileArchive2(wptransWhere);
+                    strSql = this.Select.FileArchiveCheck(wprecWhere, wptransWhere);
+
+                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+                    this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
+
+                    dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+
+                    if (dt.Rows.Count == 2)
+                    {
+                        strSql = this.Select.FileArchive2(wptransWhere);
+                    }
+                    else
+                    {
+                        strSql = this.Select.FileArchive(barWhere, wprecWhere, wptransWhere);
+                    }
                 }
                 else
                 {
@@ -408,9 +431,15 @@ namespace WDA
 
                 this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
 
+                this.WriteLog(global::Log.Mode.LogMode.DEBUG, "FileArchive：Session");
+
                 Session["FileArchive"] = strSql;
             }
             catch (System.Exception ex) { this.ShowMessage(ex.Message); }
+            finally
+            {
+                this.DBConn.Dispose(); this.DBConn = null;
+            }
         }
         #endregion
 
@@ -454,7 +483,29 @@ namespace WDA
                     strWhere = string.Format("And WpinNo = '{0}'\n", barcodeValue);
                     strSql = this.Delete.WptransDelete(barcodeValue);
                     this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
-                    result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
+                    result = this.DBConn.GeneralSqlCmd.ExecuteNonQuery(strSql);
+
+                    //BarcodeTable
+                    strWhere = string.Format("And BarcodeValue = '{0}'", barcodeValue);
+
+                    strSql = this.Select.BarcodeTable(strWhere);
+
+                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+                    this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
+
+                    string caseID = this.DBConn.GeneralSqlCmd.ExecuteByColumnName(strSql, "CaseID");
+
+                    if (caseID.Length > 0)
+                    {
+                        strSql = this.Update.BarcodeTable(strWhere);
+                        this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                        result = this.DBConn.GeneralSqlCmd.ExecuteNonQuery(strSql);
+                        if (result < 1)
+                        {
+                            this.ShowMessage("刪除失敗");
+                        }
+                    }
 
                     this.ShowMessage("刪除成功", MessageMode.INFO);
                     this.DataBind(true, true);

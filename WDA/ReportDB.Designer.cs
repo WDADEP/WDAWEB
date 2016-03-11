@@ -1417,6 +1417,8 @@ namespace WDA {
             
             private global::System.Data.DataColumn columnKEEPYR;
             
+            private global::System.Data.DataColumn columnRID;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public FileArchiveTableDataTable() {
@@ -1500,6 +1502,14 @@ namespace WDA {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn RIDColumn {
+                get {
+                    return this.columnRID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -1535,7 +1545,7 @@ namespace WDA {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public FileArchiveTableRow AddFileArchiveTableRow(string WPINNO, string WPOUTNO, string FILEDATE, string BOXNO, string FILENO, string KEEPYR) {
+            public FileArchiveTableRow AddFileArchiveTableRow(string WPINNO, string WPOUTNO, string FILEDATE, string BOXNO, string FILENO, string KEEPYR, string RID) {
                 FileArchiveTableRow rowFileArchiveTableRow = ((FileArchiveTableRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         WPINNO,
@@ -1543,7 +1553,8 @@ namespace WDA {
                         FILEDATE,
                         BOXNO,
                         FILENO,
-                        KEEPYR};
+                        KEEPYR,
+                        RID};
                 rowFileArchiveTableRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowFileArchiveTableRow);
                 return rowFileArchiveTableRow;
@@ -1572,6 +1583,7 @@ namespace WDA {
                 this.columnBOXNO = base.Columns["BOXNO"];
                 this.columnFILENO = base.Columns["FILENO"];
                 this.columnKEEPYR = base.Columns["KEEPYR"];
+                this.columnRID = base.Columns["RID"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1589,6 +1601,8 @@ namespace WDA {
                 base.Columns.Add(this.columnFILENO);
                 this.columnKEEPYR = new global::System.Data.DataColumn("KEEPYR", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnKEEPYR);
+                this.columnRID = new global::System.Data.DataColumn("RID", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnRID);
                 this.columnFILEDATE.Caption = "COMMNAME";
                 this.columnFILENO.Caption = "TRANST";
                 this.columnKEEPYR.Caption = "RECEIVER";
@@ -2519,6 +2533,22 @@ namespace WDA {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string RID {
+                get {
+                    try {
+                        return ((string)(this[this.tableFileArchiveTable.RIDColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("資料表 \'FileArchiveTable\' 中資料行 \'RID\' 的值是 DBNull。", e);
+                    }
+                }
+                set {
+                    this[this.tableFileArchiveTable.RIDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsWPINNONull() {
                 return this.IsNull(this.tableFileArchiveTable.WPINNOColumn);
             }
@@ -2587,6 +2617,18 @@ namespace WDA {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetKEEPYRNull() {
                 this[this.tableFileArchiveTable.KEEPYRColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsRIDNull() {
+                return this.IsNull(this.tableFileArchiveTable.RIDColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetRIDNull() {
+                this[this.tableFileArchiveTable.RIDColumn] = global::System.Convert.DBNull;
             }
         }
         

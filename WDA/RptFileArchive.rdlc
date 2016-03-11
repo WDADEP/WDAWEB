@@ -6,28 +6,64 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>4.06104cm</Width>
+              <Width>1.53458cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>3.50542cm</Width>
+              <Width>2.44708cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>3.39958cm</Width>
+              <Width>2.79105cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>4.29917cm</Width>
+              <Width>2.79104cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>4.12884cm</Width>
+              <Width>3.02917cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.5cm</Width>
+              <Width>3.5203cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1.65334cm</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
             <TablixRow>
               <Height>0.6cm</Height>
               <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox5">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>序號</Value>
+                              <Style>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox5</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <BackgroundColor>SeaGreen</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="Textbox1">
@@ -233,6 +269,36 @@
               <TablixCells>
                 <TablixCell>
                   <CellContents>
+                    <Textbox Name="RID">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!RID.Value</Value>
+                              <Style />
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>RID</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
                     <Textbox Name="FILEDATE1">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
@@ -423,6 +489,7 @@
             <TablixMember />
             <TablixMember />
             <TablixMember />
+            <TablixMember />
           </TablixMembers>
         </TablixColumnHierarchy>
         <TablixRowHierarchy>
@@ -435,9 +502,11 @@
             </TablixMember>
           </TablixMembers>
         </TablixRowHierarchy>
+        <RepeatColumnHeaders>true</RepeatColumnHeaders>
+        <RepeatRowHeaders>true</RepeatRowHeaders>
         <DataSetName>FileArchiveTable</DataSetName>
         <Height>1.2cm</Height>
-        <Width>21.89405cm</Width>
+        <Width>17.76655cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -448,7 +517,7 @@
     <Height>0.47244in</Height>
     <Style />
   </Body>
-  <Width>10.7044in</Width>
+  <Width>6.9947in</Width>
   <Page>
     <PageHeader>
       <Height>2.86972cm</Height>
@@ -502,7 +571,7 @@
           <rd:DefaultName>Textbox3</rd:DefaultName>
           <Top>0.3175cm</Top>
           <Height>0.80291cm</Height>
-          <Width>21.89405cm</Width>
+          <Width>17.76655cm</Width>
           <Style>
             <Border>
               <Style>None</Style>
@@ -543,7 +612,7 @@
           </Paragraphs>
           <rd:DefaultName>Textbox4</rd:DefaultName>
           <Top>1.48038cm</Top>
-          <Left>16.64238cm</Left>
+          <Left>12.51488cm</Left>
           <Height>0.62646cm</Height>
           <Width>5.25167cm</Width>
           <ZIndex>1</ZIndex>
@@ -577,7 +646,7 @@
           </Paragraphs>
           <rd:DefaultName>Textbox30</rd:DefaultName>
           <Top>2.10684cm</Top>
-          <Left>16.64238cm</Left>
+          <Left>12.51488cm</Left>
           <Height>0.7276cm</Height>
           <Width>5.25167cm</Width>
           <ZIndex>2</ZIndex>
@@ -630,12 +699,12 @@
         </Border>
       </Style>
     </PageHeader>
-    <PageHeight>21cm</PageHeight>
-    <PageWidth>29.7cm</PageWidth>
-    <LeftMargin>1cm</LeftMargin>
+    <PageHeight>29.7cm</PageHeight>
+    <PageWidth>21cm</PageWidth>
+    <LeftMargin>0cm</LeftMargin>
     <RightMargin>0cm</RightMargin>
     <TopMargin>0cm</TopMargin>
-    <BottomMargin>0cm</BottomMargin>
+    <BottomMargin>1cm</BottomMargin>
     <ColumnSpacing>0.13cm</ColumnSpacing>
     <Style />
   </Page>
@@ -678,6 +747,10 @@
         </Field>
         <Field Name="KEEPYR">
           <DataField>KEEPYR</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RID">
+          <DataField>RID</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>

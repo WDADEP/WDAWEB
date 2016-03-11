@@ -192,6 +192,9 @@ namespace WDA
                     if (pageUtility.UserInfo.Privilege.Tables[0].Select(string.Format("PrivID={0}", 21)).Length > 0)
                     { this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"DulyAdjustedQuery.aspx\">調妥查詢</a></li>"; }
 
+                    if (pageUtility.UserInfo.Privilege.Tables[0].Select(string.Format("PrivID={0}", 30)).Length > 0)
+                    { this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"FileQuery.aspx\">檔案借閱查詢</a></li>"; }
+
                     this.LiteralMenu.Text += "</ol>";
                     this.LiteralMenu.Text += "</div>";
                     this.LiteralMenu.Text += "</div>";

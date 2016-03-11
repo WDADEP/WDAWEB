@@ -4,6 +4,15 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <script type="text/javascript">
         function pageLoad() {
+            $('#obj_TiMac').hide();
+            $('#success-alert').on('closed.bs.alert', function () {
+                $get('MainContent_HiddenShowAlert').value = true;
+                //$("#MainContent_HiddenShowAlert").val() = true;
+            })
+
+            if ($("#MainContent_HiddenShowAlert").val() == "true") { $("#success-alert").alert('close'); }
+            else { $("#success-alert").alert(); }
+
             if ($("#MainContent_HiddenShowPanel").val() == "true") {
                 $('#divPanel').show();
             }
@@ -52,7 +61,7 @@
             };
         }
     </script>
-    <div class="alert alert-info">
+    <div class="alert alert-info" id="success-alert">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <h4>說明：</h4>
         <ol>
@@ -78,7 +87,7 @@
                        卷宗號是否自動加號：
                         <asp:RadioButtonList ID="RadioButtonList1" runat="server" RepeatDirection="Horizontal">
                             <asp:ListItem Value="0">是</asp:ListItem>
-                            <asp:ListItem Value="1">否</asp:ListItem>
+                            <asp:ListItem Value="1" Selected="True">否</asp:ListItem>
                         </asp:RadioButtonList>
                     </div>
                 </div>
@@ -142,5 +151,9 @@
         <cc1:LiteralMessageBox ID="LiteralMessageBox1" runat="server"></cc1:LiteralMessageBox>
         <input id="HiddenMessage" type="Hidden" runat="server" />
         <input id="HiddenShowPanel" type="Hidden" runat="server" />
+        <input id="HiddenShowAlert" type="Hidden" runat="server" />
+            <div id="obj_TiMac">
+        <asp:Button ID="Button1" runat="server" Text="Button" />
+                </div>
     </div>
 </asp:Content>

@@ -6,6 +6,7 @@
            var IsCheckNo = false;
            var IsCheckWpstatus = false;
            function pageLoad() {
+               $('#obj_TiMac').hide();
                $('#ShowInfo').hide();
                showMessage();
            }
@@ -38,6 +39,12 @@
                    var bev = result[i];
 
                    if (bev.Wpinno.length > 0) {
+
+                       if (bev.Wpstatus == '未還檔') {
+                           IsCheckWpstatus = true;
+                       }
+                       else { alert("已還檔、還檔人：" + bev.RealName + "、還檔日期：" + bev.Redated); $('#ShowInfo').hide(); IsCheckNo = false; return; }
+
                        IsCheckNo = true;
                        $('#ShowInfo').show();
                    }
@@ -48,12 +55,6 @@
                    $get("MainContent_lblReceiver").innerText = bev.Receiver;
                    $get("MainContent_lblTel").innerText = bev.Tel;
                    $get("MainContent_lblWpstatus").innerText = bev.Wpstatus;
-
-                   if (bev.Wpstatus == '未還檔') {
-                       IsCheckWpstatus = true;
-                   }
-                   else { alert("已還檔"); $('#ShowInfo').hide(); IsCheckNo = false; return; }
-
                    $get("MainContent_lblBorrdate").innerText = bev.Borrdate;
                    $get("MainContent_lblRedate").innerText = bev.Redate;
                }
@@ -157,4 +158,7 @@
         <cc1:LiteralMessageBox ID="LiteralMessageBox1" runat="server"></cc1:LiteralMessageBox>
         <input id="HiddenMessage" type="Hidden" runat="server" />
     </div>
+               <div id="obj_TiMac">
+        <asp:Button ID="Button1" runat="server" Text="Button" />
+                </div>
 </asp:Content>

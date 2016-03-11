@@ -101,9 +101,9 @@ namespace WDA
                         string startTime = this.txtScanCreateTime.Text.Trim().Replace(StringFormatException.Mode.Sql);//開始日期
                         string endTime = this.txtScanEndTime.Text.Trim().Replace(StringFormatException.Mode.Sql);//結束日期
 
-                        endTime = DateTime.Parse(endTime).AddDays(1).AddSeconds(-1).ToString("yyyy/MM/dd HH:mm:ss");
+                        //endTime = DateTime.Parse(endTime).AddDays(1).AddSeconds(-1).ToString("yyyy/MM/dd HH:mm:ss");
 
-                        where += string.Format(" And ct.CreateTime Between '{0}' And '{1}'", startTime, endTime);
+                        where += string.Format(" And bt.CreateTime Between  TO_DATE('{0}', 'YYYY/MM/DD HH24:MI:SS') And TO_DATE('{1}', 'YYYY/MM/DD HH24:MI:SS')", startTime, endTime);
                     }
 
                     strSql = this.Select.ScanListQuery(where);

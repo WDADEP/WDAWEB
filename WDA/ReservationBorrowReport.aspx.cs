@@ -150,7 +150,7 @@ namespace WDA
                     }
 
                     DataView dv = dt.DefaultView;
-                    dv.Sort = "boxno Desc,WPINNO Desc";
+                    dv.Sort = "fileno ASC,boxno ASC";
                     dt = dv.ToTable();
                 }
             }

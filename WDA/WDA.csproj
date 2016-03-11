@@ -127,6 +127,7 @@
     <Content Include="FileArchive.aspx" />
     <Content Include="FileArchiveAdd.aspx" />
     <Content Include="FileArchivePrint.aspx" />
+    <Content Include="FileQuery.aspx" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Images\Add.gif" />
     <Content Include="Images\AddName.gif" />
@@ -415,6 +416,13 @@
     </Compile>
     <Compile Include="FileArchivePrint.aspx.designer.cs">
       <DependentUpon>FileArchivePrint.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FileQuery.aspx.cs">
+      <DependentUpon>FileQuery.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FileQuery.aspx.designer.cs">
+      <DependentUpon>FileQuery.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

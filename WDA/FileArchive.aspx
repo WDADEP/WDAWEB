@@ -4,6 +4,13 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <script type="text/javascript">
         function pageLoad() {
+            $('#success-alert').on('closed.bs.alert', function () {
+                $get('MainContent_HiddenShowAlert').value = true;
+            })
+
+            if ($("#MainContent_HiddenShowAlert").val() == "true") { $("#success-alert").alert('close'); }
+            else { $("#success-alert").alert(); }
+
             if ($("#MainContent_HiddenShowPanel").val() == "true") {
                 $('#divPanel').show();
             }
@@ -51,7 +58,8 @@
                 var txtFileNo = $get('MainContent_txtFileNo').value;
                 var txtFileDate = $get('MainContent_txtFileDate').value;
                 var txtKeepYr = $get('MainContent_txtKeepYr').value;
-                var txtBoxNo = $get('MainContent_txtBoxNo').value;
+                var txtBoxNoS = $get('MainContent_txtBoxNoS').value;
+                var txtBoxNoE = $get('MainContent_txtBoxNoE').value;
                 var txtOnFile = $get('MainContent_txtOnFile').value;
 
                 if (txtBarcodeValue.length == 0 &&
@@ -59,7 +67,8 @@
                     txtFileNo.length == 0 &&
                     txtFileDate.length == 0 &&
                     txtKeepYr.length == 0 &&
-                    txtBoxNo.length == 0 &&
+                    txtBoxNoS.length == 0 &&
+                    txtBoxNoE.length == 0 &&
                     txtOnFile.length == 0) {
 
                     alert('請輸入至少填入一個搜尋條件。');
@@ -73,7 +82,7 @@
             };
         }
     </script>
-    <div class="alert alert-info">
+    <div class="alert alert-info" id="success-alert">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <h4>說明：</h4>
         <ol>
@@ -121,7 +130,10 @@
                     <tr>
                         <td class="HeadTD_green" style="padding: 5px;">卷宗號：</td>
                         <td style="padding: 5px; text-align: left;">
-                            <asp:TextBox ID="txtBoxNo" runat="server" TextMode="Number"></asp:TextBox>
+                            <strong>起：
+                                <asp:TextBox ID="txtBoxNoS" runat="server" TextMode="Number"></asp:TextBox>迄：
+										<asp:TextBox ID="txtBoxNoE" runat="server" TextMode="Number"></asp:TextBox></strong>
+                            <%--  <asp:TextBox ID="txtBoxNo" runat="server" TextMode="Number"></asp:TextBox>--%>
                         </td>
                     </tr>
                     <tr>
@@ -151,7 +163,7 @@
                         <asp:Button ID="BtnPrint" runat="server" Text="列 印" class="btn btn-large btn-success" OnClick="BtnPrint_Click" OnClientClick="JavaScript:if(!ImageBtnPringClick()) {return false} ;" PostBackUrl="~/FileArchivePrint.aspx" />
                     </div>
                 </div>
-                <asp:GridView ID="GridView1" runat="server" AllowSorting="True" AutoGenerateColumns="False" CssClass="GridViewStyle" Width="98%" OnPageIndexChanging="GridView1_PageIndexChanging" OnRowCommand="GridView1_RowCommand" OnRowDataBound="GridView1_RowDataBound" OnSorting="GridView1_Sorting" OnRowCreated="GridView1_RowCreated">
+                <asp:GridView ID="GridView1" runat="server" AllowSorting="True" AllowPaging="True" AutoGenerateColumns="False" CssClass="GridViewStyle" Width="98%" OnPageIndexChanging="GridView1_PageIndexChanging" OnRowCommand="GridView1_RowCommand" OnRowDataBound="GridView1_RowDataBound" OnSorting="GridView1_Sorting" OnRowCreated="GridView1_RowCreated">
                     <AlternatingRowStyle CssClass="AlternatingRowStyle" />
                     <Columns>
                         <asp:TemplateField HeaderText="編輯">
@@ -203,7 +215,7 @@
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:BoundField HeaderText="歸檔作業者" DataField="onfile" SortExpression="onfile" ReadOnly="True" />
-                        <asp:BoundField DataField="viewtype" HeaderText="文件類型" SortExpression="viewtype" />
+                        <asp:BoundField DataField="viewtype" HeaderText="文件類型" SortExpression="viewtype" ReadOnly="True" />
                     </Columns>
                     <FooterStyle CssClass="FooterStyle" />
                     <HeaderStyle CssClass="HeaderStyle" />
@@ -224,5 +236,6 @@
         <cc1:LiteralMessageBox ID="LiteralMessageBox1" runat="server"></cc1:LiteralMessageBox>
         <input id="HiddenMessage" type="Hidden" runat="server" />
         <input id="HiddenShowPanel" type="Hidden" runat="server" />
+        <input id="HiddenShowAlert" type="Hidden" runat="server" />
     </div>
 </asp:Content>
