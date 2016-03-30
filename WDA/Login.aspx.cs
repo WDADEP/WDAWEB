@@ -33,6 +33,44 @@ namespace WDA
 
             try
             {
+                //DataTable dt = new DataTable();
+                //DataRow row;
+
+
+                //dt.Columns.Add("fileno", typeof(string));
+                //dt.Columns.Add("boxno", typeof(string));
+
+                //{
+                //    row = dt.NewRow();
+                //    row["fileno"] = "22070102";
+                //    row["boxno"] = "10300677005";
+                //    dt.Rows.Add(row);
+
+                //    row = dt.NewRow();
+                //    row["fileno"] = "22010101";
+                //    row["boxno"] = "10301320014";
+                //    dt.Rows.Add(row);
+
+                //    row = dt.NewRow();
+                //    row["fileno"] = "22010301";
+                //    row["boxno"] = "10301667010";
+                //    dt.Rows.Add(row);
+
+                //    row = dt.NewRow();
+                //    row["fileno"] = "22010102";
+                //    row["boxno"] = "10306809019";
+                //    dt.Rows.Add(row);
+
+                //    row = dt.NewRow();
+                //    row["fileno"] = "22070103";
+                //    row["boxno"] = "10303980050";
+                //    dt.Rows.Add(row);
+                //}
+
+                //dt.DefaultView.Sort = "fileno,boxno";
+
+                //dt = dt.DefaultView.ToTable(); 
+
                 if (rePage == 1)
                 {
                     FormsAuthentication.SignOut();

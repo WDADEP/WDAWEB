@@ -70,9 +70,10 @@
                                    <asp:BoundField HeaderText="聯絡人姓名" DataField="COMMNAME"></asp:BoundField>
                                    <asp:BoundField HeaderText="聯絡人地址" DataField="COMMADD" />
                                    <asp:BoundField HeaderText="發文日期" DataField="WPOUTDATE" />
-                                   <asp:BoundField HeaderText="發文人員" DataField="SENDMAN" />
+                                   <asp:BoundField HeaderText="發文人員" DataField="USERNAME" />
                                    <asp:BoundField HeaderText="卷宗號" DataField="BOXNO" />
                                    <asp:BoundField HeaderText="歸檔檔號" DataField="FILENO" />
+                                   <asp:BoundField HeaderText="歸檔作業者" DataField="OnFile" />
                                </Columns>
                                <FooterStyle CssClass="FooterStyle" />
                                <HeaderStyle CssClass="HeaderStyle" />
@@ -87,6 +88,7 @@
                        <Columns>
                            <asp:BoundField HeaderText="序號" DataField="RID" SortExpression="RID"></asp:BoundField>
                            <asp:BoundField HeaderText="借檔人" DataField="REALNAME1" SortExpression="REALNAME1"></asp:BoundField>
+                           <asp:BoundField HeaderText="借檔分機" DataField="TEL" SortExpression="TEL"></asp:BoundField>
                            <asp:BoundField HeaderText="借檔日期" DataField="TRANST" SortExpression="TRANST" />
                            <asp:BoundField HeaderText="簽核日期" DataField="APPROVEDATE" SortExpression="APPROVEDATE" />
                            <asp:BoundField HeaderText="審核長官" DataField="REALNAME3" SortExpression="REALNAME3" />

@@ -184,7 +184,7 @@
                         <asp:BoundField HeaderText="發文文號" DataField="WpoutNo" SortExpression="WpoutNo" ReadOnly="True" />
                         <asp:TemplateField HeaderText="歸檔檔號" SortExpression="FileNo">
                             <EditItemTemplate>
-                                <asp:TextBox ID="txtFileNo" runat="server" Text='<%# Bind("FileNo") %>' Width="100%" TextMode="Number" MaxLength="10"></asp:TextBox>
+                                <asp:TextBox ID="txtFileNo" runat="server" Text='<%# Bind("FileNo") %>' Width="100%"></asp:TextBox>
                             </EditItemTemplate>
                             <ItemTemplate>
                                 <asp:Label ID="lblFileNo" runat="server" Text='<%# Eval("FileNo") %>'></asp:Label>
@@ -192,7 +192,7 @@
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="歸檔日期" SortExpression="FileDate">
                             <EditItemTemplate>
-                                <asp:TextBox ID="txtFileDate" runat="server" Text='<%# Bind("FileDate", "{0:yyyyMMdd}") %>' Width="100%" MaxLength="8" TextMode="Number"></asp:TextBox>
+                                <asp:TextBox ID="txtFileDate" runat="server" Text='<%# Bind("FileDate", "{0:yyyyMMdd}") %>' Width="100%"></asp:TextBox>
                             </EditItemTemplate>
                             <ItemTemplate>
                                 <asp:Label ID="lblFileDate" runat="server" Text='<%# Eval("FileDate", "{0:yyyyMMdd}") %>'></asp:Label>
@@ -200,7 +200,7 @@
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="保存年限" SortExpression="KeepYr">
                             <EditItemTemplate>
-                                <asp:TextBox ID="txtKeepYr" runat="server" Text='<%# Bind("KeepYr") %>' Width="100%" TextMode="Number"></asp:TextBox>
+                                <asp:TextBox ID="txtKeepYr" runat="server" Text='<%# Bind("KeepYr") %>' Width="100%"></asp:TextBox>
                             </EditItemTemplate>
                             <ItemTemplate>
                                 <asp:Label ID="lblKeepYr" runat="server" Text='<%# Eval("KeepYr") %>'></asp:Label>
@@ -208,7 +208,7 @@
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="卷宗號" SortExpression="BoxNo">
                             <EditItemTemplate>
-                                <asp:TextBox ID="txtBoxNo" runat="server" Text='<%# Bind("BoxNo") %>' Width="100%" TextMode="Number"></asp:TextBox>
+                                <asp:TextBox ID="txtBoxNo" runat="server" Text='<%# Bind("BoxNo") %>' Width="100%"></asp:TextBox>
                             </EditItemTemplate>
                             <ItemTemplate>
                                 <asp:Label ID="lblBoxNo" runat="server" Text='<%# Eval("BoxNo") %>'></asp:Label>
@@ -216,6 +216,7 @@
                         </asp:TemplateField>
                         <asp:BoundField HeaderText="歸檔作業者" DataField="onfile" SortExpression="onfile" ReadOnly="True" />
                         <asp:BoundField DataField="viewtype" HeaderText="文件類型" SortExpression="viewtype" ReadOnly="True" />
+                        <asp:BoundField DataField="BARCODEVALUE" HeaderText="有無影像檔" SortExpression="BARCODEVALUE" />
                     </Columns>
                     <FooterStyle CssClass="FooterStyle" />
                     <HeaderStyle CssClass="HeaderStyle" />

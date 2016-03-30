@@ -13,18 +13,18 @@ namespace WDA
 {
     public partial class ScanListReport : PageUtility
     {
-        #region UserName
-        protected string UserName
+        #region RealName
+        protected string RealName
         {
             get
             {
-                if (ViewState["UserName"] == null)
+                if (ViewState["RealName"] == null)
                     return null;
                 else
-                    return (string)(ViewState["UserName"]);
+                    return (string)(ViewState["RealName"]);
             }
 
-            set { ViewState["UserName"] = value; }
+            set { ViewState["RealName"] = value; }
         }
         #endregion
 
@@ -39,11 +39,11 @@ namespace WDA
                 {
                     var preContent = (ContentPlaceHolder)Page.PreviousPage.Master.FindControl("MainContent");
 
-                    TextBox txtUserName = (TextBox)preContent.FindControl("TxtUserName");
+                    TextBox txtRealName = (TextBox)preContent.FindControl("TxtRealName");
 
-                    if (!string.IsNullOrEmpty(txtUserName.Text))
+                    if (!string.IsNullOrEmpty(txtRealName.Text))
                     {
-                        UserName = txtUserName.Text;
+                        RealName = txtRealName.Text;
                     }
                 }
 
@@ -74,13 +74,13 @@ namespace WDA
 
             try
             {
-                if (!string.IsNullOrEmpty(UserName))
+                if (!string.IsNullOrEmpty(RealName))
                 {
                     OleDbCommand command = (OleDbCommand)this.DBConn.GeneralSqlCmd.Command;
 
                     command.Parameters.Clear();
 
-                    command.Parameters.Add(new OleDbParameter("CREATEUSERID", OleDbType.VarChar)).Value = UserName;
+                    command.Parameters.Add(new OleDbParameter("CREATEUSERID", OleDbType.VarChar)).Value = RealName;
                 }
 
                 strSql = Session["ScanListQuery"].ToString();

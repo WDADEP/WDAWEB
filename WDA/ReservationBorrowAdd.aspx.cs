@@ -99,7 +99,7 @@ namespace WDA
         private void InitControl()
         {
             this.txtWpoutNo.Enabled =
-            this.txtTel.Enabled =
+            //this.txtTel.Enabled =
             this.txtReceiver.Enabled =
             this.txtWpindate.Enabled =
             this.txtCirlName.Enabled =

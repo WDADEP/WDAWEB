@@ -72,32 +72,50 @@ namespace WDA
 
                 if (Anew)
                 {
+                    DataTable dt= null;
                     DataTable dtWprec = null;
                     DataTable dtWpborrow = null;
 
+                    string wpinno = string.Empty;
+                    //OleDbCommand command = (OleDbCommand)this.DBConn.GeneralSqlCmd.Command;
 
-                    OleDbCommand command = (OleDbCommand)this.DBConn.GeneralSqlCmd.Command;
-
-                    command.Parameters.Clear();
+                    //command.Parameters.Clear();
 
                     if (!string.IsNullOrEmpty(this.TxtWPINNO.Text.Trim()))
                     {
-                        string wpinno = this.TxtWPINNO.Text.Trim();
+                        wpinno = this.TxtWPINNO.Text.Trim();
 
-                        command.Parameters.Add(new OleDbParameter("WPINNO", OleDbType.VarChar)).Value = wpinno;
+                        //command.Parameters.Add(new OleDbParameter("WPINNO", OleDbType.VarChar)).Value = wpinno;
 
-                        where = string.Format("And WPINNO =:WPINNO");
+                        //where = string.Format("And WP.WPINNO =:WPINNO");
+                        where = string.Format("And WP.WPINNO ='{0}'", wpinno);
                     }
 
                     strSql = this.Select.Wprec(where);
 
                     this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
 
-                    Session["FileWprecQuery"] = strSql;
-
                     this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
 
+                    dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+
+                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, "1");
+
+                    if (dt.Rows.Count == 2)
+                    {
+                        strSql = this.Select.WprecBySingle(where);
+
+                        this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                    }
+
+                    Session["FileWprecQuery"] = strSql;
+
+                    //this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
+                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, "2");
+
                     dtWprec = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+
+                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, "3");
 
                     if (dtWprec.Rows.Count == 0)
                     {
@@ -113,7 +131,7 @@ namespace WDA
                         this.GridView1.DataBind((DataTable)ViewState[this.GridView1.ClientID], Anew, LockPageNum);
                     }
 
-                    where = string.Format("And wp.WPINNO =:WPINNO");
+                    where = string.Format("And WP.WPINNO ='{0}'", wpinno);
 
                     strSql = this.Select.FileQuery(where);
 

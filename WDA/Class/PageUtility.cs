@@ -1107,5 +1107,32 @@ namespace WDA.Class
             }
         }
         #endregion
+
+        #region UsermSchema
+        /// <summary>
+        ///  userm  Table Schema
+        /// </summary>
+        public static string UsermSchema 
+        {
+            get
+            {
+                string usermSchema = "userm";
+
+                if (ConfigurationManager.AppSettings["Location"] == null) return usermSchema;
+
+                switch (ConfigurationManager.AppSettings["Location"].Trim())
+                {
+                    case "1":
+                        usermSchema = "userm"; break;
+                    case "2":
+                        usermSchema = "fpv.userm@FILESCANUSER_TESTFPV"; break;
+                    case "3":
+                        usermSchema = "fpv.userm@FILESCANUSER_FPV"; break;
+                }
+
+                return usermSchema;
+            }
+        }
+        #endregion
     }
 }

@@ -75,12 +75,11 @@ namespace WDA
         protected void ImageBtnEdit_Click(object sender, ImageClickEventArgs e)
         {
             GridViewRow gridViewRow = (GridViewRow)((ImageButton)sender).NamingContainer;
-
             GridView gv = (GridView)gridViewRow.NamingContainer;
 
             gv.EditIndex = gridViewRow.RowIndex;
-
-            this.DataBind(true, false);
+            gv.DataSource = ViewState[this.GridView1.ClientID];
+            gv.DataBind();
         }
         #endregion
 
@@ -175,7 +174,7 @@ namespace WDA
 
                 this.GridView1.EditIndex = -1;
 
-                this.DataBind(true, false);
+                this.DataBind(true, true);
             }
         }
         #endregion
@@ -183,11 +182,7 @@ namespace WDA
         #region ITImageBtnCancel_Click()
         protected void ITImageBtnCancel_Click(object sender, ImageClickEventArgs e)
         {
-            GridViewRow gridViewRow = (GridViewRow)((ImageButton)sender).NamingContainer;
-
-            GridView gv = (GridView)gridViewRow.NamingContainer;
-
-            gv.EditIndex = -1;
+            this.GridView1.EditIndex = -1;
 
             this.DataBind(true, true);
         }
@@ -290,11 +285,15 @@ namespace WDA
                         }
                         else
                         {
+                            wptransWhere += "And ROWNUM <=300";
+
                             strSql = this.Select.FileArchive(barWhere, wprecWhere, wptransWhere);
                         }
                     }
                     else
                     {
+                        wptransWhere += "And ROWNUM <=300";
+
                         strSql = this.Select.FileArchive(barWhere, wprecWhere, wptransWhere);
                     }
 
@@ -307,7 +306,7 @@ namespace WDA
                     if (dt.Rows.Count == 0)
                     {
                         this.ShowMessage("目前查詢沒有任何資料", MessageMode.INFO);
-                        this.GridView1.DataBind();
+                        ViewState[this.GridView1.ClientID] = dt;
                         this.HiddenShowPanel.Value = "false";
                         return;
                     }
@@ -546,6 +545,8 @@ namespace WDA
                     case "99": e.Row.Cells[9].Text = "其它";
                         break;
                 }
+
+                e.Row.Cells[10].Text = string.IsNullOrEmpty(e.Row.Cells[10].Text.Replace(StringFormatException.Mode.Nbsp)) ? "無" : "有";
             }
         }
         #endregion

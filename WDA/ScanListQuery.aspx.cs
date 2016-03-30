@@ -87,14 +87,14 @@ namespace WDA
                     OleDbCommand command = (OleDbCommand)this.DBConn.GeneralSqlCmd.Command;
 
                     command.Parameters.Clear();
-                  
-                    if (!string.IsNullOrEmpty(this.TxtUserName.Text.Trim()))
+
+                    if (!string.IsNullOrEmpty(this.TxtRealName.Text.Trim()))
                     {
-                        string userName = this.TxtUserName.Text.Trim();
+                        string realName = this.TxtRealName.Text.Trim();
 
-                        command.Parameters.Add(new OleDbParameter("UserName", OleDbType.VarChar)).Value = userName;
+                        command.Parameters.Add(new OleDbParameter("RealName", OleDbType.VarChar)).Value = realName;
 
-                        where += string.Format("And ut.UserName =:UserName");
+                        where += string.Format("And ut.RealName =:RealName");
                     }
                     if (!string.IsNullOrEmpty(txtScanCreateTime.Text))
                     {

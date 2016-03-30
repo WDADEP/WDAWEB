@@ -33,6 +33,7 @@
 
         function ImageBtnAddClick() {
             try {
+                var txtTel = $get('MainContent_txtTel').value;
                 var ddlKind = $get('MainContent_ddlKind').value;
                 var ddlViewType = $get('MainContent_ddlViewType').value;
                 var ddlApproveUser = $get('MainContent_ddlApproveUser').value;
@@ -45,6 +46,10 @@
                 }
                 if (ddlApproveUser == "0") {
                     alert('請選擇「簽核主管」。'); return false;
+                }
+                if (txtTel.length == 0) {
+                    alert('請輸入「使用者分機」。');
+                    return false;
                 }
                 return true;
             }

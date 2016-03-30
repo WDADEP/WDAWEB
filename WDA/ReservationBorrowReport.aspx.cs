@@ -61,6 +61,10 @@ namespace WDA
                             this.DBConn.GeneralSqlCmd.ExecuteNonQuery(strSql);
                         }
 
+
+                        dt.DefaultView.Sort = "fileno,boxno";
+                        dt = dt.DefaultView.ToTable(); 
+
                         ReportViewer1.LocalReport.DataSources.Add(new Microsoft.Reporting.WebForms.ReportDataSource("ReservationBorrowTable", dt));
 
                         ReportViewer1.SizeToReportContent = true;
@@ -101,11 +105,11 @@ namespace WDA
                 }
                 else
                 {
-                    dt.Columns.Add("wpoutno", System.Type.GetType("System.String"));
-                    dt.Columns.Add("commname", System.Type.GetType("System.String"));
-                    dt.Columns.Add("boxno", System.Type.GetType("System.String"));
-                    dt.Columns.Add("fileno", System.Type.GetType("System.String"));
-                    dt.Columns.Add("onfile", System.Type.GetType("System.String"));
+                    dt.Columns.Add("wpoutno", typeof(string));
+                    dt.Columns.Add("commname", typeof(string));
+                    dt.Columns.Add("fileno", typeof(string));
+                    dt.Columns.Add("boxno", typeof(string));
+                    dt.Columns.Add("onfile", typeof(string));
 
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
@@ -149,9 +153,9 @@ namespace WDA
                         dtWpr.Dispose(); dtWpr = null;
                     }
 
-                    DataView dv = dt.DefaultView;
-                    dv.Sort = "fileno ASC,boxno ASC";
-                    dt = dv.ToTable();
+                    //dv = dt.DefaultView;
+                    //dv.Sort = "fileno ASC,boxno ASC";
+                    //dt = dv.ToTable();
                 }
             }
             catch (Exception ex)

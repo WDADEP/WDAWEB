@@ -6,28 +6,28 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>2.24895cm</Width>
+              <Width>1.90499cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>1.865cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.72716cm</Width>
+              <Width>2.17154cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>3.32021cm</Width>
+              <Width>2.97625cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>3.20084cm</Width>
+              <Width>2.96272cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>3.12207cm</Width>
+              <Width>2.96332cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>5.21167cm</Width>
+              <Width>4.94709cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>3.16493cm</Width>
+              <Width>3.45597cm</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
@@ -823,7 +823,7 @@
           <TablixMembers>
             <TablixMember>
               <TablixHeader>
-                <Size>1.66688cm</Size>
+                <Size>1.37584cm</Size>
                 <CellContents>
                   <Textbox Name="Textbox76">
                     <CanGrow>true</CanGrow>
@@ -868,11 +868,14 @@
               </Group>
               <SortExpressions>
                 <SortExpression>
-                  <Value>=Fields!WPINNO.Value</Value>
+                  <Value>=Fields!FILENO.Value</Value>
+                </SortExpression>
+                <SortExpression>
+                  <Value>=Fields!BOXNO.Value</Value>
                 </SortExpression>
               </SortExpressions>
               <TablixHeader>
-                <Size>1.66688cm</Size>
+                <Size>1.37584cm</Size>
                 <CellContents>
                   <Textbox Name="RID">
                     <CanGrow>true</CanGrow>
@@ -881,7 +884,7 @@
                       <Paragraph>
                         <TextRuns>
                           <TextRun>
-                            <Value>=Fields!RID.Value</Value>
+                            <Value>=RowNumber("ReservationBorrowTable")</Value>
                             <Style />
                           </TextRun>
                         </TextRuns>
@@ -910,7 +913,7 @@
             </TablixMember>
             <TablixMember>
               <TablixHeader>
-                <Size>1.66688cm</Size>
+                <Size>1.37584cm</Size>
                 <CellContents>
                   <Textbox Name="Textbox90">
                     <CanGrow>true</CanGrow>
@@ -946,7 +949,7 @@
         </TablixRowHierarchy>
         <DataSetName>ReservationBorrowTable</DataSetName>
         <Height>1.8cm</Height>
-        <Width>26.52771cm</Width>
+        <Width>24.62271cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -957,7 +960,7 @@
     <Height>0.70866in</Height>
     <Style />
   </Body>
-  <Width>10.96457in</Width>
+  <Width>9.7044in</Width>
   <Page>
     <PageHeader>
       <Height>2.86972cm</Height>
@@ -1010,9 +1013,8 @@
           </Paragraphs>
           <rd:DefaultName>Textbox3</rd:DefaultName>
           <Top>0.3175cm</Top>
-          <Left>3.67763cm</Left>
           <Height>0.80291cm</Height>
-          <Width>18.78557cm</Width>
+          <Width>24.62271cm</Width>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1050,7 +1052,7 @@
           <rd:DefaultName>Textbox1</rd:DefaultName>
           <Top>1.58722cm</Top>
           <Height>0.6cm</Height>
-          <Width>4.64312cm</Width>
+          <Width>5.14583cm</Width>
           <ZIndex>1</ZIndex>
           <Style>
             <Border>
@@ -1091,10 +1093,10 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>1.51566cm</Top>
-          <Left>21.3025cm</Left>
+          <Top>1.48038cm</Top>
+          <Left>21.16674cm</Left>
           <Height>0.62646cm</Height>
-          <Width>5.25167cm</Width>
+          <Width>3.48243cm</Width>
           <ZIndex>2</ZIndex>
           <Style>
             <Border>
@@ -1126,9 +1128,9 @@
           </Paragraphs>
           <rd:DefaultName>Textbox30</rd:DefaultName>
           <Top>2.14212cm</Top>
-          <Left>21.3025cm</Left>
+          <Left>21.16674cm</Left>
           <Height>0.7276cm</Height>
-          <Width>5.25167cm</Width>
+          <Width>3.48243cm</Width>
           <ZIndex>3</ZIndex>
           <Style>
             <Border>

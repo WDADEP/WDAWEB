@@ -72,7 +72,7 @@
                            <td class="HeadTD_green" style="padding: 5px;">掃瞄作業者：
                            </td>
                            <td style="padding: 5px; text-align: left;">
-                               <asp:TextBox ID="TxtUserName" runat="server"></asp:TextBox>
+                               <asp:TextBox ID="TxtRealName" runat="server"></asp:TextBox>
                            </td>
                        </tr>
                        <tr style="padding: 5px;">
