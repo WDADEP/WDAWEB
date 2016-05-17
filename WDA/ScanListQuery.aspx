@@ -4,6 +4,8 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <script type="text/javascript">
         function pageLoad() {
+            $('#obj_TiMac').hide();
+
             $("#MainContent_txtScanCreateTime").datepicker("option", $.datepicker.regional["zh-TW"]);
             $("#MainContent_txtScanEndTime").datepicker("option", $.datepicker.regional["zh-TW"]);
 
@@ -177,5 +179,8 @@
            </div>
     <cc1:LiteralMessageBox ID="LiteralMessageBox1" runat="server"></cc1:LiteralMessageBox>
     <input id="HiddenMessage" type="Hidden" runat="server" />
-           </div>
+    </div>
+    <div id="obj_TiMac">
+        <asp:Button ID="Button1" runat="server" Text="Button" />
+    </div>
 </asp:Content>

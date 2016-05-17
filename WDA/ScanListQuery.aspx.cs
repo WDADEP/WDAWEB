@@ -64,6 +64,8 @@ namespace WDA
         protected void Page_Load(object sender, EventArgs e)
         {
             this.LoadPage(true);
+            //ADD BY RICHARD 20160511
+            this.Form.DefaultButton = this.Button1.UniqueID;
 
             try
             {
@@ -421,7 +423,6 @@ namespace WDA
         }
         #endregion
 
-
         #region GridView Events
 
         #region GridView1_RowDataBound
@@ -432,43 +433,6 @@ namespace WDA
 
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-    /*            Label lblCaseID = (Label)e.Row.Cells[0].FindControl("LblCaseID");
-                //ADD BY RICHARD BARCODEVALUE 20160330
-                Label lblBARCODEVALUE = (Label)e.Row.Cells[0].FindControl("lblBARCODEVALUE");
-
-                if (string.IsNullOrEmpty(CaseID))
-                {
-                    CaseID = lblCaseID.Text;
-                }
-
-                if (CaseID != lblCaseID.Text)
-                {
-                    CaseID = lblCaseID.Text;
-                    ColorInt += 1;
-                }
-
-                //ADD BY RICHARD 20160330
-                if (string.IsNullOrEmpty(BARCODEVALUE))
-                {
-                    BARCODEVALUE = lblBARCODEVALUE.Text;
-                }
-
-                if (BARCODEVALUE != lblBARCODEVALUE.Text)
-                {
-                    BARCODEVALUE = lblBARCODEVALUE.Text;
-                    ColorInt += 1;
-                }
-
-
-                if (ColorInt % 2 != 0)
-                {
-                    lblCaseID.Attributes.Add("style", "color:#AA0000 ");
-                    e.Row.Cells[2].Text = " <span style=color:#AA0000>" + e.Row.Cells[2].Text + "</span>";
-                    e.Row.Cells[3].Text = " <span style=color:#AA0000>" + e.Row.Cells[3].Text + "</span>";
-                    e.Row.Cells[4].Text = " <span style=color:#AA0000>" + e.Row.Cells[4].Text + "</span>";
-                    e.Row.Cells[5].Text = " <span style=color:#AA0000>" + e.Row.Cells[5].Text + "</span>";
-                }
-     * */
                 ImageButton btnDelete = (ImageButton)e.Row.Cells[1].FindControl("ImageBtnDelete");
 
                 if (btnDelete != null)

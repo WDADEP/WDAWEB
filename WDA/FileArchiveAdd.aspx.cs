@@ -184,6 +184,9 @@ namespace WDA
                 {
                     this.txtBarcodeValue.Text = string.Empty;
                     this.txtBarcodeValue.Enabled = true;
+                    //ADD BY RICHARD 20160511 查詢文號設定為空
+                    this.txtQueryBarcodeValue.Text = string.Empty;
+
                     if (this.RadioButtonList1.SelectedValue == "0")
                     {
                         this.txtBoxNo.Text = (this.BoxNo.Length == 0) ? "" : (Convert.ToInt64(this.BoxNo) + 1).ToString().PadLeft(this.BoxNo.Length, '0');
@@ -325,6 +328,9 @@ namespace WDA
 
                         //顯示資料
                         this.txtBarcodeValue.Text = dt.Rows[index]["BarcodeValue"].ToString();
+                        //ADD BY RICHARD 20160510 跟第二個收文號同步
+                        this.txtQueryBarcodeValue.Text = dt.Rows[index]["BarcodeValue"].ToString();
+
 
                         this.txtFileNo.Text = this.FileNo;
 

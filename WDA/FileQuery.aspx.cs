@@ -132,7 +132,9 @@ namespace WDA
                         this.GridView1.DataBind((DataTable)ViewState[this.GridView1.ClientID], Anew, LockPageNum);
                     //}
 
-                    where = string.Format("And WP.WPINNO ='{0}' AND FB.GETIME IS NOT NULL ", wpinno);
+                    //MODIFY BY RICHARD 20160510 只要有做703借檔，就該顯示於707查詢，簽核後再顯示簽核資訊，而非等到檔案室調妥新增後才有借檔資料
+                    //where = string.Format("And WP.WPINNO ='{0}' AND WP.PRTFLAG IN ('N','P','F') ", wpinno);
+                    where = string.Format("And WP.WPINNO ='{0}' ", wpinno);
 
                     strSql = this.Select.FileQuery(where);
 
