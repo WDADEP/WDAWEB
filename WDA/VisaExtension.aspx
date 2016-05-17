@@ -51,8 +51,8 @@
                                 <asp:Label ID="LblTranst" runat="server"></asp:Label>
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:BoundField HeaderText="預約人" DataField="RECEIVER" SortExpression="RECEIVER" />
-                        <asp:BoundField HeaderText="案件別" DataField="kindName" SortExpression="kindName"/>
+                        <asp:BoundField HeaderText="預約人" DataField="RealName" SortExpression="RealName" />
+                        <asp:BoundField HeaderText="借檔類別" DataField="kindName" SortExpression="kindName"/>
                         <asp:TemplateField HeaderText="原定還檔日">
                             <ItemTemplate>
                                 <asp:Label ID="LblReDate" runat="server"></asp:Label>
@@ -77,6 +77,7 @@
                         <asp:BoundField DataField="EXTENSIONCOUNT" HeaderText="EXTENSIONCOUNT" SortExpression="EXTENSIONCOUNT" />
                         <asp:BoundField DataField="KIND" HeaderText="KIND" SortExpression="KIND" />
                         <asp:BoundField DataField="VIEWTYPE" HeaderText="VIEWTYPE" SortExpression="VIEWTYPE" />
+                        <asp:BoundField DataField="GETIME" HeaderText="GETIME" />
                     </Columns>
                     <FooterStyle CssClass="FooterStyle" />
                     <HeaderStyle CssClass="HeaderStyle" />

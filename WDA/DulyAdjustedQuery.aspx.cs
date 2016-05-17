@@ -118,11 +118,9 @@ namespace WDA
                         string caseno = this.txtCaseno.Text.Trim().Replace(StringFormatException.Mode.Sql);
                         where += string.Format("And fb.Caseno ='{0}'", caseno);
                     }
-                    //if (!string.IsNullOrEmpty(txtApplkind.Text))
-                    if (this.ddlApplkind.SelectedIndex > 0)
+                    if (!string.IsNullOrEmpty(txtApplkind.Text))
                     {
-                        //string applkind = this.txtApplkind.Text.Trim().Replace(StringFormatException.Mode.Sql);
-                        string applkind = this.ddlApplkind.SelectedValue;
+                        string applkind = this.txtApplkind.Text.Trim().Replace(StringFormatException.Mode.Sql);
                         where += string.Format("And fb.Applkind ='{0}'", applkind);
                     }
                     if (!string.IsNullOrEmpty(txtCommname.Text))

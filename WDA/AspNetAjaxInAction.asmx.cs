@@ -421,17 +421,21 @@ namespace WDA
                         {
                             switch (dt.Rows[0]["kind"].ToString())
                             {
+                                //#計算一般案件預約歸檔新增起 7工作日,展期再加7工作日
+                                //#計算法制案件預約歸檔新增起14工作日,展期再加7工作日
+                                //#計算行政案件預約歸檔新增起365工作日,展期再加90工作日
+                                //MODIFY BY RICHARD 20160418
                                 case "1":
-                                    Redate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
-                                    ExtensionRedate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(15).ToString("yyyy/MM/dd HH:mm:ss");
+                                    Redate = DateTime.Parse(dt.Rows[0]["getime"].ToString()).AddDays(9).ToString("yyyy/MM/dd HH:mm:ss");
+                                    ExtensionRedate = DateTime.Parse(dt.Rows[0]["getime"].ToString()).AddDays(18).ToString("yyyy/MM/dd HH:mm:ss");
                                     break;
                                 case "2":
-                                    Redate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
-                                    ExtensionRedate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(15).ToString("yyyy/MM/dd HH:mm:ss");
+                                    Redate = DateTime.Parse(dt.Rows[0]["getime"].ToString()).AddDays(18).ToString("yyyy/MM/dd HH:mm:ss");
+                                    ExtensionRedate = DateTime.Parse(dt.Rows[0]["getime"].ToString()).AddDays(27).ToString("yyyy/MM/dd HH:mm:ss");
                                     break;
                                 case "3":
-                                    Redate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(366).ToString("yyyy/MM/dd HH:mm:ss");
-                                    ExtensionRedate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(456).ToString("yyyy/MM/dd HH:mm:ss");
+                                    Redate = DateTime.Parse(dt.Rows[0]["getime"].ToString()).AddDays(485).ToString("yyyy/MM/dd HH:mm:ss");
+                                    ExtensionRedate = DateTime.Parse(dt.Rows[0]["getime"].ToString()).AddDays(611).ToString("yyyy/MM/dd HH:mm:ss");
                                     break;
                                 default: break;
                             }
@@ -441,26 +445,27 @@ namespace WDA
                             switch (dt.Rows[0]["kind"].ToString())
                             {
                                 case "1":
-                                    Redate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
-                                    ExtensionRedate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(15).ToString("yyyy/MM/dd HH:mm:ss");
+                                    Redate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(9).ToString("yyyy/MM/dd HH:mm:ss");
+                                    ExtensionRedate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(18).ToString("yyyy/MM/dd HH:mm:ss");
                                     break;
                                 case "2":
-                                    Redate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
-                                    ExtensionRedate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(15).ToString("yyyy/MM/dd HH:mm:ss");
+                                    Redate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(9).ToString("yyyy/MM/dd HH:mm:ss");
+                                    ExtensionRedate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(18).ToString("yyyy/MM/dd HH:mm:ss");
                                     break;
                                 case "3":
-                                    Redate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(366).ToString("yyyy/MM/dd HH:mm:ss");
-                                    ExtensionRedate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(456).ToString("yyyy/MM/dd HH:mm:ss");
+                                    Redate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(126).ToString("yyyy/MM/dd HH:mm:ss");
+                                    ExtensionRedate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(252).ToString("yyyy/MM/dd HH:mm:ss");
                                     break;
                                 default: break;
                             }
                         }
                     }
-                    else if (dt.Rows[0]["Viewtype"].ToString() == "2")
+                    else if (dt.Rows[0]["Viewtype"].ToString() == "2") //電子檔
                     {
                         if (dt.Rows[0]["kind"].ToString() == "3" && !string.IsNullOrEmpty(dt.Rows[0]["EXTENSIONDATE"].ToString()))
                         {
-                            DateTime STime = DateTime.Parse(DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(15).ToString("yyyy/MM/dd HH:mm:ss")); //起始日
+                            //電子檔案調閱期限為7天，期滿則無法檢視該文件。若有繼續使用之必要者，可辦理線上展期，展期天數以7日為限，行政救濟案件展期天數則不得超過3個月。
+                            DateTime STime = DateTime.Parse(DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(18).ToString("yyyy/MM/dd HH:mm:ss")); //起始日
                             DateTime ETime = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString());
                             TimeSpan Total = ETime.Subtract(STime); //日期相減
 
@@ -474,13 +479,13 @@ namespace WDA
 
                         if (string.IsNullOrEmpty(dt.Rows[0]["EXTENSIONDATE"].ToString()))
                         {
-                            Redate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
-                            ExtensionRedate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(15).ToString("yyyy/MM/dd HH:mm:ss");
+                            Redate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(9).ToString("yyyy/MM/dd HH:mm:ss");
+                            ExtensionRedate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(18).ToString("yyyy/MM/dd HH:mm:ss");
                         }
                         else
                         {
-                            Redate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
-                            ExtensionRedate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(15).ToString("yyyy/MM/dd HH:mm:ss");
+                            Redate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(9).ToString("yyyy/MM/dd HH:mm:ss");
+                            ExtensionRedate = DateTime.Parse(dt.Rows[0]["EXTENSIONDATE"].ToString()).AddDays(18).ToString("yyyy/MM/dd HH:mm:ss");
                         }
                     }
                      
@@ -491,7 +496,13 @@ namespace WDA
                     AlsoFileInfos.Rname = dt.Rows[0]["RealName"].ToString();
                     AlsoFileInfos.Kind = dt.Rows[0]["kindName"].ToString();
                     AlsoFileInfos.Redate = Redate;
-                    AlsoFileInfos.Exten = dt.Rows[0]["Exten"].ToString();
+                    //MODIFY BY RICHARD 20160418
+                    string strExten = string.Empty;
+                    if (dt.Rows[0]["Exten"].ToString().Equals("Y") || dt.Rows[0]["Exten"].ToString().Equals("D"))
+                        strExten = "是";
+                    else
+                        strExten = "否";
+                    AlsoFileInfos.Exten = strExten;
                     AlsoFileInfos.ExtensionRedate = ExtensionRedate;
                 }
 
@@ -636,21 +647,32 @@ namespace WDA
 
                 if (dt.Rows.Count > 0)
                 {
-                    switch (dt.Rows[0]["kind"].ToString())
-                    {
-                        case "1":
-                            Redate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
-                            break;
-                        case "2":
-                            Redate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
-                            break;
-                        case "3":
-                            Redate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(366).ToString("yyyy/MM/dd HH:mm:ss");
-                            break;
-                        default: break;
-                    }
+                    //REMARK BY RICHARD 20160418 REDATE 預設帶今日時間
+                    //switch (dt.Rows[0]["kind"].ToString())
+                    //{
+                    //    case "1":
+                    //        Redate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
+                    //        break;
+                    //    case "2":
+                    //        Redate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
+                    //        break;
+                    //    case "3":
+                    //        Redate = DateTime.Parse(dt.Rows[0]["Transt"].ToString()).AddDays(366).ToString("yyyy/MM/dd HH:mm:ss");
+                    //        break;
+                    //    default: break;
+                    //}
 
                     Wpstatus = string.IsNullOrEmpty(dt.Rows[0]["Redate"].ToString()) ? "未還檔" : "已還檔";
+
+                    //ADD BY RICHARD 20160328 for 取消還檔
+                    if (Wpstatus.Equals("已還檔"))
+                    {
+                        string strRedate = dt.Rows[0]["Redate"].ToString().Trim();
+                        if (strRedate.Equals("2999/12/31 下午 12:00:00"))
+                            Wpstatus = "取消還檔";
+                    }
+
+
 
                     PaperAlsoFileInfos.Wpinno = dt.Rows[0]["Wpinno"].ToString();
                     PaperAlsoFileInfos.Wpoutno = dt.Rows[0]["Wpoutno"].ToString();

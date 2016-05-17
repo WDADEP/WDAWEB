@@ -18,7 +18,7 @@
 
             function ImageBtnOKClick() {
                 try {
-                    if (!IsCheckWpinno) { alert('請先確認發文文號!!'); return false; }
+                    if (!IsCheckWpinno) { alert('請先按下收文文號按鈕!!'); return false; }
                     return true;
                 }
                 catch (e) {

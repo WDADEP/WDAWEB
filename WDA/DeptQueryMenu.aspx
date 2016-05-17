@@ -1,7 +1,8 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="UserQueryMenu.aspx.cs" Inherits="WDA.UserQueryMenu" %>
-
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DeptQueryMenu.aspx.cs" Inherits="WDA.DeptQueryMenu" %>
 <%@ Register Assembly="WDA" Namespace="WDA" TagPrefix="cc1" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
+
     <script type="text/javascript">
         function pageLoad() {
             showMessage();
@@ -17,42 +18,27 @@
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <h4>說明：</h4>
         <ol>
-            <li>設定「查詢條件」，完成後請按【確定】鍵執行查詢動作。</li>
-            <li>您可設定一個以上的查詢條件，以取得更精確的查詢結果。</li>
+            <li>科室別清單</li>
+            <li>填寫完科室別中文名稱，點選查詢。</li>
         </ol>
     </div>
     <div class="well well-lg">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title">人員管理─查詢</h3>
+                <h3 class="panel-title">科室別管理─查詢</h3>
             </div>
             <div class="panel-body">
                 <div style="width: 98%; text-align: right">
-                    <asp:Button ID="BtnAdd" runat="server" Text="新增人員" Class="btn btn-success" OnClick="BtnAdd_Click" />
+                    <asp:Button ID="BtnAdd" runat="server" Text="新增科室別" Class="btn btn-success" OnClick="BtnAdd_Click" Visible="false"/>
                 </div>
                 <table class="ItemTD_green" style="width: 98%; float: right; border-collapse: separate; border-spacing: 1px;" border="1">
-                    <tr style="padding: 5px;">
-                        <td class="HeadTD_green" style="padding: 5px;">
-                            <asp:Label ID="lblUserName" runat="server" Text="帳號：" Width="90px"></asp:Label>
-                        </td>
-                        <td style="padding: 5px; text-align: left;">
-                            <asp:TextBox ID="TxtUserName" runat="server"></asp:TextBox>
-                        </td>
-                    </tr>
                     <tr>
                         <td class="HeadTD_green" style="padding: 5px;">
-                            <asp:Label ID="lblRealName" runat="server" Text="姓名：" Width="90px"></asp:Label>
+                            <asp:Label ID="lblDeptName" runat="server" Text="科室別：" Width="90px"></asp:Label>
                         </td>
                         <td style="padding: 5px; text-align: left;">
-                            <asp:TextBox ID="TxtRealName" runat="server"></asp:TextBox>
+                            <asp:TextBox ID="TxtDeptName" runat="server"></asp:TextBox>
                         </td>
-                    </tr>
-                    <tr>
-                        <td class="HeadTD_green" style="padding: 5px;">
-                            <asp:Label ID="lblRole" runat="server" Text="角色：" Width="90px"></asp:Label>
-                        </td>
-                        <td style="padding: 5px; text-align: left;">
-                            <asp:DropDownList ID="DDLRole" runat="server"></asp:DropDownList>
                     </tr>
                 </table>
             </div>
@@ -72,7 +58,7 @@
             <br>
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h3 class="panel-title">人員管理─詳細列表如下：</h3>
+                    <h3 class="panel-title">科室別管理─詳細列表如下：</h3>
                 </div>
                 <div class="panel-body">
                 </div>
@@ -93,43 +79,16 @@
                                 <asp:ImageButton ID="ImageBtnDelete" runat="server" ImageUrl="Images/delete.gif" CommandName="Stop" />
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:BoundField DataField="UserName" HeaderText="員工帳號" SortExpression="UserName" ReadOnly="True" />
-                        <asp:TemplateField HeaderText="員工姓名" SortExpression="RealName">
-                            <EditItemTemplate>
-                                <asp:TextBox ID="TxtRealName" Text='<%# Bind("RealName") %>' runat="server"></asp:TextBox>
-                            </EditItemTemplate>
-                            <ItemTemplate>
-                                <asp:Label ID="Label2" runat="server" Text='<%# Bind("RealName") %>'></asp:Label>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:TemplateField HeaderText="角色">
-                            <EditItemTemplate>
-                                <asp:DropDownList ID="ITDDLRole" runat="server">
-                                </asp:DropDownList>
-                            </EditItemTemplate>
-                            <ItemTemplate>
-                                <asp:Label ID="Label1" runat="server" Text='<%# Bind("RoleName") %>'></asp:Label>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:BoundField DataField="UserStatus" HeaderText="UserStatus" SortExpression="UserStatus" ReadOnly="True" />
-                        <asp:BoundField DataField="UserID" HeaderText="人員編號" SortExpression="UserID" ReadOnly="True" />
-                        <asp:BoundField DataField="RoleID" HeaderText="角色編號" SortExpression="RoleID" ReadOnly="True" />
-                        <asp:TemplateField HeaderText="分機號碼" SortExpression="TEL">
-                            <EditItemTemplate>
-                                <asp:TextBox ID="TxtTEL" runat="server" Text='<%# Bind("TEL") %>'></asp:TextBox>
-                            </EditItemTemplate>
-                            <ItemTemplate>
-                                <asp:Label ID="Label3" runat="server" Text='<%# Bind("TEL") %>'></asp:Label>
-                            </ItemTemplate>
-                        </asp:TemplateField>
                         <asp:TemplateField HeaderText ="科室別">
                             <EditItemTemplate>
-                                <asp:DropDownList ID="ITDDLDept" runat="server"></asp:DropDownList>
+                                <asp:TextBox ID="TxtDEPTNAME" runat="server" Text='<%# Bind("DEPTNAME") %>'></asp:TextBox>
                             </EditItemTemplate>
                             <ItemTemplate>
                                 <asp:Label ID="lblDept" runat="server" Text='<%# Bind("DEPTNAME") %>'></asp:Label>
                              </ItemTemplate>
                         </asp:TemplateField>
+                        <asp:BoundField DataField="Status" HeaderText="Status"  ReadOnly="True" />
+                        <asp:BoundField DataField="DeptID" HeaderText="科室代碼" ReadOnly="True" />
                     </Columns>
                     <FooterStyle CssClass="FooterStyle" />
                     <HeaderStyle CssClass="HeaderStyle" />
@@ -150,4 +109,5 @@
         <input id="HiddenMessage" type="Hidden" runat="server" />
         <input id="HiddenShowPanel" type="Hidden" runat="server" />
     </div>
+
 </asp:Content>

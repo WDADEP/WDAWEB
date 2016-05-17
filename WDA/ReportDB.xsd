@@ -33,7 +33,7 @@
               <xs:element name="TRANST" msprop:Generator_ColumnVarNameInTable="columnTRANST" msprop:Generator_ColumnPropNameInRow="TRANST" msprop:Generator_ColumnPropNameInTable="TRANSTColumn" msprop:Generator_UserColumnName="TRANST" type="xs:string" minOccurs="0" />
               <xs:element name="HURRYTIME" msprop:Generator_ColumnVarNameInTable="columnHURRYTIME" msprop:Generator_ColumnPropNameInRow="HURRYTIME" msprop:Generator_ColumnPropNameInTable="HURRYTIMEColumn" msprop:Generator_UserColumnName="HURRYTIME" type="xs:string" minOccurs="0" />
               <xs:element name="RECEIVER" msprop:Generator_ColumnVarNameInTable="columnRECEIVER" msprop:Generator_ColumnPropNameInRow="RECEIVER" msprop:Generator_ColumnPropNameInTable="RECEIVERColumn" msprop:Generator_UserColumnName="RECEIVER" type="xs:string" minOccurs="0" />
-              <xs:element name="transtExtra" msprop:Generator_ColumnVarNameInTable="columntranstExtra" msprop:Generator_ColumnPropNameInRow="transtExtra" msprop:Generator_ColumnPropNameInTable="transtExtraColumn" msprop:Generator_UserColumnName="transtExtra" type="xs:string" minOccurs="0" />
+              <xs:element name="DEPTNAME" msprop:Generator_ColumnVarNameInTable="columnDEPTNAME" msprop:Generator_ColumnPropNameInRow="DEPTNAME" msprop:Generator_ColumnPropNameInTable="DEPTNAMEColumn" msprop:Generator_UserColumnName="DEPTNAME" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

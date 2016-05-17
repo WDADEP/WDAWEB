@@ -43,6 +43,9 @@
                        if (bev.Wpstatus == '未還檔') {
                            IsCheckWpstatus = true;
                        }
+                       else if (bev.Wpstatus == '取消還檔') {
+                           alert("取消還檔、還檔人：" + bev.RealName + "、還檔日期：" + bev.Redated); $('#ShowInfo').hide(); IsCheckNo = false; return;
+                       }
                        else { alert("已還檔、還檔人：" + bev.RealName + "、還檔日期：" + bev.Redated); $('#ShowInfo').hide(); IsCheckNo = false; return; }
 
                        IsCheckNo = true;
@@ -138,22 +141,24 @@
                             </td>
                         </tr>
                     </table>
+
+                    <table border="0" style="width: 100%; border-collapse: collapse">
+                        <tr style="text-align: center">
+                            <td style="text-align: right">
+                                <asp:Button ID="BtnOK" runat="server" Text="還 檔" class="btn btn-large btn-success" OnClick="BtnOK_Click" OnClientClick="JavaScript:if(!ImageBtnOKClick()) {return false} ;" />
+                            </td>
+                            <td style="text-align:center">
+                                <asp:Button ID="BtnCancel" runat="server" Text="取消還檔"　class="btn btn-large btn-success" OnClientClick="JavaScript:if(!ImageBtnOKClick()) {return false} ;" OnClick="BtnCancel_Click" />
+                            </td>
+                            <td style="text-align: left">
+                                <asp:Button ID="BtnClear" runat="server" Text="取 消" class="btn btn-large btn-success" OnClick="BtnClear_Click"/>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
-            <table border="0" style="width: 100%; border-collapse: collapse">
-                <tr style="text-align: center">
-                    <td style="text-align: right">
-                        <asp:Button ID="BtnOK" runat="server" Text="還 檔" class="btn btn-large btn-success" OnClick="BtnOK_Click" OnClientClick="JavaScript:if(!ImageBtnOKClick()) {return false} ;" />
-                    </td>
-                    <td style="text-align: center"></td>
-                    <td style="text-align: left">
-                        <asp:Button ID="BtnClear" runat="server" Text="取 消" class="btn btn-large btn-success" OnClick="BtnClear_Click"/>
-                    </td>
-                </tr>
-            </table>
-            <br />
         </div>
-        <div id="btn1">
+        <div id="btn_command">
         </div>
         <cc1:LiteralMessageBox ID="LiteralMessageBox1" runat="server"></cc1:LiteralMessageBox>
         <input id="HiddenMessage" type="Hidden" runat="server" />

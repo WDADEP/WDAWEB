@@ -62,6 +62,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -496,6 +497,7 @@
           <TablixMembers>
             <TablixMember>
               <KeepWithGroup>After</KeepWithGroup>
+              <RepeatOnNewPage>true</RepeatOnNewPage>
             </TablixMember>
             <TablixMember>
               <Group Name="詳細資料" />
@@ -506,7 +508,7 @@
         <RepeatRowHeaders>true</RepeatRowHeaders>
         <DataSetName>FileArchiveTable</DataSetName>
         <Height>1.2cm</Height>
-        <Width>16.97281cm</Width>
+        <Width>16.97282cm</Width>
         <Style>
           <Border>
             <Style>None</Style>

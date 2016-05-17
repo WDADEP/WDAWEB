@@ -147,7 +147,7 @@ namespace WDA
             {
                 this.HiddenShowPanel.Value = "false";
 
-                this.ShowMessage("查詢不到對應的發文編號，或此發文編號已歸檔", MessageMode.INFO); return;
+                this.ShowMessage("查詢不到收文號，或此文號已歸檔", MessageMode.INFO); return;
             }
 
 
@@ -182,19 +182,6 @@ namespace WDA
             {
                 if (this.UpdateDataByWprec())
                 {
-                    #region Monitor
-                    string wpinno = string.Empty;
-
-                    if (!string.IsNullOrEmpty(this.txtBarcodeValue.Text.Trim()))
-                    {
-                        wpinno = this.txtBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql);
-                    }
-
-                    string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
-
-                    this.MonitorLog.LogMonitor(wpinno, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA05, string.Empty);
-                    #endregion
-
                     this.txtBarcodeValue.Text = string.Empty;
                     this.txtBarcodeValue.Enabled = true;
                     if (this.RadioButtonList1.SelectedValue == "0")
@@ -208,27 +195,16 @@ namespace WDA
 
                     this.txtFileNo.Text = this.FileNo;
                     this.txtKeepYr.Text = this.KeepYr;
+                    //ADD BY RICHARD 20160414 set focus
+                    this.txtBarcodeValue.Focus();
                     //this.HiddenShowPanel.Value = "false";
                 }
             }
-            else if (this.ViewType == "2")
+            else if (this.ViewType == "2") //電子
             {
                 if (this.UpdateData())
                 {
                     this.DataBind(true, false);
-
-                    #region Monitor
-                    string wpinno = string.Empty;
-
-                    if (!string.IsNullOrEmpty(this.txtBarcodeValue.Text.Trim()))
-                    {
-                        wpinno = this.txtBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql);
-                    }
-
-                    string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
-
-                    this.MonitorLog.LogMonitor(wpinno, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA05, string.Empty);
-                    #endregion
                 }
             }
         }
@@ -261,7 +237,8 @@ namespace WDA
             DataTable dt = null;
             try
             {
-                where = string.Format("And wpinno = '{0}'\n And FILENO is null And FILEDATE is null And KEEPYR is null And BOXNO is null", this.txtQueryBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim());
+                //MODIFY BY RICHARD 20160427 檢查該文號是否有發文(發文日期或發文人員有值)
+                where = string.Format("And WPINNO = '{0}'\n And FILENO is null And FILEDATE is null And KEEPYR is null And BOXNO is null AND  (SENDMAN is not null or WPOUTDATE is not null) ", this.txtQueryBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim());
 
                 strSql = this.Select.WprecCheck(where);
 
@@ -324,7 +301,8 @@ namespace WDA
 
                         this.HiddenShowPanel.Value = "false";
 
-                        this.ShowMessage("已完成歸檔", MessageMode.INFO);
+                        //Remark by Richard 20160407 for 建議於歸檔未成功時，再行跳出提示畫面
+                        //this.ShowMessage("已完成歸檔", MessageMode.INFO);
                     }
                     else
                     {
@@ -443,13 +421,13 @@ namespace WDA
                 this.DBConnTransac.GeneralSqlCmd.Command.CommandTimeout = 90;
 
                 //Wprec
-                strWhere = string.Format("And WpinNo = '{0}'\n", this.BarcodeValue);
+                strWhere = string.Format("And WPINNO = '{0}'\n", this.BarcodeValue);
                 strSql = this.Update.Wprec(ht, strWhere);
                 this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
                 result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
                 if (result < 1)
                 {
-                    this.ShowMessage("WPREC Table 找不到對應的發文文號");
+                    this.ShowMessage("WPREC Table 找不到對應的文號");
                     this.WriteLog(global::Log.Mode.LogMode.ERROR, "Update WPREC Fail");
                     return false;
                 }
@@ -465,7 +443,7 @@ namespace WDA
                 }
 
                 //BarcodeTable
-                strWhere = string.Format("And WpinNo = '{0}'\n", this.BarcodeValue);
+                strWhere = string.Format("And wp.WpinNo = '{0}'\n", this.BarcodeValue);
                 strSql = this.Select.Wprec(strWhere);
                 this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
                 string wpoutNo = this.DBConnTransac.GeneralSqlCmd.ExecuteByColumnName(strSql, "WpoutNo");  //找出發文文號
@@ -478,6 +456,13 @@ namespace WDA
 
                 if (result > 0)
                 {
+                    #region Monitor
+
+                    string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+
+                    this.MonitorLog.LogMonitor(this.BarcodeValue, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA05, "電子檔歸檔");
+                    #endregion
+
                     this.DBConnTransac.GeneralSqlCmd.Transaction.Commit();
                 }
                 else
@@ -543,7 +528,7 @@ namespace WDA
                 result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
                 if (result < 1)
                 {
-                    this.ShowMessage("WPREC Table 找不到對應的發文文號或是此文號已經歸檔");
+                    this.ShowMessage("WPREC Table 找不到對應的收文號或是此文號已經歸檔");
                     this.WriteLog(global::Log.Mode.LogMode.ERROR, "Update WPREC Fail");
                     return false;
                 }
@@ -560,6 +545,13 @@ namespace WDA
 
                 if (result > 0)
                 {
+                    #region Monitor
+
+                    string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+
+                    this.MonitorLog.LogMonitor(this.BarcodeValue, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA05, "紙本歸檔");
+                    #endregion
+
                     this.DBConnTransac.GeneralSqlCmd.Transaction.Commit();
                 }
             }

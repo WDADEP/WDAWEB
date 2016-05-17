@@ -11,8 +11,7 @@
             try {
                 var txtWPINNO = $get('MainContent_TxtWPINNO').value;
 
-                if (txtWPINNO.length == 0)
-                {
+                if (txtWPINNO.length == 0) {
                     alert('收文號');
                     return false;
                 }
@@ -82,7 +81,11 @@
                            </asp:GridView>
                        </div>
                    </div>
-                        <h4 class="panel-title">檔案狀況：</h4>
+                   <div class="panel-body">
+
+                        <h5 class="panel-title">檔案狀況：</h5>
+                       <div style="width: 98%">
+
                     <asp:GridView ID="GridView2" runat="server" AllowSorting="True" AutoGenerateColumns="False" CssClass="GridViewStyle" Width="98%" OnSorting="GridView2_Sorting" AllowPaging="True" OnPageIndexChanging="GridView2_PageIndexChanging">
                        <AlternatingRowStyle CssClass="AlternatingRowStyle" />
                        <Columns>
@@ -92,8 +95,8 @@
                            <asp:BoundField HeaderText="借檔日期" DataField="TRANST" SortExpression="TRANST" />
                            <asp:BoundField HeaderText="簽核日期" DataField="APPROVEDATE" SortExpression="APPROVEDATE" />
                            <asp:BoundField HeaderText="審核長官" DataField="REALNAME3" SortExpression="REALNAME3" />
-                           <asp:BoundField HeaderText="調檔日期" DataField="GETIME" SortExpression="GETIME" />
-                           <asp:BoundField HeaderText="調檔人員" DataField="WORKERID" SortExpression="WORKERID" />
+                           <asp:BoundField HeaderText="調妥日期" DataField="GETIME" SortExpression="GETIME" />
+                           <asp:BoundField HeaderText="調妥人員" DataField="WORKERID" SortExpression="WORKERID" />
                            <asp:BoundField HeaderText="還檔日期" DataField="REDATE" SortExpression="REDATE" />
                            <asp:BoundField HeaderText="還檔人員" DataField="REALNAME2" SortExpression="REALNAME2" />
                        </Columns>
@@ -103,6 +106,8 @@
                        <RowStyle CssClass="RowStyle" />
                        <PagerSettings Mode="NumericFirstLast" FirstPageText="[第一頁]" LastPageText="[最末頁]" />
                    </asp:GridView>
+			</div>
+                   </div>
                    <table id="tbPageLayer_GridView1" style="border-right: #ffffff 1px solid; border-top: #ffffff 1px solid; border-left: #e6e6e6 1px solid; border-bottom: #e6e6e6 1px solid; width: 100%;" border="1">
                        <tr>
                            <td style="padding: 0; float: none; background-color: #ffffff; text-align: right;" class="t12_blue">

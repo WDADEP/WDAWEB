@@ -6,25 +6,25 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>3.175cm</Width>
+              <Width>2.54cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>4.89675cm</Width>
+              <Width>2.70071cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>3.00271cm</Width>
+              <Width>2.63229cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>3.99459cm</Width>
+              <Width>1.85147cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>3.46603cm</Width>
+              <Width>1.6404cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.825cm</Width>
+              <Width>1.53396cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>3.16493cm</Width>
+              <Width>2.10658cm</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
@@ -172,7 +172,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>還檔日</Value>
+                              <Value>稽催次數</Value>
                               <Style>
                                 <Color>White</Color>
                               </Style>
@@ -205,7 +205,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>稽催次數</Value>
+                              <Value>借檔人</Value>
                               <Style>
                                 <Color>White</Color>
                               </Style>
@@ -238,7 +238,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>借檔人員</Value>
+                              <Value>科室</Value>
                               <Style>
                                 <Color>White</Color>
                               </Style>
@@ -368,7 +368,7 @@
                             <TextRun>
                               <Value>=Fields!TRANST.Value</Value>
                               <Style>
-                                <Format>D</Format>
+                                <Format>yyyy/M/d</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -376,38 +376,6 @@
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>TRANST</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Color>LightGrey</Color>
-                          <Style>Solid</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="transtExtra">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>=Fields!transtExtra.Value</Value>
-                              <Style>
-                                <Format>D</Format>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style />
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>transtExtra</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -431,13 +399,14 @@
                           <TextRuns>
                             <TextRun>
                               <Value>=Fields!HURRYTIME.Value</Value>
-                              <Style />
+                              <Style>
+                                <Format>0;(0)</Format>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style />
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>HURRYTIME</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -467,7 +436,35 @@
                           <Style />
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>RECEIVER</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="DEPTNAME">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!DEPTNAME.Value</Value>
+                              <Style />
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -751,6 +748,7 @@
               <TablixMembers>
                 <TablixMember />
               </TablixMembers>
+              <RepeatOnNewPage>true</RepeatOnNewPage>
             </TablixMember>
             <TablixMember>
               <Group Name="WPINNO">
@@ -760,7 +758,10 @@
               </Group>
               <SortExpressions>
                 <SortExpression>
-                  <Value>=Fields!WPINNO.Value</Value>
+                  <Value>=Fields!RECEIVER.Value</Value>
+                </SortExpression>
+                <SortExpression>
+                  <Value>=Fields!TRANST.Value</Value>
                 </SortExpression>
               </SortExpressions>
               <TablixHeader>
@@ -792,6 +793,7 @@
                       <PaddingBottom>2pt</PaddingBottom>
                     </Style>
                   </Textbox>
+                  <rd:Selected>true</rd:Selected>
                 </CellContents>
               </TablixHeader>
               <TablixMembers>
@@ -836,7 +838,7 @@
         </TablixRowHierarchy>
         <DataSetName>RecallQueryTable</DataSetName>
         <Height>1.8cm</Height>
-        <Width>25.94564cm</Width>
+        <Width>17.42604cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -847,7 +849,7 @@
     <Height>0.70866in</Height>
     <Style />
   </Body>
-  <Width>10.21482in</Width>
+  <Width>6.86065in</Width>
   <Page>
     <PageHeader>
       <Height>2.86972cm</Height>
@@ -901,7 +903,7 @@
           <rd:DefaultName>Textbox3</rd:DefaultName>
           <Top>0.3175cm</Top>
           <Height>0.80291cm</Height>
-          <Width>25.94563cm</Width>
+          <Width>17.42604cm</Width>
           <Style>
             <Border>
               <Style>None</Style>
@@ -939,52 +941,8 @@
           <rd:DefaultName>Textbox1</rd:DefaultName>
           <Top>2.22222cm</Top>
           <Height>0.6cm</Height>
-          <Width>5.59562cm</Width>
-          <ZIndex>1</ZIndex>
-          <Style>
-            <Border>
-              <Style>None</Style>
-            </Border>
-            <PaddingLeft>2pt</PaddingLeft>
-            <PaddingRight>2pt</PaddingRight>
-            <PaddingTop>2pt</PaddingTop>
-            <PaddingBottom>2pt</PaddingBottom>
-          </Style>
-        </Textbox>
-        <Textbox Name="Textbox4">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>列印日期：</Value>
-                  <Style>
-                    <FontStyle>Normal</FontStyle>
-                    <FontFamily>標楷體</FontFamily>
-                    <FontSize>12pt</FontSize>
-                    <FontWeight>Normal</FontWeight>
-                    <TextDecoration>None</TextDecoration>
-                    <Color>#000000</Color>
-                  </Style>
-                </TextRun>
-                <TextRun>
-                  <Value>=CDate(DateAdd(DateInterval.Year,-1911,Globals!ExecutionTime)).ToString("yyy/MM/dd")</Value>
-                  <Style>
-                    <FontFamily>標楷體</FontFamily>
-                    <FontSize>12pt</FontSize>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style />
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox4</rd:DefaultName>
-          <Top>1.51566cm</Top>
-          <Left>20.985cm</Left>
-          <Height>0.62646cm</Height>
           <Width>4.96063cm</Width>
-          <ZIndex>2</ZIndex>
+          <ZIndex>1</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1015,10 +973,10 @@
           </Paragraphs>
           <rd:DefaultName>Textbox30</rd:DefaultName>
           <Top>2.14212cm</Top>
-          <Left>20.985cm</Left>
+          <Left>12.1451cm</Left>
           <Height>0.7276cm</Height>
-          <Width>4.96063cm</Width>
-          <ZIndex>3</ZIndex>
+          <Width>5.28095cm</Width>
+          <ZIndex>2</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1056,8 +1014,8 @@
           <rd:DefaultName>Textbox1</rd:DefaultName>
           <Top>1.45236cm</Top>
           <Height>0.6cm</Height>
-          <Width>5.59562cm</Width>
-          <ZIndex>4</ZIndex>
+          <Width>4.96063cm</Width>
+          <ZIndex>3</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1075,12 +1033,12 @@
         </Border>
       </Style>
     </PageHeader>
-    <PageHeight>21cm</PageHeight>
-    <PageWidth>29.7cm</PageWidth>
-    <LeftMargin>1cm</LeftMargin>
+    <PageHeight>29.7cm</PageHeight>
+    <PageWidth>21cm</PageWidth>
+    <LeftMargin>0cm</LeftMargin>
     <RightMargin>0cm</RightMargin>
     <TopMargin>0cm</TopMargin>
-    <BottomMargin>0cm</BottomMargin>
+    <BottomMargin>1cm</BottomMargin>
     <ColumnSpacing>0.13cm</ColumnSpacing>
     <Style />
   </Page>
@@ -1129,8 +1087,8 @@
           <DataField>RECEIVER</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="transtExtra">
-          <DataField>transtExtra</DataField>
+        <Field Name="DEPTNAME">
+          <DataField>DEPTNAME</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>

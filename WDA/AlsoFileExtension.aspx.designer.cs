@@ -85,13 +85,13 @@ namespace WDA {
         protected global::System.Web.UI.WebControls.Label lblApplkind;
         
         /// <summary>
-        /// lblredate 控制項。
+        /// lblredate1 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblredate;
+        protected global::System.Web.UI.WebControls.Label lblredate1;
         
         /// <summary>
         /// lblexten 控制項。
@@ -103,13 +103,13 @@ namespace WDA {
         protected global::System.Web.UI.WebControls.Label lblexten;
         
         /// <summary>
-        /// lblredate1 控制項。
+        /// lblredate 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblredate1;
+        protected global::System.Web.UI.WebControls.Label lblredate;
         
         /// <summary>
         /// ddlApproveuserID 控制項。

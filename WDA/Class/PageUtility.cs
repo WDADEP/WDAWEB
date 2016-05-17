@@ -269,6 +269,8 @@ namespace WDA.Class
             public string RealName = string.Empty;
             public int UserStatus = -1;
             public string Tel = string.Empty;
+            //ADD BY RICHARD 20160411 DEPTID
+            public int DEPTID = -1;
 
             public string UnitID = string.Empty;
             public string UnitName = string.Empty;
@@ -318,6 +320,8 @@ namespace WDA.Class
                             this._UserInfo.UserName = dt.Rows[0]["UserName"].ToString();
                             this._UserInfo.RealName = dt.Rows[0]["RealName"].ToString();
                             this._UserInfo.Tel = dt.Rows[0]["Tel"].ToString();
+                            //ADD BY RICHARD 20160411
+                            this._UserInfo.DEPTID = int.Parse(dt.Rows[0]["DEPTID"].ToString());
 
                             result = Int32.TryParse(dt.Rows[0]["UserStatus"].ToString(), out number);
 

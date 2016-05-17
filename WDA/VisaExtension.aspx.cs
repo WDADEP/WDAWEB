@@ -41,10 +41,13 @@ namespace WDA
                 for (int i = 0; i < this.GridView1.Rows.Count; i++)
                 {
                     string WpinNo = this.GridView1.Rows[i].Cells[1].Text.Trim();
-                    string RECEIVER = this.GridView1.Rows[i].Cells[4].Text.Trim();
+                    //MODIFY BY RICHARD 20160418 4->11
+                    string RECEIVER = this.GridView1.Rows[i].Cells[11].Text.Trim();
                     string TRANST = DateTime.Parse(this.GridView1.Rows[i].Cells[10].Text.Trim()).ToString("yyyy/MM/dd tt hh:mm:ss");
-
-                    Label lblTranst = (Label)this.GridView1.Rows[i].Cells[3].FindControl("LblTranst");
+                    //REMARK BY RICHARD
+                    //Label lblTranst = (Label)this.GridView1.Rows[i].Cells[3].FindControl("LblTranst");
+                    //ADD BY RICHARD 20160418
+                    Label lblRedate = (Label)this.GridView1.Rows[i].Cells[6].FindControl("LblReDate");
                     string count = this.GridView1.Rows[i].Cells[15].Text.Trim();
                     string kind = this.GridView1.Rows[i].Cells[16].Text.Trim();
                     string viewtype = this.GridView1.Rows[i].Cells[17].Text.Trim();
@@ -58,28 +61,29 @@ namespace WDA
                     {
                         if (prtflag == "D")
                         {
-                            if (viewtype == "1")
-                            {
-                                switch (kind)
-                                {
-                                    case "1":
-                                        extensiondate = DateTime.Parse(lblTranst.Text).AddDays(7).ToString("yyyy/MM/dd HH:mm:ss");
-                                        break;
-                                    case "2":
-                                        extensiondate = DateTime.Parse(lblTranst.Text).AddDays(7).ToString("yyyy/MM/dd HH:mm:ss");
-                                        break;
-                                    case "3":
-                                        extensiondate = DateTime.Parse(lblTranst.Text).AddDays(90).ToString("yyyy/MM/dd HH:mm:ss");
-                                        break;
-                                    default: break;
-                                }
-                            }
-                            else if (viewtype == "2")
-                            {
-                                extensiondate = DateTime.Parse(lblTranst.Text).AddDays(7).ToString("yyyy/MM/dd HH:mm:ss");
-                            }
+                            //if (viewtype == "1")
+                            //{
+                            //    switch (kind)
+                            //    {
+                            //        case "1":
+                            //            extensiondate = DateTime.Parse(lblTranst.Text).AddDays(9).ToString("yyyy/MM/dd HH:mm:ss");
+                            //            break;
+                            //        case "2":
+                            //            extensiondate = DateTime.Parse(lblTranst.Text).AddDays(9).ToString("yyyy/MM/dd HH:mm:ss");
+                            //            break;
+                            //        case "3":
+                            //            extensiondate = DateTime.Parse(lblTranst.Text).AddDays(126).ToString("yyyy/MM/dd HH:mm:ss");
+                            //            break;
+                            //        default: break;
+                            //    }
+                            //}
+                            //else if (viewtype == "2")
+                            //{
+                            //    extensiondate = DateTime.Parse(lblTranst.Text).AddDays(9).ToString("yyyy/MM/dd HH:mm:ss");
+                            //}
 
                             extensioncount = Convert.ToInt32(count) + 1;
+                            extensiondate = DateTime.Parse(lblRedate.Text).ToString("yyyy/MM/dd HH:mm:ss"); 
 
                             ht.Clear();
                             ht.Add("EXTEN", "D");
@@ -111,7 +115,7 @@ namespace WDA
 
                             if (result < 1)
                             {
-                                this.ShowMessage("退回展期失敗"); return;
+                                this.ShowMessage("取消展期失敗"); return;
                             }
                         }
                     }
@@ -218,7 +222,7 @@ namespace WDA
         #region GridView1_RowCreated()
         protected void GridView1_RowCreated(object sender, GridViewRowEventArgs e)
         {
-            e.RowVisible(sender, new int[] { 10, 11, 12, 13, 14, 15, 16, 17 });
+            e.RowVisible(sender, new int[] { 10, 11, 12, 13, 14, 15, 16, 17, 18 });
         }
         #endregion
 
@@ -244,25 +248,29 @@ namespace WDA
                     {
                         switch (e.Row.Cells[16].Text)
                         {
+                            //#計算一般案件預約歸檔新增起 7日,展期再加7日
+                            //#計算法制案件預約歸檔新增起14日,展期再加7日
+                            //#計算行政案件預約歸檔新增起365日,展期再加90日
+                            //MODIFY BY RICHARD 20160418
                             case "1":
-                                lblredate.Text = DateTime.Parse(e.Row.Cells[10].Text).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
-                                lblextenredate.Text = DateTime.Parse(e.Row.Cells[10].Text).AddDays(15).ToString("yyyy/MM/dd HH:mm:ss");
+                                lblredate.Text = DateTime.Parse(e.Row.Cells[18].Text).AddDays(9).ToString("yyyy/MM/dd HH:mm:ss");
+                                lblextenredate.Text = DateTime.Parse(e.Row.Cells[18].Text).AddDays(18).ToString("yyyy/MM/dd HH:mm:ss");
                                 break;
                             case "2":
-                                lblredate.Text = DateTime.Parse(e.Row.Cells[10].Text).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
-                                lblextenredate.Text = DateTime.Parse(e.Row.Cells[10].Text).AddDays(15).ToString("yyyy/MM/dd HH:mm:ss");
+                                lblredate.Text = DateTime.Parse(e.Row.Cells[18].Text).AddDays(18).ToString("yyyy/MM/dd HH:mm:ss");
+                                lblextenredate.Text = DateTime.Parse(e.Row.Cells[18].Text).AddDays(27).ToString("yyyy/MM/dd HH:mm:ss");
                                 break;
                             case "3":
-                                lblredate.Text = DateTime.Parse(e.Row.Cells[10].Text).AddDays(366).ToString("yyyy/MM/dd HH:mm:ss");
-                                lblextenredate.Text = DateTime.Parse(e.Row.Cells[10].Text).AddDays(456).ToString("yyyy/MM/dd HH:mm:ss");
+                                lblredate.Text = DateTime.Parse(e.Row.Cells[18].Text).AddDays(485).ToString("yyyy/MM/dd HH:mm:ss");
+                                lblextenredate.Text = DateTime.Parse(e.Row.Cells[18].Text).AddDays(611).ToString("yyyy/MM/dd HH:mm:ss");
                                 break;
                             default: break;
                         }
                     }
                     else if (e.Row.Cells[17].Text == "2")
                     {
-                        lblredate.Text = DateTime.Parse(e.Row.Cells[10].Text).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
-                        lblextenredate.Text = DateTime.Parse(e.Row.Cells[10].Text).AddDays(15).ToString("yyyy/MM/dd HH:mm:ss");
+                        lblredate.Text = DateTime.Parse(e.Row.Cells[10].Text).AddDays(9).ToString("yyyy/MM/dd HH:mm:ss");
+                        lblextenredate.Text = DateTime.Parse(e.Row.Cells[10].Text).AddDays(18).ToString("yyyy/MM/dd HH:mm:ss");
                     }
                 }
                 else
@@ -276,24 +284,24 @@ namespace WDA
                         switch (e.Row.Cells[16].Text)
                         {
                             case "1":
-                                lblredate.Text = DateTime.Parse(e.Row.Cells[14].Text).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
-                                lblextenredate.Text = DateTime.Parse(e.Row.Cells[14].Text).AddDays(15).ToString("yyyy/MM/dd HH:mm:ss");
+                                lblredate.Text = DateTime.Parse(e.Row.Cells[14].Text).AddDays(9).ToString("yyyy/MM/dd HH:mm:ss");
+                                lblextenredate.Text = DateTime.Parse(e.Row.Cells[14].Text).AddDays(18).ToString("yyyy/MM/dd HH:mm:ss");
                                 break;
                             case "2":
-                                lblredate.Text = DateTime.Parse(e.Row.Cells[14].Text).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
-                                lblextenredate.Text = DateTime.Parse(e.Row.Cells[14].Text).AddDays(15).ToString("yyyy/MM/dd HH:mm:ss");
+                                lblredate.Text = DateTime.Parse(e.Row.Cells[14].Text).AddDays(9).ToString("yyyy/MM/dd HH:mm:ss");
+                                lblextenredate.Text = DateTime.Parse(e.Row.Cells[14].Text).AddDays(18).ToString("yyyy/MM/dd HH:mm:ss");
                                 break;
                             case "3":
-                                lblredate.Text = DateTime.Parse(e.Row.Cells[14].Text).AddDays(366).ToString("yyyy/MM/dd HH:mm:ss");
-                                lblextenredate.Text = DateTime.Parse(e.Row.Cells[14].Text).AddDays(456).ToString("yyyy/MM/dd HH:mm:ss");
+                                lblredate.Text = DateTime.Parse(e.Row.Cells[14].Text).AddDays(126).ToString("yyyy/MM/dd HH:mm:ss");
+                                lblextenredate.Text = DateTime.Parse(e.Row.Cells[14].Text).AddDays(252).ToString("yyyy/MM/dd HH:mm:ss");
                                 break;
                             default: break;
                         }
                     }
                     else if (e.Row.Cells[17].Text == "2")
                     {
-                        lblredate.Text = DateTime.Parse(e.Row.Cells[14].Text).AddDays(8).ToString("yyyy/MM/dd HH:mm:ss");
-                        lblextenredate.Text = DateTime.Parse(e.Row.Cells[14].Text).AddDays(15).ToString("yyyy/MM/dd HH:mm:ss");
+                        lblredate.Text = DateTime.Parse(e.Row.Cells[14].Text).AddDays(9).ToString("yyyy/MM/dd HH:mm:ss");
+                        lblextenredate.Text = DateTime.Parse(e.Row.Cells[14].Text).AddDays(18).ToString("yyyy/MM/dd HH:mm:ss");
                     }
 
                 }

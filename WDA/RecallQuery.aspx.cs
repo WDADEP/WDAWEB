@@ -81,7 +81,9 @@ namespace WDA
                 {
                     string userName = this.txtUserName.Text.Trim();
 
-                    where += string.Format("And wb.receiver ='{0}'", userName);
+                    //MODIFY BY RICHARD 20160411
+                    //where += string.Format("And wb.receiver ='{0}'", userName);
+                    where += string.Format("And ut.REALNAME ='{0}'", userName.Trim());
                 }
 
                 if (this.ddlKind.SelectedIndex > 0)

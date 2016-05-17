@@ -56,6 +56,8 @@
                 $get("MainContent_lblredate").innerText = bev.Redate;
                 $get("MainContent_lblexten").innerText = bev.Exten;
                 $get("MainContent_lblredate1").innerText = bev.ExtensionRedate;
+                $("#BtnOK").show();
+
             }
         }
         function onGetAlsoFileFailure(error, context, methodName) {
@@ -86,7 +88,7 @@
                         調閱類型：
                          <asp:DropDownList ID="ddlViewType" Style="width: 150px" runat="server">
                                     <asp:ListItem Value="0">請選擇</asp:ListItem>
-                                    <asp:ListItem Value="1">1. 紙本調閱</asp:ListItem>
+                                    <asp:ListItem Value="1" Selected="True">1. 紙本調閱</asp:ListItem>
                                     <asp:ListItem Value="2">2. 電子調閱</asp:ListItem>
                                 </asp:DropDownList>
                         <input id="btnCheckWpinno" type="button" value="確認收文號" class="btn btn-large btn-danger" onclick="javascript: GetAlsoFile()" />
@@ -123,15 +125,15 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="HeadTD_green" style="padding: 5px;">案 件 別：</td>
+                            <td class="HeadTD_green" style="padding: 5px;">借檔類別：</td>
                             <td style="padding: 5px; text-align: left;">
                                 <asp:Label ID="lblApplkind" runat="server" Text=""></asp:Label>
                             </td>
                         </tr>
                         <tr>
-                            <td class="HeadTD_green" style="padding: 5px;">原定還檔日：</td>
+                            <td class="HeadTD_green" style="padding: 5px;">展期還檔日：</td>
                             <td style="padding: 5px; text-align: left;">
-                                <asp:Label ID="lblredate" runat="server" Text=""></asp:Label>
+                                <asp:Label ID="lblredate1" runat="server" Text=""></asp:Label>
                             </td>
                         </tr>
                         <tr>
@@ -142,9 +144,9 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="HeadTD_green" style="padding: 5px;">展期還檔日：</td>
+                            <td class="HeadTD_green" style="padding: 5px;">原定還檔日：</td>
                             <td style="padding: 5px; text-align: left;">
-                                <asp:Label ID="lblredate1" runat="server" Text=""></asp:Label>
+                                <asp:Label ID="lblredate" runat="server" Text=""></asp:Label>
                             </td>
                         </tr>
                         <tr>
@@ -155,20 +157,19 @@
                             </td>
                         </tr>
                     </table>
+                    <table border="0" style="width: 100%; border-collapse: collapse">
+                        <tr style="text-align: center">
+                            <td style="text-align: right">
+                                <asp:Button ID="BtnOK" runat="server" Text="展 期" class="btn btn-large btn-success" OnClick="BtnOK_Click" OnClientClick="JavaScript:if(!ImageBtnOKClick()) {return false} ;"  />
+                            </td>
+                            <td style="text-align: center"></td>
+                            <td style="text-align: left">
+                                <asp:Button ID="BtnClear" runat="server" Text="取 消" class="btn btn-large btn-success" OnClick="BtnClear_Click" />
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
-            <table border="0" style="width: 100%; border-collapse: collapse">
-                <tr style="text-align: center">
-                    <td style="text-align: right">
-
-                        <asp:Button ID="BtnOK" runat="server" Text="展 期" class="btn btn-large btn-success" OnClick="BtnOK_Click" OnClientClick="JavaScript:if(!ImageBtnOKClick()) {return false} ;"  />
-                    </td>
-                    <td style="text-align: center"></td>
-                    <td style="text-align: left">
-                        <asp:Button ID="BtnClear" runat="server" Text="取 消" class="btn btn-large btn-success" OnClick="BtnClear_Click" />
-                    </td>
-                </tr>
-            </table>
             <br />
         </div>
         <div id="btn1">

@@ -28,6 +28,23 @@ namespace WDA
         } 
         #endregion
 
+        #region BARCODEVALUE
+        protected String BARCODEVALUE
+        {
+            get
+            {
+                if (ViewState["BARCODEVALUE"] == null)
+                    return string.Empty;
+                else
+                    return (String)(ViewState["BARCODEVALUE"]);
+            }
+            set
+            {
+                ViewState["BARCODEVALUE"] = value;
+            }
+        }
+        #endregion
+
         #region ColorInt
         protected int ColorInt
         {
@@ -88,6 +105,13 @@ namespace WDA
 
                     command.Parameters.Clear();
 
+                    //ADD BY RICHARD 20160330 for ADD WPINNO QUERY
+                    if (!string.IsNullOrEmpty(this.TxtWpinno.Text.Trim()))
+                    {
+                        string strWpinno = this.TxtWpinno.Text.Trim();
+                        command.Parameters.Add(new OleDbParameter("BARCODEVALUE", OleDbType.VarChar)).Value = strWpinno;
+                        where += string.Format(" And bt.BARCODEVALUE =:BARCODEVALUE");
+                    }
                     if (!string.IsNullOrEmpty(this.TxtRealName.Text.Trim()))
                     {
                         string realName = this.TxtRealName.Text.Trim();
@@ -168,14 +192,249 @@ namespace WDA
         }
         #endregion
 
+        #region ITImageListBtnChang_Click()
+        // Modified by Luke (add Select region)
+        protected void ITImageListBtnChang_Click(object sender, ImageClickEventArgs e)
+        {
+            GridViewRow gridViewRow = (GridViewRow)((ImageButton)sender).NamingContainer;
+
+            int DataIndex = this.GridView1.PageSize * this.GridView1.PageIndex + gridViewRow.RowIndex;
+
+            string sNewBarcodeValue = ((TextBox)gridViewRow.Cells[0].FindControl("txtBARCODEVALUE")).Text.Trim();
+
+            int result = 0;
+
+            Hashtable ht = new Hashtable();
+
+            string strSql = string.Empty, strWhere = string.Empty;
+            DataTable dt = null;
+            try
+            {
+                #region Select
+
+                if (string.IsNullOrEmpty(sNewBarcodeValue))
+                {
+                    this.ShowMessage("新收文文號欄位空白"); return;
+                }
+
+                this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
+
+                //BarcodeTable
+                strWhere = string.Format("And BarcodeValue = '{0}'", sNewBarcodeValue);
+                strSql = this.Select.BarcodeTableBarcodeValues(strWhere);
+                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+
+                if ((dt != null) && (dt.Rows.Count > 0))
+                {
+                    this.ShowMessage("欲更新之收文文號已經存在"); return;
+                }
+
+                #endregion
+
+                #region Update
+
+                ht.Add("BARCODEVALUE", sNewBarcodeValue);
+
+                this.DBConnTransac.GeneralSqlCmd.Command.CommandTimeout = 90;
+                
+                //BarcodeTable
+                strWhere = string.Format("And BarcodeValue = '{0}' And CaseID = '{1}' ", gridViewRow.Cells[7].Text.Trim(), gridViewRow.Cells[2].Text.Trim());
+                strSql = this.Update.BarcodeTableByBarCodeValue(ht, strWhere);
+                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
+
+                if (result <= 0)
+                {
+                    this.ShowMessage("修改失敗"); return;
+                }
+
+                this.DBConnTransac.GeneralSqlCmd.Transaction.Commit();
+                this.ShowMessage("修改成功", MessageMode.INFO);
+
+                //ADD BY RICHARD 20160407 
+                #region Monitor
+                string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+                this.MonitorLog.LogMonitor(sNewBarcodeValue, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA02, "修改收文文號");
+                #endregion
+
+
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    if (this.DBConnTransac.GeneralSqlCmd.Transaction != null) this.DBConnTransac.GeneralSqlCmd.Transaction.Rollback();
+                }
+                catch { }
+
+                this.ShowMessage(ex);
+            }
+            finally
+            {
+                if (ht != null) { ht.Clear(); ht = null; }
+
+                if (dt != null) { dt.Dispose(); dt = null; }
+
+                if (this.DBConn != null) { this.DBConn.Dispose(); this.DBConn = null; }
+
+                if (this.DBConnTransac != null) { this.DBConnTransac.Dispose(); this.DBConnTransac = null; }
+
+                this.GridView1.EditIndex = -1;
+
+                this.DataBind(true, true);
+            }
+        }
+        #endregion
+
+        #region ITImageListBtnAdd_Click()
+        // Added by Luke
+        protected void ITImageListBtnAdd_Click(object sender, ImageClickEventArgs e)
+        {
+            GridViewRow gridViewRow = (GridViewRow)((ImageButton)sender).NamingContainer;
+
+            int DataIndex = this.GridView1.PageSize * this.GridView1.PageIndex + gridViewRow.RowIndex;
+
+            string sNewBarcodeValue = ((TextBox)gridViewRow.Cells[0].FindControl("txtBARCODEVALUE")).Text.Trim();
+
+            int result = 0;
+
+            Hashtable ht = new Hashtable();
+
+            string strSql = string.Empty, strWhere = string.Empty;
+            DataTable dt = null;
+            try
+            {
+                #region Select
+
+                if (string.IsNullOrEmpty(sNewBarcodeValue))
+                {
+                    this.ShowMessage("新收文文號欄位空白"); return;
+                }
+
+                this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
+
+                //BarcodeTable
+                strWhere = string.Format("And BarcodeValue = '{0}'", sNewBarcodeValue);
+                strSql = this.Select.BarcodeTableBarcodeValues(strWhere);
+                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+
+                if ((dt != null) && (dt.Rows.Count > 0))
+                {
+                    this.ShowMessage("欲新增之收文文號已經存在"); return;
+                }
+
+                #endregion
+
+                #region Insert
+
+                DateTime dTime = DateTime.Parse(gridViewRow.Cells[4].Text.Trim());
+
+                ht.Add("CaseID", gridViewRow.Cells[2].Text.Trim());
+                ht.Add("BarcodeValue", sNewBarcodeValue);
+                ht.Add("CreateTime", dTime.ToString("yyyy/MM/dd HH:mm:ss"));
+                ht.Add("CreateUserID", UserInfo.UserID);
+                ht.Add("LastModifyTime", dTime.ToString("yyyy/MM/dd HH:mm:ss"));
+                ht.Add("LastModifyUserID", UserInfo.UserID);
+                ht.Add("WpoutNo", null);
+                ht.Add("FileNo", null);
+                ht.Add("FileDate", null);
+                ht.Add("KeepYr", null);
+                ht.Add("BoxNo", null);
+                ht.Add("OnFile", null);
+
+                this.DBConnTransac.GeneralSqlCmd.Command.CommandTimeout = 90;
+
+                //BarcodeTable
+                strSql = this.Insert.BarcodeTable(ht);
+                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
+
+                if (result > 0)
+                {
+                    this.DBConnTransac.GeneralSqlCmd.Transaction.Commit();
+                    this.ShowMessage("新增成功", MessageMode.INFO);
+
+                    //ADD BY RICHARD 20160407 
+                    #region Monitor
+                    string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+                    this.MonitorLog.LogMonitor(sNewBarcodeValue, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA02, "新增收文文號");
+                    #endregion
+
+                }
+                else
+                {
+                    this.WriteLog(global::Log.Mode.LogMode.ERROR, "Insert BARCODETABLE Fail");
+                }
+
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    if (this.DBConnTransac.GeneralSqlCmd.Transaction != null) this.DBConnTransac.GeneralSqlCmd.Transaction.Rollback();
+                }
+                catch { }
+
+                this.ShowMessage(ex);
+            }
+            finally
+            {
+                if (ht != null) { ht.Clear(); ht = null; }
+
+                if (dt != null) { dt.Dispose(); dt = null; }
+
+                if (this.DBConn != null) { this.DBConn.Dispose(); this.DBConn = null; }
+
+                if (this.DBConnTransac != null) { this.DBConnTransac.Dispose(); this.DBConnTransac = null; }
+
+                this.GridView1.EditIndex = -1;
+
+                this.DataBind(true, true);
+            }
+        }
+        #endregion
+
+        #region ITImageBtnCancel_Click()
+        protected void ITImageBtnCancel_Click(object sender, ImageClickEventArgs e)
+        {
+            this.GridView1.EditIndex = -1;
+
+            this.DataBind(true, true);
+        }
+        #endregion
+
+        #region ImageBtnEdit_Click
+        // Modified by Luke
+        protected void ImageBtnEdit_Click(object sender, ImageClickEventArgs e)
+        {
+            GridViewRow gridViewRow = (GridViewRow)((ImageButton)sender).NamingContainer;
+            GridView gv = (GridView)gridViewRow.NamingContainer;
+
+            gv.EditIndex = gridViewRow.RowIndex;
+            //this.DataBind(true, false);
+            gv.DataSource = ViewState[this.GridView1.ClientID];
+            gv.DataBind();
+        }
+        #endregion
+
+
+        #region GridView Events
+
         #region GridView1_RowDataBound
+        // Modified by Luke
         protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             e.RowDataBound();
 
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                Label  lblCaseID = (Label)e.Row.Cells[0].FindControl("LblCaseID");
+    /*            Label lblCaseID = (Label)e.Row.Cells[0].FindControl("LblCaseID");
+                //ADD BY RICHARD BARCODEVALUE 20160330
+                Label lblBARCODEVALUE = (Label)e.Row.Cells[0].FindControl("lblBARCODEVALUE");
 
                 if (string.IsNullOrEmpty(CaseID))
                 {
@@ -188,15 +447,42 @@ namespace WDA
                     ColorInt += 1;
                 }
 
+                //ADD BY RICHARD 20160330
+                if (string.IsNullOrEmpty(BARCODEVALUE))
+                {
+                    BARCODEVALUE = lblBARCODEVALUE.Text;
+                }
+
+                if (BARCODEVALUE != lblBARCODEVALUE.Text)
+                {
+                    BARCODEVALUE = lblBARCODEVALUE.Text;
+                    ColorInt += 1;
+                }
+
+
                 if (ColorInt % 2 != 0)
                 {
                     lblCaseID.Attributes.Add("style", "color:#AA0000 ");
-                    e.Row.Cells[1].Text = " <span style=color:#AA0000>" + e.Row.Cells[1].Text + "</span>";
                     e.Row.Cells[2].Text = " <span style=color:#AA0000>" + e.Row.Cells[2].Text + "</span>";
                     e.Row.Cells[3].Text = " <span style=color:#AA0000>" + e.Row.Cells[3].Text + "</span>";
                     e.Row.Cells[4].Text = " <span style=color:#AA0000>" + e.Row.Cells[4].Text + "</span>";
+                    e.Row.Cells[5].Text = " <span style=color:#AA0000>" + e.Row.Cells[5].Text + "</span>";
+                }
+     * */
+                ImageButton btnDelete = (ImageButton)e.Row.Cells[1].FindControl("ImageBtnDelete");
+
+                if (btnDelete != null)
+                {
+                    btnDelete.Attributes.Add("onclick", string.Format(@"javascript:return confirm('{0}')", "是否確定刪除？"));
                 }
             }
+        }
+        #endregion
+
+        #region GridView1_RowCreated
+        protected void GridView1_RowCreated(object sender, GridViewRowEventArgs e)
+        {
+            e.RowVisible(sender, new int[] { 7 });
         }
         #endregion
 
@@ -217,5 +503,103 @@ namespace WDA
             this.DataBind(false, false);
         }
         #endregion
+
+        #region GridView1_RowCommand()
+        // Added by Luke
+        protected void GridView1_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            GridView gv = (GridView)sender;
+
+            DataTable dt = null;
+            try
+            {
+                if (e.CommandName != "Stop") return;
+
+                int rowIndex = ((GridViewRow)((ImageButton)e.CommandSource).NamingContainer).RowIndex;
+
+                string barcodeValue = gv.Rows[rowIndex].Cells[7].Text.Trim();
+                string caseid = gv.Rows[rowIndex].Cells[2].Text.Trim();
+
+                int result = 0;
+
+                string strSql = string.Empty, strWhere = string.Empty;
+
+                if (e.CommandName == "Stop")
+                {
+                    #region Select
+
+                    this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
+
+                    //BarcodeTable
+                    strWhere = string.Format("And CaseID = '{0}' ", caseid);
+                    strSql = this.Select.BarcodeTableBarcodeValues(strWhere);
+                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                    dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+
+                    if ((dt != null) && (dt.Rows.Count > 0))
+                    {
+                        if (dt.Rows.Count == 1)
+                        {
+                            this.ShowMessage("本收文文號僅有 1 筆，無法刪除"); return;
+                        }
+                    }
+                    else
+                    {
+                        this.ShowMessage("無此收文文號"); return;
+                    }
+
+                    #endregion
+
+                    #region Delete
+
+                    this.DBConnTransac.GeneralSqlCmd.Command.CommandTimeout = 90;
+
+                    //BarcodeTable
+                    strSql = this.Delete.BarcodeTable(barcodeValue, caseid);
+                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                    result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
+
+                    if (result <= 0)
+                    {
+                        this.ShowMessage("刪除失敗"); return;
+                    }
+
+                    this.DBConnTransac.GeneralSqlCmd.Transaction.Commit();
+                    this.ShowMessage("刪除成功", MessageMode.INFO);
+
+                    this.DataBind(true, true);
+
+                    //ADD BY RICHARD 20160407 
+                    #region Monitor
+                    string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+                    this.MonitorLog.LogMonitor(barcodeValue, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA02, "刪除收文文號");
+                    #endregion
+
+                    #endregion
+                }
+            }
+            catch (System.Exception ex)
+            {
+                try
+                {
+                    if (this.DBConnTransac.GeneralSqlCmd.Transaction != null) this.DBConnTransac.GeneralSqlCmd.Transaction.Rollback();
+                }
+                catch { }
+
+                this.ShowMessage(ex);
+            }
+            finally
+            {
+                if (dt != null) { dt.Dispose(); dt = null; }
+
+                if (this.DBConn != null) { this.DBConn.Dispose(); this.DBConn = null; }
+
+                if (this.DBConnTransac != null) { this.DBConnTransac.Dispose(); this.DBConnTransac = null; }
+            }
+        }
+        #endregion
+
+        #endregion
+
     }
 }

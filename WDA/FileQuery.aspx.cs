@@ -88,7 +88,7 @@ namespace WDA
                         //command.Parameters.Add(new OleDbParameter("WPINNO", OleDbType.VarChar)).Value = wpinno;
 
                         //where = string.Format("And WP.WPINNO =:WPINNO");
-                        where = string.Format("And WP.WPINNO ='{0}'", wpinno);
+                        where = string.Format("And WP.WPINNO ='{0}' ", wpinno);
                     }
 
                     strSql = this.Select.Wprec(where);
@@ -99,7 +99,7 @@ namespace WDA
 
                     dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
 
-                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, "1");
+                    //this.WriteLog(global::Log.Mode.LogMode.DEBUG, "1");
 
                     if (dt.Rows.Count == 2)
                     {
@@ -111,27 +111,28 @@ namespace WDA
                     Session["FileWprecQuery"] = strSql;
 
                     //this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
-                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, "2");
+                    //this.WriteLog(global::Log.Mode.LogMode.DEBUG, "2");
 
                     dtWprec = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
 
-                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, "3");
+                    //this.WriteLog(global::Log.Mode.LogMode.DEBUG, "3");
 
-                    if (dtWprec.Rows.Count == 0)
-                    {
-                        this.ShowMessage("目前查詢沒有任何資料", MessageMode.INFO);
-                        return;
-                    }
-                    else
-                    {
+                    //MODIFY BY RICHARD 20160324
+                    //if (dtWprec.Rows.Count == 0)
+                    //{
+                    //    this.ShowMessage("目前查詢沒有任何資料", MessageMode.INFO);
+                    //    return;
+                    //}
+                    //else
+                    //{
                         ViewState[this.GridView1.ClientID] = dtWprec;
 
                         dtWprec.Dispose(); dtWprec = null;
 
                         this.GridView1.DataBind((DataTable)ViewState[this.GridView1.ClientID], Anew, LockPageNum);
-                    }
+                    //}
 
-                    where = string.Format("And WP.WPINNO ='{0}'", wpinno);
+                    where = string.Format("And WP.WPINNO ='{0}' AND FB.GETIME IS NOT NULL ", wpinno);
 
                     strSql = this.Select.FileQuery(where);
 
@@ -143,17 +144,18 @@ namespace WDA
 
                     dtWpborrow = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
 
-                    if (dtWpborrow.Rows.Count == 0)
-                    {
-                        this.ShowMessage("目前查詢沒有任何資料", MessageMode.INFO);
-                        return;
-                    }
-                    else
-                    {
+                    //MODIFY BY RICHARD 20160324
+                    //if (dtWpborrow.Rows.Count == 0)
+                    //{
+                        //this.ShowMessage("此文號無任何調閱紀錄", MessageMode.INFO);
+                        //return;
+                    //}
+                    //else
+                    //{
                         ViewState[this.GridView2.ClientID] = dtWpborrow;
 
                         dtWpborrow.Dispose(); dtWpborrow = null;
-                    }
+                    //}
                 }
 
                 this.GridView2.DataBind((DataTable)ViewState[this.GridView2.ClientID], Anew, LockPageNum);

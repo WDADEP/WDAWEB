@@ -224,13 +224,13 @@ namespace WDA
                 }
                 #endregion
 
-                #region 還檔作業(705)
+                #region 還檔作業(703&706)
                 if (pageUtility.UserInfo.Privilege.Tables[0].Select(string.Format("PrivID={0}", 5)).Length > 0)
                 {
                     this.LiteralMenu.Text += "<div class=\"accordion-group\">";
                     this.LiteralMenu.Text += "<div class=\"accordion-heading\">";
                     this.LiteralMenu.Text += "<a class=\"accordion-toggle\" data-toggle=\"collapse\" data-parent=\"#leftMenu\" href=\"#collapseFive\">";
-                    this.LiteralMenu.Text += "<span class=\"glyphicon glyphicon-floppy-save\" aria-hidden=\"true\">還檔作業(703&705)</span></a>";
+                    this.LiteralMenu.Text += "<span class=\"glyphicon glyphicon-floppy-save\" aria-hidden=\"true\">還檔作業(703&706)</span></a>";
                     this.LiteralMenu.Text += "</div>";
                     this.LiteralMenu.Text += "<div id=\"collapseFive\" class=\"accordion-body collapse\" style=\"height:0px;\">";
                     this.LiteralMenu.Text += "<div class=\"accordion-inner\">";
@@ -269,6 +269,9 @@ namespace WDA
 
                     if (pageUtility.UserInfo.Privilege.Tables[0].Select(string.Format("PrivID={0}", 23)).Length > 0)
                     { this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"RoleQueryMenu.aspx\">角色管理</a></li>"; }
+
+                    if (pageUtility.UserInfo.Privilege.Tables[0].Select(string.Format("PrivID={0}", 31)).Length > 0)
+                    { this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"DeptQueryMenu.aspx\">科室別管理</a></li>"; }
 
                     this.LiteralMenu.Text += "</ol>";
                     this.LiteralMenu.Text += "</div>";

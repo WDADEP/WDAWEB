@@ -116,9 +116,14 @@ namespace WDA
                     string startTime = this.txtCreateTime.Text.Trim().Replace(StringFormatException.Mode.Sql);//開始日期
                     string endTime = this.txtEndTime.Text.Trim().Replace(StringFormatException.Mode.Sql);//結束日期
 
-                    endTime = DateTime.Parse(endTime).AddDays(1).AddSeconds(-1).ToString("yyy/MM/dd HH:mm:ss");
-
-                    where += string.Format("And lt.TransDateTime >= '{0}' and lt.TransDateTime <= '{1}'", startTime, endTime);
+                    //ADD BY Richard 20160322 
+                    if (string.IsNullOrEmpty(endTime) || string.IsNullOrEmpty(startTime))
+                        startTime = startTime.Trim();
+                    else
+                    {
+                        endTime = DateTime.Parse(endTime).AddDays(1).AddSeconds(-1).ToString("yyy/MM/dd HH:mm:ss");
+                        where += string.Format("And lt.TransDateTime >= '{0}' and lt.TransDateTime <= '{1}'", startTime, endTime);
+                    }
 
                     if (!string.IsNullOrEmpty(txtWPINNO.Text))
                     {
@@ -136,6 +141,7 @@ namespace WDA
 
                     #region 系統行為
                     string[] privilegeSO = this.HiddenSystemOperatingPrivilegeList.Value.Split('|');
+                    //string[] privilegeSO = this.LiteralSystemOperatingMenu;
 
                     if (privilegeSO.Length > 0 && !string.IsNullOrEmpty(privilegeSO[0].Trim()))
                     {
@@ -150,7 +156,8 @@ namespace WDA
                     }
                     else
                     {
-                        systemOperatingWhere += " And mt.MsgID In (0)";
+                        //REMARK BY RICHARD 20160322
+                        //systemOperatingWhere += " And mt.MsgID In (0)";
                     }
                     #endregion
 

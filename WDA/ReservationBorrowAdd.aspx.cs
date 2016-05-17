@@ -12,6 +12,9 @@ namespace WDA
 {
     public partial class ReservationBorrowAdd : PageUtility
     {
+        //ADD BY RICHARD 20160421 
+        bool bFlagAdd = true;
+
         #region ViewType()
         /// <summary>
         /// ViewType：1、紙本；2、電子
@@ -34,6 +37,7 @@ namespace WDA
         #region Page_Load()
         protected void Page_Load(object sender, EventArgs e)
         {
+            bFlagAdd = true;
             this.LoadPage(true);
             try
             {
@@ -86,6 +90,7 @@ namespace WDA
             else
             {
                 this.ShowMessage("預約借檔(新增) 失敗");
+                this.HiddenShowPanel.Value = "false";
             }
         }
         #endregion
@@ -169,7 +174,7 @@ namespace WDA
             DataTable dt = null;
             try
             {
-                strSql = this.Select.GetApproveuserID("27");
+                strSql = this.Select.GetApproveuserID("27",UserInfo.DEPTID);
 
                 this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
 
@@ -453,42 +458,76 @@ namespace WDA
             Hashtable ht = new Hashtable();
             try
             {
-                string wpinNo = this.txtWpinNo.Text.Trim().Replace(StringFormatException.Mode.Sql);
-                string wpoutNo = this.txtWpoutNo.Text.Trim().Replace(StringFormatException.Mode.Sql);
-                string kind = this.ddlKind.SelectedValue;
-                //string kind = string.Empty;
-                string viewType = this.ddlViewType.SelectedValue;
-                string approveUserID = this.ddlApproveUser.SelectedValue;
-                string imagePriv = this.ddlImagePriv.SelectedValue;
-                string reason = this.txtReason.Text.Trim().Replace(StringFormatException.Mode.Sql);
+                if (bFlagAdd)
+                {
+                    string wpinNo = this.txtWpinNo.Text.Trim().Replace(StringFormatException.Mode.Sql);
+                    string wpoutNo = this.txtWpoutNo.Text.Trim().Replace(StringFormatException.Mode.Sql);
+                    string kind = this.ddlKind.SelectedValue;
+                    //string kind = string.Empty;
+                    string viewType = this.ddlViewType.SelectedValue;
+                    string approveUserID = this.ddlApproveUser.SelectedValue;
+                    string imagePriv = this.ddlImagePriv.SelectedValue;
+                    string reason = this.txtReason.Text.Trim().Replace(StringFormatException.Mode.Sql);
+                    //ADD BY Richard 20160322 for Update TEL 
+                    string tel = this.txtTel.Text.Trim().Replace(StringFormatException.Mode.Sql);
 
-                //switch (this.lblkindName.Text)
-                //{
-                //    case "一般":
-                //        kind ="1"; break;
-                //    case "法制":
-                //        kind ="2"; break;
-                //    case "行政":
-                //        kind ="3"; break;
-                //}
 
-                ht.Add("WpinNo", wpinNo);
-                ht.Add("Transt", "SYSDATE");
-                ht.Add("Receiver", UserInfo.UserName);
-                ht.Add("WpoutNo", wpoutNo);
-                ht.Add("Kind", kind);
-                ht.Add("ViewType", viewType);
-                ht.Add("ApproveUserID", approveUserID);
-                ht.Add("IMAGEPRIV", imagePriv);
-                ht.Add("REASON", reason);
+                    //switch (this.lblkindName.Text)
+                    //{
+                    //    case "一般":
+                    //        kind ="1"; break;
+                    //    case "法制":
+                    //        kind ="2"; break;
+                    //    case "行政":
+                    //        kind ="3"; break;
+                    //}
 
-                this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
+                    ht.Add("WpinNo", wpinNo);
+                    ht.Add("Transt", "SYSDATE");
+                    ht.Add("Receiver", UserInfo.UserName);
+                    ht.Add("WpoutNo", wpoutNo);
+                    ht.Add("Kind", kind);
+                    ht.Add("ViewType", viewType);
+                    ht.Add("ApproveUserID", approveUserID);
+                    ht.Add("IMAGEPRIV", imagePriv);
+                    ht.Add("REASON", reason);
+                    //ADD BY RICHARD 20160324
+                    ht.Add("TEL", tel);
+                    ht.Add("UserID", UserInfo.UserID);
 
-                strSql = this.Insert.Wpborrow(ht);
 
-                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                    this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
 
-                result = this.DBConn.GeneralSqlCmd.ExecuteNonQuery(strSql);
+                    //ADD BY RICHARD 20160420
+                    //DataTable dt = null;
+                    //string where = string.Format("And wb.WpinNo = '{0}' And wb.Receiver = '{1}' And wb.Prtflag = '{2}'  And wb.Viewtype ='{3}' ",
+                    //                   wpinNo.Trim(),
+                    //                   UserInfo.UserName,
+                    //                   "N",
+                    //                   "1");
+
+                    //strSql = this.Select.WpborrowQuery(where);
+                    //this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+                    //dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+
+                    //if (dt.Rows.Count == 0)
+                    //{
+                        strSql = this.Insert.Wpborrow(ht);
+
+                        this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+                        result = this.DBConn.GeneralSqlCmd.ExecuteNonQuery(strSql);
+
+                        //update TEL for 20160322 Richard
+                        strSql = this.Update.UserTableTel(ht);
+                        this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                        result = this.DBConn.GeneralSqlCmd.ExecuteNonQuery(strSql);
+                        //ADD BY RICHARD 設定只能按一次 20160421 
+                        bFlagAdd = false;
+                   // }
+                }
+
             }
             catch (System.Exception ex) { this.ShowMessage(ex); }
             finally

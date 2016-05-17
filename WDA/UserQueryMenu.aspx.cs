@@ -88,11 +88,15 @@ namespace WDA
 
                     string userDep = string.Empty; string userCorp = string.Empty;
 
+                    string userRole = string.Empty; //ADD BY RICHARD 20160408
+
                     userName = this.TxtUserName.Text.Trim().Replace(StringFormatException.Mode.Sql);
 
                     realName = this.TxtRealName.Text.Trim().Replace(StringFormatException.Mode.Sql);
 
-                    strSql = this.Select.UsersMaintain(userName, realName);
+                    userRole = this.DDLRole.SelectedValue.Trim();
+
+                    strSql = this.Select.UsersMaintain(userName, realName, userRole);
 
                     this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
 
@@ -271,6 +275,22 @@ namespace WDA
 
                         DataRowView dr = e.Row.DataItem as DataRowView;
                         ddlRoleName.SelectedValue = dr["RoleID"].ToString();
+
+                        //ADD BY RICHARD 20160411 for DEPT
+                        strSql = this.Select.DEPT("");
+                        this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+                        DropDownList ddlDeptName = (DropDownList)e.Row.FindControl("ITDDLDept");
+                        dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+                        ddlDeptName.DataSource = dt;
+                        ddlDeptName.DataTextField = "DEPTNAME";
+                        ddlDeptName.DataValueField = "DEPTID";
+                        ddlDeptName.DataBind();
+
+                        dr = e.Row.DataItem as DataRowView;
+                        ddlDeptName.SelectedValue = dr["DEPTID"].ToString();
+
+
                     }
                     catch (Exception ex)
                     {
@@ -331,6 +351,8 @@ namespace WDA
                 ht.Clear();
                 ht.Add("RealName", "'" + ((TextBox)gridViewRow.FindControl("TxtRealName")).Text + "'");
                 ht.Add("RoleID", "'" + ((DropDownList)gridViewRow.FindControl("ITDDLRole")).SelectedValue + "'");
+                //ADD BY Richard 20160411 for dept
+                ht.Add("DEPTID", "'" + ((DropDownList)gridViewRow.FindControl("ITDDLDept")).SelectedValue + "'");
                 ht.Add("TEL", "'" + ((TextBox)gridViewRow.FindControl("TxtTEL")).Text + "'");
 
                 string where = string.Format("UserID={0}", gridViewRow.Cells[6].Text.Trim());

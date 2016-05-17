@@ -78,7 +78,7 @@
                                <asp:TextBox ID="txtWpinno" runat="server"></asp:TextBox>
                            </td>
                        </tr>
-                       <tr>
+                       <tr style="display:none">
                            <td class="HeadTD_green" style="padding: 5px;">收文日期：</td>
                            <td style="padding: 5px; text-align: left;">
                                <asp:TextBox ID="txtWpindate" runat="server"></asp:TextBox>
@@ -90,7 +90,7 @@
                                <asp:TextBox ID="txtWpoutNo" runat="server" TextMode="Number"></asp:TextBox>
                            </td>
                        </tr>
-                       <tr>
+                       <tr style="display:none">
                            <td class="HeadTD_green" style="padding: 5px;">發文日期：</td>
                            <td style="padding: 5px; text-align: left;">
                                <asp:TextBox ID="txtWpoutdate" runat="server"></asp:TextBox>
@@ -105,13 +105,7 @@
                     <tr>
                         <td class="HeadTD_green" style="padding: 5px;">案 件 別：</td>
                         <td style="padding: 5px; text-align: left;">
-                            <asp:DropDownList ID="ddlApplkind" runat="server">
-                                <asp:ListItem Value="0">請選擇</asp:ListItem>
-                                <asp:ListItem Value="1">一般</asp:ListItem>
-                                <asp:ListItem Value="2">法制</asp:ListItem>
-                                <asp:ListItem Value="3">行政</asp:ListItem>
-                            </asp:DropDownList>
-                          <%--  <asp:TextBox ID="txtApplkind" runat="server"></asp:TextBox>--%>
+                          <asp:TextBox ID="txtApplkind" runat="server"></asp:TextBox>
                         </td>
                     </tr>
                     <tr>
@@ -127,13 +121,13 @@
                             <asp:Label ID="lblReceiver" runat="server" Text="Label"></asp:Label>
                         </td>
                     </tr>
-                    <tr>
+                    <tr style="display:none">
                         <td class="HeadTD_green" style="padding: 5px;">預約時間：</td>
                         <td style="padding: 5px; text-align: left;">
                             <asp:TextBox ID="txtTranst" runat="server"></asp:TextBox>
                         </td>
                     </tr>
-                       <tr>
+                    <tr style="display:none">
                         <td class="HeadTD_green" style="padding: 5px;">登錄時間：</td>
                         <td style="padding: 5px; text-align: left;">
                             <asp:TextBox ID="txtGetime" runat="server"></asp:TextBox>
@@ -182,7 +176,7 @@
                             <asp:BoundField DataField="caseno" HeaderText="案號" SortExpression="caseno" />
                             <asp:BoundField DataField="kindName" HeaderText="案件別" SortExpression="kindName" />
                             <asp:BoundField DataField="commname" HeaderText="雇主名稱" SortExpression="commname" />
-                            <asp:BoundField DataField="receiver" HeaderText="預約人" SortExpression="receiver" />
+                            <asp:BoundField DataField="receiver" HeaderText="預約人" SortExpression="receiver" Visible="false" />
                             <asp:BoundField DataField="transt" HeaderText="預約時間" SortExpression="transt" />
                             <asp:BoundField DataField="getime" HeaderText="登錄時間" SortExpression="getime" />
                             <asp:BoundField DataField="workerid" HeaderText="登錄人" SortExpression="workerid" />

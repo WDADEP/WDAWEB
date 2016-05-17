@@ -74,7 +74,7 @@
                                 <asp:TextBox ID="txtUserName" runat="server"></asp:TextBox>
                             </td>
                         </tr>
-                        <tr>
+                        <tr style="display:none">
                             <td class="HeadTD_green" style="padding: 5px;">系統行為
                             </td>
                             <td style="padding: 5px; text-align: left; background-color: #EEEEEE;">
@@ -114,7 +114,7 @@
                     <asp:GridView ID="GridView1" runat="server" AllowSorting="True" AutoGenerateColumns="False" CssClass="GridViewStyle" Width="98%" OnPageIndexChanging="GridView1_PageIndexChanging" OnRowDataBound="GridView1_RowDataBound" OnSorting="GridView1_Sorting" AllowPaging="True">
                                     <AlternatingRowStyle CssClass="AlternatingRowStyle" />
                                     <Columns>
-                                        <asp:BoundField HeaderText="收文文號" DataField="RepNo" SortExpression="RepNo" />
+                                        <asp:BoundField HeaderText="收文文號" DataField="WPINNO" SortExpression="WPINNO" />
                                         <asp:BoundField HeaderText="使用者帳號" DataField="USERNAME" SortExpression="USERNAME" />
                                         <asp:BoundField HeaderText="使用者姓名" DataField="RealName" SortExpression="RealName" />
                                         <asp:BoundField DataField="TransDateTime" HeaderText="交易日期" SortExpression="TransDateTime" />

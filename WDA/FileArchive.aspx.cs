@@ -49,7 +49,8 @@ namespace WDA
 
                 string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
 
-                this.MonitorLog.LogMonitor(wpinno, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA04, string.Empty);
+                //MODIFY BY RICHARD 20160407
+                this.MonitorLog.LogMonitor(wpinno, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA04, "文號查詢");
                 #endregion
             }
             catch (Exception ex)
@@ -97,64 +98,72 @@ namespace WDA
             string strSql = string.Empty, strWhere = string.Empty;
             try
             {
-                #region Update
+                    #region Update
 
-                //ht.Add("WpoutNo", gridViewRow.Cells[3].Text.Trim());
-                ht.Add("FileNo", ((TextBox)gridViewRow.Cells[0].FindControl("txtFileNo")).Text.Trim());
-                ht.Add("FileDate", ((TextBox)gridViewRow.Cells[0].FindControl("txtFileDate")).Text.Trim());
-                ht.Add("KeepYr", ((TextBox)gridViewRow.Cells[0].FindControl("txtKeepYr")).Text.Trim());
-                ht.Add("BoxNo", ((TextBox)gridViewRow.Cells[0].FindControl("txtBoxNo")).Text.Trim());
-                ht.Add("LastModifyUserID", UserInfo.UserID);
-                ht.Add("LastModifyTime", "SYSDATE");
+                    //ht.Add("WpoutNo", gridViewRow.Cells[3].Text.Trim());
+                    ht.Add("FileNo", ((TextBox)gridViewRow.Cells[0].FindControl("txtFileNo")).Text.Trim());
+                    ht.Add("FileDate", ((TextBox)gridViewRow.Cells[0].FindControl("txtFileDate")).Text.Trim());
+                    ht.Add("KeepYr", ((TextBox)gridViewRow.Cells[0].FindControl("txtKeepYr")).Text.Trim());
+                    ht.Add("BoxNo", ((TextBox)gridViewRow.Cells[0].FindControl("txtBoxNo")).Text.Trim());
+                    ht.Add("LastModifyUserID", UserInfo.UserID);
+                    ht.Add("LastModifyTime", "SYSDATE");
 
-                this.DBConnTransac.GeneralSqlCmd.Command.CommandTimeout = 90;
+                    this.DBConnTransac.GeneralSqlCmd.Command.CommandTimeout = 90;
 
-                //Wprec
-                strWhere = string.Format("And WpinNo = '{0}'\n", gridViewRow.Cells[2].Text.Trim());
-                strSql = this.Update.WprecEdit(ht, strWhere);
-                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
-                result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
-                if (result < 1)
-                {
-                    this.ShowMessage("修改失敗"); return;
-                }
-
-                //Wptrans
-                strWhere = string.Format("And WpinNo = '{0}'\n", gridViewRow.Cells[2].Text.Trim());
-                strSql = this.Update.WptransEdit(this.UserInfo.RealName, strWhere);
-                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
-                result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
-                //if (result < 1)
-                //{
-                //    this.ShowMessage("修改失敗"); return;
-                //}
-
-                //BarcodeTable
-                strWhere = string.Format("And BarcodeValue = '{0}'", gridViewRow.Cells[2].Text.Trim());
-
-                strSql = this.Select.BarcodeTable(strWhere);
-
-                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
-
-                this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
-
-                string caseID = this.DBConn.GeneralSqlCmd.ExecuteByColumnName(strSql, "CaseID");
-
-                if (caseID.Length > 0)
-                {
-                    strSql = this.Update.BarcodeTable(ht, strWhere);
+                    //Wprec
+                    strWhere = string.Format("And WpinNo = '{0}'\n", gridViewRow.Cells[2].Text.Trim());
+                    strSql = this.Update.WprecEdit(ht, strWhere);
                     this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
                     result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
-
-                    if (result <= 0)
+                    if (result < 1)
                     {
                         this.ShowMessage("修改失敗"); return;
                     }
-                }
-                this.DBConnTransac.GeneralSqlCmd.Transaction.Commit();
-                this.ShowMessage("修改成功", MessageMode.INFO);
 
-                #endregion
+                    //Wptrans
+                    strWhere = string.Format("And WpinNo = '{0}'\n", gridViewRow.Cells[2].Text.Trim());
+                    strSql = this.Update.WptransEdit(this.UserInfo.RealName, strWhere);
+                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                    result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
+                    //if (result < 1)
+                    //{
+                    //    this.ShowMessage("修改失敗"); return;
+                    //}
+
+                    //BarcodeTable
+                    strWhere = string.Format("And BarcodeValue = '{0}'", gridViewRow.Cells[2].Text.Trim());
+
+                    strSql = this.Select.BarcodeTable(strWhere);
+
+                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+                    this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
+
+                    string caseID = this.DBConn.GeneralSqlCmd.ExecuteByColumnName(strSql, "CaseID");
+
+                    if (caseID.Length > 0)
+                    {
+                        strSql = this.Update.BarcodeTable(ht, strWhere);
+                        this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                        result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
+
+                        if (result <= 0)
+                        {
+                            this.ShowMessage("修改失敗"); return;
+                        }
+                    }
+                    this.DBConnTransac.GeneralSqlCmd.Transaction.Commit();
+                    this.ShowMessage("修改成功", MessageMode.INFO);
+
+                    //ADD BY RICHARD 20160407 for Monitor
+                    #region Monitor
+
+                    string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+
+                    this.MonitorLog.LogMonitor(gridViewRow.Cells[2].Text.Trim(), this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA04, "修改文號");
+                    #endregion
+
+                    #endregion
             }
             catch (Exception ex)
             {
@@ -464,51 +473,60 @@ namespace WDA
 
                 if (e.CommandName == "Stop")
                 {
-                    #region Delete
+                        #region Delete
 
-                    this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
+                        this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
 
-                    //Wprec
-                    strWhere = string.Format("And WpinNo = '{0}'\n", barcodeValue);
-                    strSql = this.Update.WprecDelete(strWhere);
-                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
-                    result = this.DBConn.GeneralSqlCmd.ExecuteNonQuery(strSql);
-                    if (result < 1)
-                    {
-                        this.ShowMessage("修改失敗"); return;
-                    }
-
-                    //Wptrans
-                    strWhere = string.Format("And WpinNo = '{0}'\n", barcodeValue);
-                    strSql = this.Delete.WptransDelete(barcodeValue);
-                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
-                    result = this.DBConn.GeneralSqlCmd.ExecuteNonQuery(strSql);
-
-                    //BarcodeTable
-                    strWhere = string.Format("And BarcodeValue = '{0}'", barcodeValue);
-
-                    strSql = this.Select.BarcodeTable(strWhere);
-
-                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
-
-                    this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
-
-                    string caseID = this.DBConn.GeneralSqlCmd.ExecuteByColumnName(strSql, "CaseID");
-
-                    if (caseID.Length > 0)
-                    {
-                        strSql = this.Update.BarcodeTable(strWhere);
+                        //Wprec
+                        strWhere = string.Format("And WpinNo = '{0}'\n", barcodeValue);
+                        strSql = this.Update.WprecDelete(strWhere);
                         this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
                         result = this.DBConn.GeneralSqlCmd.ExecuteNonQuery(strSql);
                         if (result < 1)
                         {
-                            this.ShowMessage("刪除失敗");
+                            this.ShowMessage("修改失敗"); return;
                         }
-                    }
 
-                    this.ShowMessage("刪除成功", MessageMode.INFO);
-                    this.DataBind(true, true);
-                    #endregion
+                        //Wptrans
+                        strWhere = string.Format("And WpinNo = '{0}'\n", barcodeValue);
+                        strSql = this.Delete.WptransDelete(barcodeValue);
+                        this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                        result = this.DBConn.GeneralSqlCmd.ExecuteNonQuery(strSql);
+
+                        //BarcodeTable
+                        strWhere = string.Format("And BarcodeValue = '{0}'", barcodeValue);
+
+                        strSql = this.Select.BarcodeTable(strWhere);
+
+                        this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+                        this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
+
+                        string caseID = this.DBConn.GeneralSqlCmd.ExecuteByColumnName(strSql, "CaseID");
+
+                        if (caseID.Length > 0)
+                        {
+                            strSql = this.Update.BarcodeTable(strWhere);
+                            this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                            result = this.DBConn.GeneralSqlCmd.ExecuteNonQuery(strSql);
+                            if (result < 1)
+                            {
+                                this.ShowMessage("刪除失敗");
+                            }
+                        }
+
+                        this.ShowMessage("刪除成功", MessageMode.INFO);
+                        this.DataBind(true, true);
+
+                        //ADD BY RICHARD 20160407 for Monitor
+                        #region Monitor
+
+                        string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+
+                        this.MonitorLog.LogMonitor(barcodeValue, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA04, "刪除文號");
+                        #endregion
+
+                        #endregion
                 }
             }
             catch (System.Exception ex)
@@ -545,6 +563,14 @@ namespace WDA
                     case "99": e.Row.Cells[9].Text = "其它";
                         break;
                 }
+
+                //ADD BY RICHARD 20160407 for 歸檔資料（檔號、日期、卷宗號及文件類型）編輯僅能由原始歸檔者進行操作
+                if (!UserInfo.RealName.Equals(e.Row.Cells[8].Text.Trim()))
+                {
+                    e.Row.Cells[0].Text = "";
+                    e.Row.Cells[1].Text = "";
+                }
+
 
                 e.Row.Cells[10].Text = string.IsNullOrEmpty(e.Row.Cells[10].Text.Replace(StringFormatException.Mode.Nbsp)) ? "無" : "有";
             }

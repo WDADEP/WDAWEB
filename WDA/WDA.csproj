@@ -119,6 +119,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Content\StyleLogin.css" />
     <Content Include="Content\WDA.css" />
+    <Content Include="DeptQueryMenu.aspx" />
     <Content Include="Dll\DBLib.dll" />
     <Content Include="Dll\Log.dll" />
     <Content Include="Dll\OSerialize.dll" />
@@ -381,6 +382,13 @@
     </Compile>
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DeptQueryMenu.aspx.cs">
+      <DependentUpon>DeptQueryMenu.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DeptQueryMenu.aspx.designer.cs">
+      <DependentUpon>DeptQueryMenu.aspx</DependentUpon>
     </Compile>
     <Compile Include="DulyAdjustedAdd.aspx.cs">
       <DependentUpon>DulyAdjustedAdd.aspx</DependentUpon>

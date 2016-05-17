@@ -120,7 +120,9 @@ namespace WDA
 
                         string transt = DateTime.Parse(dt.Rows[i]["TRANST"].ToString()).ToString("yyyy/MM/dd tt hh:mm:ss");
 
-                        where = string.Format("And WPINNO='{0}' And RECEIVER='{1}' And to_char(TRANST,'YYYY/MM/DD AM HH:MI:SS')='{2}'", dt.Rows[i]["WPINNO"].ToString(), dt.Rows[i]["RECEIVER"].ToString(), transt);
+                        //MODIFY BY RICHARD 20160426 RECEIVER為中文名，改抓UserName
+                        where = string.Format("And WPINNO='{0}' And RECEIVER='{1}' And to_char(TRANST,'YYYY/MM/DD AM HH:MI:SS')='{2}'", dt.Rows[i]["WPINNO"].ToString(), dt.Rows[i]["UserName"].ToString(), transt);
+
 
                         int count = Convert.ToInt32(dt.Rows[i]["HURRYTIME"].ToString()) + 1;
 

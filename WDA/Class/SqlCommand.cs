@@ -62,6 +62,22 @@ namespace WDA.Class
 
                 return strSql;
             }
+
+            // Added by Luke
+            public string BarcodeTableBarcodeValues(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select BarcodeValue\n"
+                              + "From BarcodeTable\n"
+                                + "Where 1=1 {0}";
+                #endregion
+
+                strSql = string.Format(strSql, Where);
+
+                return strSql;
+            }
+
             #endregion
 
             #region BkwpfileTable
@@ -160,7 +176,7 @@ namespace WDA.Class
                                 + "INNER JOIN WPBORROW wb ON fb.WPINNO = wb.WPINNO And fb.Receiver = wb.Receiver And fb.TRANST = wb.TRANST  \n"
                                 + "Inner Join {1} wpr On wb.wpinno = wpr.wpinno\n"
                                 + "Left JOIN BarcodeTable bt ON fb.WPINNO = bt.Barcodevalue\n"
-                                + "WHERE 1=1 And wb.REDATE Is Null  {0}\n  And ((fb.chk='Y' And wb.viewtype =2) or(fb.chk='N' And wb.viewtype =1))";
+                                + "WHERE 1=1 And wb.REDATE Is Null  {0}\n  And ((fb.chk='Y' And wb.viewtype =2) or(fb.chk='N' And wb.viewtype =1)) order by fb.wpinno";
 
                 #endregion
 
@@ -178,13 +194,17 @@ namespace WDA.Class
             {
                 #region SQL Command
 
-                string strSql = "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,bk.onfile,'1' as viewtype\n"
+                //REMARK BY RICHARD 20160408
+
+                //string strSql = "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,bk.onfile,'1' as viewtype\n"
+                string strSql = "Select wp.WPINNO\n"
                                 + " From {1} wp\n"
                                 + "Left Join {2} bk\n"
                                 + "On wp.wpinno = bk.wpinno\n"
                                 + "WHERE  1=1 {0}\n"
                                 + " Union\n"
-                                + "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,wps.RECEIVER As OnFile,'1' as viewtype\n"
+                //              + "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,wps.RECEIVER As OnFile,'1' as viewtype\n"
+                                + "Select wp.WPINNO\n"
                                 + " From {1} wp\n"
                                 + "Inner Join WPTRANS wps\n"
                                 + "On wp.wpinno = wps.wpinno\n"
@@ -296,29 +316,31 @@ namespace WDA.Class
             {
                 #region SQL Command
 
-                string strSql = "Select wb.WPINNO,wb.WPOUTNO,fb.commname,fb.transt,NVL(wb.hurrytime,0) as hurrytime,ut.RealName as receiver,wb.EXTENSIONDATE,wb.EXTENSIONCOUNT\n"
+                string strSql = "Select wb.WPINNO,wb.WPOUTNO,fb.commname,fb.transt,NVL(wb.hurrytime,0) as hurrytime,ut.RealName as receiver,wb.EXTENSIONDATE,wb.EXTENSIONCOUNT,dp.DEPTNAME,ut.UserName\n"
                                 + " From Wpborrow wb\n"
                                 + "Inner Join (Select wb.WPINNO,\n"
                                 + "CASE wb.kind\n"
-                                + "WHEN N'1' THEN wb.transt + 8\n"
-                                + "WHEN N'2' THEN wb.transt + 15\n"
-                                + "WHEN N'3' THEN wb.transt + 366\n"
+                                + "WHEN N'1' THEN fb.GETIME + 9\n"
+                                + "WHEN N'2' THEN fb.GETIME + 18\n"
+                                + "WHEN N'3' THEN fb.GETIME + 485\n"
                                 + "ELSE wb.transt END As transtExtra\n"
-                                + "From Wpborrow wb WHERE  wb.REDATE IS null  And wb.EXTEN In('D','N','Z') And wb.ViewType = 1 And wb.PRTFLAG In('P','T') And NVL(wb.EXTENSIONCOUNT,0)=0)B\n"
+                                + "From Wpborrow wb inner join fileboro fb on wb.wpinno=fb.wpinno WHERE  wb.REDATE IS null  And wb.EXTEN In('D','N','Z') And wb.ViewType = 1 And wb.PRTFLAG In('P','T') And NVL(wb.EXTENSIONCOUNT,0)=0)B\n"
                                 + "On wb.wpinno = B.wpinno\n"
                                 + "Inner Join UserTable ut\n"
                                 + "On wb.receiver = ut.username\n"
                                 + "Inner Join Fileboro fb\n"
                                 + "On wb.wpinno = fb.wpinno\n"
+                                + "Inner Join DEPT dp\n"
+                                + "On ut.deptid = dp.deptid\n"
                                 + "WHERE  wb.REDATE IS null  And fb.chk ='N' And wb.EXTEN In('D','N','Z') And wb.ViewType = 1  {0}\n"
                                 + " Union\n"
-                                + "Select wb.WPINNO,wb.WPOUTNO,fb.commname,fb.transt,NVL(wb.hurrytime,0) as hurrytime,ut.RealName as receiver,wb.EXTENSIONDATE,wb.EXTENSIONCOUNT\n"
+                                + "Select wb.WPINNO,wb.WPOUTNO,fb.commname,fb.transt,NVL(wb.hurrytime,0) as hurrytime,ut.RealName as receiver,wb.EXTENSIONDATE,wb.EXTENSIONCOUNT,dp.DEPTNAME,ut.UserName\n"
                                 + " From Wpborrow wb\n"
                                 + "Inner Join (Select wb.WPINNO,\n"
                                 + "CASE wb.kind\n"
-                                + "WHEN N'1' THEN wb.EXTENSIONDATE + 8\n"
-                                + "WHEN N'2' THEN wb.EXTENSIONDATE + 15\n"
-                                + "WHEN N'3' THEN wb.EXTENSIONDATE + 366\n"
+                                + "WHEN N'1' THEN wb.EXTENSIONDATE + 9\n"
+                                + "WHEN N'2' THEN wb.EXTENSIONDATE + 9\n"
+                                + "WHEN N'3' THEN wb.EXTENSIONDATE + 126\n"
                                 + "ELSE wb.EXTENSIONDATE END As transtExtra\n"
                                 + "From Wpborrow wb WHERE  wb.REDATE IS null  And wb.EXTEN In('D','N','Z') And wb.ViewType = 1 And wb.PRTFLAG In('P','T') And NVL(wb.EXTENSIONCOUNT,0)!=0)B\n"
                                 + "On wb.wpinno = B.wpinno\n"
@@ -326,6 +348,8 @@ namespace WDA.Class
                                 + "On wb.receiver = ut.username\n"
                                 + "Inner Join Fileboro fb\n"
                                 + "On wb.wpinno = fb.wpinno\n"
+                                + "Inner Join DEPT dp\n"
+                                + "On ut.deptid = dp.deptid\n"
                                 + "WHERE  wb.REDATE IS null  And fb.chk ='N' And wb.EXTEN In('D','N','Z') And wb.ViewType = 1  {0}\n"
                                 + "Order By receiver,transt";
 
@@ -426,9 +450,11 @@ namespace WDA.Class
                                 + "WHEN N'2' THEN '法制'\n"
                                 + "WHEN N'3' THEN '行政'\n"
                                 + "ELSE '其他' END As kindName,\n"
-                                + "wpb.redate,wpb.exten,ut.RealName\n"
+                                + "wpb.redate,wpb.exten,ut.RealName,fb.getime\n"
                                 + "From wpborrow wpb\n"
                                 + "Inner Join UserTable ut On wpb.receiver = ut.UserName\n"
+                                //ADD BY RICHARD 20160418 for展期日調檔新增開始起算
+                                + "Inner Join FILEBORO fb On (fb.wpinno = wpb.wpinno and fb.transt=wpb.transt)\n"
                                 + "Where 1=1 And wpb.REDATE IS null  And wpb.EXTEN  In('N','D') {0} And wpb.PRTFLAG In('P','T','F')";
                 #endregion
 
@@ -497,9 +523,11 @@ namespace WDA.Class
                                 + "WHEN N'2' THEN '法制'\n"
                                 + "WHEN N'3' THEN '行政'\n"
                                 + "ELSE '其他' END As kindName,\n"
-                                + "wpb.redate,wpb.exten,ut.RealName\n"
+                                + "wpb.redate,wpb.exten,ut.RealName,fb.getime\n"
                                 + "From wpborrow wpb\n"
                                 + "Inner Join UserTable ut On wpb.receiver = ut.UserName\n"
+                                //ADD BY RICHARD 20160418 展期日為調檔新增開始起算
+                                + "Inner Join FILEBORO fb On (fb.wpinno = wpb.wpinno and fb.transt=wpb.transt)\n"
                                 + "Where 1=1 And REDATE IS null And EXTEN ='Y' {0}";
                 #endregion
 
@@ -563,15 +591,16 @@ namespace WDA.Class
             /// 
             /// </summary>
             /// <param name="PrivID"></param>
+            /// <param name="DEPTID"></param> 
             /// <returns></returns>
-            public string GetApproveuserID(string PrivID)
+            public string GetApproveuserID(string PrivID, int DEPTID)
             {
                 #region SQL Command
                 string strSql = string.Format(
                     @"Select ut.* From UserTable ut
                       Inner Join ROLEPRIVILEGE rp On ut.RoleID = rp.RoleID
-                      Where rp.PrivID = '{0}'",
-                      PrivID);
+                      Where rp.PrivID = '{0}' AND ut.DEPTID={1} ",
+                      PrivID, DEPTID);
 
                 #endregion
 
@@ -653,15 +682,18 @@ namespace WDA.Class
 
             #endregion
 
-            #region GetDepID
+            #region DEPT
             /// <summary>
-            /// 取得UserID
+            /// 取得部門名稱
             /// </summary>
-            public string GetDepID()
+            public string DEPT(string strDeptName)
             {
                 #region SQL Command
-
-                string strSql = "Select * From UnitTable Where UnitCode =@UnitCode";
+                string strSql= string.Empty;
+                if (string.IsNullOrEmpty(strDeptName))
+                    strSql  = "Select DEPTID,DEPTNAME,Status From Dept order by DEPTID \n";
+                else
+                    strSql = string.Format("Select DEPTID,DEPTNAME,Status From Dept where DEPTNAME like '%{0}' order by DEPTID \n",strDeptName.Trim());
 
                 #endregion
 
@@ -919,10 +951,10 @@ namespace WDA.Class
             public string ScanListQuery(string Where)
             {
                 #region SQL Command
-
-                string strSql = " Select bt.*,ft.FileCount,ut.* From BARCODETABLE bt\n"
+                //MODIFY BY RICHARD 20160408
+                string strSql = " Select bt.*,ft.FileCount,ut.RealName From BARCODETABLE bt\n"
                     + "Inner Join Casetable ct On bt.caseid = ct.caseid\n"
-                    + "Inner Join Usertable ut On ct.CreateUserID = ut.UserID\n"
+                    + "Inner Join Usertable ut On bt.CreateUserID = ut.UserID\n"
                     + "Inner Join (Select COUNT(*) AS FileCount,a.CaseID From FileTable a GROUP BY CaseID) ft ON ct.CaseID =ft.CaseID\n"
                     + " Where 1=1\n"
                     + " {0} Order BY bt.CREATETIME\n";
@@ -1043,33 +1075,10 @@ namespace WDA.Class
             {
                 #region SQL Command
 
-                //string strSql = " With SystemOperatingTable([LogID],[RepNo],[FileID],[UserName],[RealName],[TransDateTime],[TransIP],[TransResult],[Comments]) as\n"
-                //                 + "(\n"
-                //                      + "Select lt.* From LogTable lt\n"
-                //                      + "Inner Join MessageTable mt On lt.TransResult = mt.MsgID\n"
-                //                      + "Where 1=1{0}\n"
-                //                 + "),\n"
-                //                 + "CaseStatusTable([LogID],[RepNo],[FileID],[UserName],[RealName],[TransDateTime],[TransIP],[TransResult],[Comments]) as\n"
-                //                 + "(\n"
-                //                      + "Select lt.* From LogTable lt\n"
-                //                      + "Inner Join MessageTable mt On lt.TransResult = mt.MsgID\n"
-                //                      + "Where 1=1{1}\n"
-                //                 + "),\n"
-                //                 + "AllDataTable([LogID],[RepNo],[FileID],[UserName],[RealName],[TransDateTime],[TransIP],[TransResult],[Comments]) as\n"
-                //                 + "(\n"
-                //                 + "select LogTable.* From LogTable Inner Join SystemOperatingTable\n"
-                //                 + "On LogTable.LogID = SystemOperatingTable.LogID\n"
-                //                 + "UNION\n"
-                //                 + "select LogTable.* From LogTable Inner Join CaseStatusTable\n"
-                //                 + "On LogTable.LogID = CaseStatusTable.LogID\n"
-                //                 + ")\n"
-                //                 + "Select lt.*,mt.* From AllDataTable lt\n"
-                //                 + "Inner Join MessageTable mt On lt.TransResult = mt.MsgID\n"
-                //                 + "Where 1=1{2} ";
-
+                //MODIFY BY RICHARD 20160407 加上order by
                 string strSql = "Select lt.*,mt.* From LogTable lt\n"
                                       + "Inner Join MessageTable mt On lt.TransResult = mt.MsgID\n"
-                                      + "Where 1=1 {0} {1}\n";
+                                      + "Where 1=1 {0} {1} order by lt.TRANSDATETIME \n";
                 #endregion
 
                 strSql = string.Format(strSql, SystemOperatingWhere, Where);
@@ -1100,6 +1109,7 @@ namespace WDA.Class
                     + " ut.UserStatus,\n"
                     + " ut.CreateTime,\n"
                     + " ut.TEL,\n"
+                    + " ut.DEPTID,\n"
                     + " ut.Comments\n"
                     + " From UserTable ut\n"
                     + " Where 1=1\n"
@@ -1176,6 +1186,7 @@ namespace WDA.Class
                     + "ut.UserStatus,\n"
                     + "ut.Comments,\n"
                     + "ut.Tel,\n"
+                    + "ut.DEPTID,\n" 
                     + "NVL(rt.RoleID, 0) As RoleID,\n"
                     + "NVL(rt.RoleName, '') As RoleName\n"
                     + "From UserTable ut\n"
@@ -1198,8 +1209,9 @@ namespace WDA.Class
             /// </summary>
             /// <param name="UserName"></param>
             /// <param name="RealName"></param>
+            /// <param name="UserRole"></param>
             /// <returns></returns>
-            public string UsersMaintain(string UserName, string RealName)
+            public string UsersMaintain(string UserName, string RealName, string UserRole)
             {
                 #region SQL Command
 
@@ -1210,9 +1222,12 @@ namespace WDA.Class
                       + "ut.UserStatus,\n"
                       + "ut.RoleID,\n"
                       + "ut.TEL,\n"
+                      + "ut.DEPTID,\n"
+                      + "dp.DEPTNAME,\n"
                       + "rt.RoleName\n"
                       + "From UserTable ut\n"
                       + "Left Join RoleTable rt  On ut.RoleID =rt.RoleID\n"
+                      + "Left Join DEPT dp  On ut.DEPTID =dp.DEPTID\n"
                       + "Where 1 = 1 {0}\n"
                       + "Order By ut.CreateTime";
 
@@ -1223,6 +1238,13 @@ namespace WDA.Class
                 if (UserName != null && UserName.Length > 0) where += string.Format("And ut.UserName='{0}'\n", UserName);
 
                 if (RealName != null && RealName.Length > 0) where += string.Format("And ut.RealName=N'{0}'\n", RealName);
+
+                //ADD BY RICHARD 20160408
+                if (UserRole != null && UserRole.Length > 0)
+                {
+                    if(!UserRole.Trim().Equals("0"))
+                        where += string.Format("And ut.ROLEID='{0}'\n", UserRole);
+                }
 
                 strSql = string.Format(strSql, where);
 
@@ -1317,9 +1339,9 @@ namespace WDA.Class
             public string WpborrowPrint(string Where)
             {
                 #region SQL Command
-
+                // modify by richard 20160328 add distinct
                 string strSql = "Select\n"
-                              + " ROW_NUMBER() OVER(ORDER BY wb.wpinno) AS RID,\n"
+                              + " distinct ROW_NUMBER() OVER(ORDER BY wb.wpinno) AS RID,\n" 
                               + " wb.wpinno,\n"
                     //+ " wb.receiver,\n"
                     //+ " bk.onfile,\n"
@@ -1370,8 +1392,9 @@ namespace WDA.Class
             {
                 #region SQL Command
 
+                //MODIFY BY RICHARD 20160331 for 系統目前檔案調借設定為只要是同一卷宗號之檔案無法同時調借，除綁定卷宗號外，請加綁定檔號前4碼相同者才無法同時調借。
                 string strSql = "Select bk.wpinno ,wp.RECEIVER from {0} bk\n"
-                                + "Inner Join (Select boxno From {0} A Where 1=1 {1}) B On bk.boxno = B.BOXNO\n"
+                                + "Inner Join (Select boxno,fileno From {0} A Where 1=1 {1}) B On bk.boxno = B.BOXNO AND SUBSTR(bk.fileno,0,4)=SUBSTR(B.fileno,0,4) \n"
                                 + "Inner Join wpborrow wp On bk.wpinno = wp.wpinno\n"
                                 + "Where wp.redate Is null And wp.viewtype = 1";
                 #endregion
@@ -1392,7 +1415,8 @@ namespace WDA.Class
             {
                 #region SQL Command
 
-                string strSql = "Select wr.*\n"
+                //MODIFY BY RICHARD 20160427 for performance
+                string strSql = "Select wr.WPINNO \n"
                               + "From {0} wr\n"
                               + "Where 1=1 {1}\n";
                 #endregion
@@ -1658,9 +1682,7 @@ namespace WDA.Class
 
                 return strSql;
             }
-            #endregion
 
-            #region Wprec
             /// <summary>
             /// 
             /// </summary>
@@ -1797,6 +1819,30 @@ namespace WDA.Class
 
                 return strSql;
             }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <param name="Where"></param>
+            /// <returns></returns>
+            public string BarcodeTableByBarCodeValue(Hashtable Data, string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Update BarcodeTable Set\n"
+                    + " BARCODEVALUE = '{0}'\n"
+                    + "Where 1=1 {1}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql,
+                    Data["BARCODEVALUE"].ToString(),
+                    Where);
+
+                return strSql;
+            }
+
             #endregion
 
             #region SystemCodeStatus
@@ -2042,6 +2088,58 @@ namespace WDA.Class
             }
             #endregion
 
+            #region DEPT
+            /// <summary>
+            /// DEPT
+            /// </summary>
+            /// <param name="DEPTID">部門代碼</param>
+            /// <param name="DEPTNAME">部門名稱</param>
+            /// <param name="STATUS">部門狀態</param> 
+            /// <returns></returns>
+            public string DEPT(string strDEPTID,string strDEPTNAME,string strStatus)
+            {
+                #region SQL Command
+
+                string strSql = "Update DEPT Set\n"
+                    + "	DEPTNAME = '{1}' ,\n"
+                    + " Status = '{2}' \n"
+                    + "Where DEPTID = {0}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql,
+                    strDEPTID.Trim(),
+                    strDEPTNAME.Trim(),
+                    strStatus.Trim());
+
+                return strSql;
+            }
+
+            /// <summary>
+            /// DEPT
+            /// </summary>
+            /// <param name="DEPTID">部門代碼</param>
+            /// <param name="STATUS">部門狀態</param> 
+            /// <returns></returns>
+            public string DEPTSTATUS(string strDEPTID, string strStatus)
+            {
+                #region SQL Command
+
+                string strSql = "Update DEPT Set\n"
+                    + " Status = '{1}' \n"
+                    + "Where DEPTID = {0}\n";
+
+                #endregion
+
+                strSql = string.Format(strSql,
+                    strDEPTID.Trim(),
+                    strStatus.Trim());
+
+                return strSql;
+            }
+
+            #endregion
+
             #region UserTablePassWord
             /// <summary>
             /// UserTable
@@ -2061,6 +2159,30 @@ namespace WDA.Class
 
                 strSql = string.Format(strSql,
                     Data["Password"].ToString(),
+                     Data["UserID"].ToString(),
+                      Data["TEL"].ToString());
+
+                return strSql;
+            }
+            #endregion
+
+            #region UserTableTel
+            /// <summary>
+            /// UserTable
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <returns></returns>
+            public string UserTableTel(Hashtable Data)
+            {
+                #region SQL Command
+
+                string strSql = "Update UserTable Set\n"
+                    + " TEL =N'{1}'\n"
+                    + "Where UserID ='{0}'\n";
+
+                #endregion
+
+                strSql = string.Format(strSql,
                      Data["UserID"].ToString(),
                       Data["TEL"].ToString());
 
@@ -2416,7 +2538,9 @@ namespace WDA.Class
                     + "And FILENO is null\n"
                     + "And FILEDATE is null\n"
                     + "And KEEPYR is null\n"
-                    + "And BOXNO is null\n";
+                    + "And BOXNO is null\n"
+                    //ADD BY RICHARD 20160427 檢查該文號是否有發文(發文日期或發文人員有值)
+                    + "And (SENDMAN is not null or WPOUTDATE is not null) \n";  
 
                 #endregion
 
@@ -2529,6 +2653,27 @@ namespace WDA.Class
 
                 return strSql;
             }
+
+            // Added by Luke
+            /// <summary>
+            /// 刪除 BarcodeTable
+            /// </summary>
+            /// <param name="BarcodeValue">收文文號</param>
+            /// <param name="CaseID">案號</param>
+            /// <returns></returns>
+            public string BarcodeTable(string BarcodeValue, string CaseID)
+            {
+                #region SQL Command
+
+                string strSql = "Delete From BarcodeTable Where BarcodeValue = '{0}' And CaseID = '{1}'";
+
+                #endregion
+
+                strSql = string.Format(strSql, BarcodeValue, CaseID);
+
+                return strSql;
+            }
+
             #endregion
 
             #region BkwpfileTable
@@ -2797,6 +2942,51 @@ namespace WDA.Class
 
                 return strSql;
             }
+
+            // Added by Luke
+            public string BarcodeTable(Hashtable Data)
+            {
+                #region SQL Command
+
+                string strSql = "INSERT INTO BarcodeTable\n"
+                              + "(CaseID\n"
+                              + ",BarcodeValue\n"
+                              + ",CreateTime\n"
+                              + ",CreateUserID\n"
+                              + ",LastModifyTime\n"
+                              + ",LastModifyUserID\n"
+                              + ",WpoutNo\n"
+                              + ",FileNo\n"
+                              + ",FileDate\n"
+                              + ",KeepYr\n"
+                              + ",BoxNo\n"
+                              + ",OnFile)\n"
+                              + "VALUES\n"
+                              + "('{0}'\n"
+                              + ",'{1}'\n"
+                              + ",TO_DATE('{2}','YYYY/MM/DD HH24:MI:SS')\n"
+                              + ",'{3}'\n"
+                              + ",TO_DATE('{4}','YYYY/MM/DD HH24:MI:SS')\n"
+                              + ",'{5}'\n"
+                              + ",null\n"
+                              + ",null\n"
+                              + ",null\n"
+                              + ",null\n"
+                              + ",null\n"
+                              + ",null)";
+                #endregion
+
+                strSql = string.Format(strSql,
+                   Data["CaseID"].ToString(),
+                   Data["BarcodeValue"].ToString(),
+                   Data["CreateTime"].ToString(),
+                   Data["CreateUserID"].ToString(),
+                   Data["LastModifyTime"].ToString(),
+                   Data["LastModifyUserID"].ToString());
+
+                return strSql;
+            }
+
             #endregion
 
             #region CaseTable

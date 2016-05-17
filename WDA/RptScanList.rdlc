@@ -6,22 +6,22 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>2.05021cm</Width>
+              <Width>1.25646cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.59291cm</Width>
+              <Width>5.82083cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>4.28042cm</Width>
+              <Width>3.19563cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>5.75438cm</Width>
+              <Width>5.30459cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>1.95792cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>3.08208cm</Width>
+              <Width>2.1825cm</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
@@ -332,7 +332,7 @@
                             <TextRun>
                               <Value>=Fields!CREATETIME.Value</Value>
                               <Style>
-                                <Format>f</Format>
+                                <Format>g</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -616,6 +616,7 @@
           <TablixMembers>
             <TablixMember>
               <KeepWithGroup>After</KeepWithGroup>
+              <RepeatOnNewPage>true</RepeatOnNewPage>
             </TablixMember>
             <TablixMember>
               <Group Name="詳細資料" />
@@ -731,9 +732,9 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox1</rd:DefaultName>
-          <Top>1.82323cm</Top>
+          <Top>1.50573cm</Top>
           <Height>0.6cm</Height>
-          <Width>4.64312cm</Width>
+          <Width>7.07729cm</Width>
           <ZIndex>1</ZIndex>
           <Style>
             <Border>
@@ -764,10 +765,10 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox30</rd:DefaultName>
-          <Top>1.63601cm</Top>
-          <Left>14.73083cm</Left>
+          <Top>1.67129cm</Top>
+          <Left>12.60125cm</Left>
           <Height>0.7276cm</Height>
-          <Width>4.98709cm</Width>
+          <Width>7.11667cm</Width>
           <ZIndex>2</ZIndex>
           <Style>
             <Border>
@@ -809,9 +810,9 @@
           </Paragraphs>
           <rd:DefaultName>Textbox4</rd:DefaultName>
           <Top>1.00955cm</Top>
-          <Left>14.73083cm</Left>
+          <Left>12.60125cm</Left>
           <Height>0.62646cm</Height>
-          <Width>4.98709cm</Width>
+          <Width>7.11667cm</Width>
           <ZIndex>3</ZIndex>
           <Style>
             <Border>
@@ -835,7 +836,7 @@
     <LeftMargin>0cm</LeftMargin>
     <RightMargin>0cm</RightMargin>
     <TopMargin>0cm</TopMargin>
-    <BottomMargin>0cm</BottomMargin>
+    <BottomMargin>1cm</BottomMargin>
     <ColumnSpacing>0.13cm</ColumnSpacing>
     <Style />
   </Page>

@@ -10,88 +10,34 @@
 namespace WDA {
     
     
-    public partial class PaperAlsoFile {
+    public partial class DeptQueryMenu {
         
         /// <summary>
-        /// txtWpinno 控制項。
+        /// BtnAdd 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtWpinno;
+        protected global::System.Web.UI.WebControls.Button BtnAdd;
         
         /// <summary>
-        /// txtWpoutNo 控制項。
+        /// lblDeptName 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtWpoutNo;
+        protected global::System.Web.UI.WebControls.Label lblDeptName;
         
         /// <summary>
-        /// lblWpinno 控制項。
+        /// TxtDeptName 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblWpinno;
-        
-        /// <summary>
-        /// lblWpoutNo 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblWpoutNo;
-        
-        /// <summary>
-        /// lblReceiver 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblReceiver;
-        
-        /// <summary>
-        /// lblTel 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTel;
-        
-        /// <summary>
-        /// lblWpstatus 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblWpstatus;
-        
-        /// <summary>
-        /// lblBorrdate 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblBorrdate;
-        
-        /// <summary>
-        /// lblRedate 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRedate;
+        protected global::System.Web.UI.WebControls.TextBox TxtDeptName;
         
         /// <summary>
         /// BtnOK 控制項。
@@ -103,15 +49,6 @@ namespace WDA {
         protected global::System.Web.UI.WebControls.Button BtnOK;
         
         /// <summary>
-        /// BtnCancel 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button BtnCancel;
-        
-        /// <summary>
         /// BtnClear 控制項。
         /// </summary>
         /// <remarks>
@@ -119,6 +56,33 @@ namespace WDA {
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button BtnClear;
+        
+        /// <summary>
+        /// GridView1 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView GridView1;
+        
+        /// <summary>
+        /// lblTotalPage_GridView1 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTotalPage_GridView1;
+        
+        /// <summary>
+        /// lblPage_GridView1 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblPage_GridView1;
         
         /// <summary>
         /// LiteralMessageBox1 控制項。
@@ -139,12 +103,12 @@ namespace WDA {
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden HiddenMessage;
         
         /// <summary>
-        /// Button1 控制項。
+        /// HiddenShowPanel 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button1;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden HiddenShowPanel;
     }
 }

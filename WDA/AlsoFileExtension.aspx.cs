@@ -52,7 +52,8 @@ namespace WDA
             DataTable dt = null;
             try
             {
-                strSql = this.Select.GetApproveuserID();
+                //ADD 增加部門別判斷
+                strSql = this.Select.GetApproveuserID("26",UserInfo.DEPTID);
 
                 this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
 

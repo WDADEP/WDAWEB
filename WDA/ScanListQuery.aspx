@@ -38,6 +38,10 @@
             try {
                 var txtScanCreateTime = $get('MainContent_txtScanCreateTime').value;
                 var txtScanEndTime = $get('MainContent_txtScanEndTime').value;
+                var txtWPINNO = $get('MainContent_TxtWpinno').value;
+                var txtRealName = $get('MainContent_TxtRealName').value;
+
+
 
                 if (txtScanCreateTime.length != 0 && txtScanEndTime.length == 0) {
                     $('#MainContent_txtScanEndTime').val($('#MainContent_txtScanCreateTime').val()); 
@@ -46,9 +50,16 @@
                     $('#MainContent_txtScanCreateTime').val($('#MainContent_txtScanEndTime').val()); 
                 }
 
+		/*	
                 if (txtScanCreateTime.length == 0)
                 {
                     alert('請輸入掃描起訖日');
+                    return false;
+                }
+		*/
+                if(txtScanCreateTime.length == 0 && txtScanEndTime.length == 0 && txtWPINNO.length == 0 && txtRealName.length == 0) 
+		{
+		    alert('請輸入任一個查詢條件');
                     return false;
                 }
 
@@ -69,6 +80,12 @@
                <div class="panel-body">
                    <table class="ItemTD_green" style="width: 98%; float: right; border-collapse: separate; border-spacing: 1px;" border="1">
                        <tr>
+                           <td class="HeadTD_green" style="padding:5px;">收文文號：</td>
+                           <td style="padding: 5px; text-align: left;">
+                               <asp:TextBox ID="TxtWpinno" runat="server"></asp:TextBox>
+                           </td>
+                       </tr>
+                       <tr>
                            <td class="HeadTD_green" style="padding: 5px;">掃瞄作業者：
                            </td>
                            <td style="padding: 5px; text-align: left;">
@@ -77,7 +94,7 @@
                        </tr>
                        <tr style="padding: 5px;">
                            <td class="HeadTD_green" style="padding: 5px;">
-                               <span class="t15_red">＊</span>掃描起訖日：
+                               掃描起訖日：
                            </td>
                            <td style="padding: 5px; text-align: left;">起：
      <asp:TextBox ID="txtScanCreateTime" runat="server" pattern="(\d{4})/(\d{1,2})/(\d{1,2}) (\d{2}):(\d{2})" title="日期格式"></asp:TextBox>
@@ -110,18 +127,37 @@
                            <asp:Button ID="BtnAdd" runat="server" Text="列印" class="btn btn-large btn-success" OnClientClick="var scriptName=document.forms[0].action;window.document.forms[0].target='_blank';setTimeout(function(){window.document.forms[0].target='';document.forms[0].action=scriptName;}, 500);" PostBackUrl="~/ScanListReport.aspx" />
                        </div>
                    </div>
-                    <asp:GridView ID="GridView1" runat="server" AllowSorting="True" AutoGenerateColumns="False" CssClass="GridViewStyle" Width="98%" OnSorting="GridView1_Sorting" AllowPaging="True" OnPageIndexChanging="GridView1_PageIndexChanging" OnRowDataBound="GridView1_RowDataBound">
+                    <asp:GridView ID="GridView1" runat="server" AllowSorting="True" AutoGenerateColumns="False" CssClass="GridViewStyle" Width="98%" OnSorting="GridView1_Sorting" AllowPaging="True" OnPageIndexChanging="GridView1_PageIndexChanging" OnRowDataBound="GridView1_RowDataBound" OnRowCreated="GridView1_RowCreated" OnRowCommand="GridView1_RowCommand">
                        <AlternatingRowStyle CssClass="AlternatingRowStyle" />
                        <Columns>
-                           <asp:TemplateField HeaderText="案件編號" SortExpression="CASEID">
-                               <ItemTemplate>
-                                   <asp:Label ID="LblCaseID" runat="server" Text='<%# Eval("CASEID") %>'></asp:Label>
-                               </ItemTemplate>
+                            <asp:TemplateField HeaderText="編輯">
+                                <EditItemTemplate>
+                                    <asp:ImageButton ID="ITImageListBtnAdd" runat="server" ImageUrl="~/Images/Add.gif" OnClick="ITImageListBtnAdd_Click" />
+                                    <asp:ImageButton ID="ITImageListBtnChang" runat="server" ImageUrl="~/Images/Chang.gif" OnClick="ITImageListBtnChang_Click" />
+                                    <asp:ImageButton ID="ITImageBtnCancel" runat="server" ImageUrl="~/Images/Cancel.gif" OnClick="ITImageBtnCancel_Click" />
+                                </EditItemTemplate>
+                                <ItemTemplate>
+                                    <asp:ImageButton ID="ImageBtnEdit" runat="server" ImageUrl="Images/Edit.gif" Style="width: 21px" OnClick="ImageBtnEdit_Click" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="刪除">
+                                <ItemTemplate>
+                                    <asp:ImageButton ID="ImageBtnDelete" runat="server" ImageUrl="Images/delete.gif" CommandName="Stop" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                           <asp:BoundField HeaderText="案件編號" DataField="CASEID" SortExpression="CASEID" ReadOnly="True" />
+                           <asp:TemplateField HeaderText="收文文號" SortExpression="BARCODEVALUE" >
+                            <EditItemTemplate>
+                                <asp:TextBox ID="txtBARCODEVALUE" runat="server" Text='<%# Bind("BARCODEVALUE") %>' Width="100%"></asp:TextBox>
+                            </EditItemTemplate>
+                            <ItemTemplate>
+                                <asp:Label ID="lblBARCODEVALUE" runat="server" Text='<%# Bind("BARCODEVALUE") %>'></asp:Label>
+                            </ItemTemplate>
                            </asp:TemplateField>
-                           <asp:BoundField DataField="BARCODEVALUE" HeaderText="收文文號" SortExpression="BARCODEVALUE" />
-                           <asp:BoundField HeaderText="掃描日期" DataField="CREATETIME" SortExpression="CREATETIME" />
-                           <asp:BoundField HeaderText="掃瞄作業者" DataField="RealName" SortExpression="RealName" />
-                           <asp:BoundField HeaderText="掃描頁數" DataField="FileCount" SortExpression="FileCount" />
+                           <asp:BoundField HeaderText="掃描日期" DataField="CREATETIME" SortExpression="CREATETIME" ReadOnly="True" />
+                           <asp:BoundField HeaderText="掃瞄作業者" DataField="RealName" SortExpression="RealName" ReadOnly="True" />
+                           <asp:BoundField HeaderText="掃描頁數" DataField="FileCount" SortExpression="FileCount" ReadOnly="True" />
+                           <asp:BoundField HeaderText="文號" DataField="BARCODEVALUE" SortExpression="BARCODEVALUE" ReadOnly="True" />
                        </Columns>
                        <FooterStyle CssClass="FooterStyle" />
                        <HeaderStyle CssClass="HeaderStyle" />
