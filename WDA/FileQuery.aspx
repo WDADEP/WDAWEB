@@ -82,9 +82,8 @@
                        </div>
                    </div>
                    <div class="panel-body">
-
                         <h5 class="panel-title">檔案狀況：</h5>
-                       <div style="width: 98%">
+                   <div style="width: 98%">
 
                     <asp:GridView ID="GridView2" runat="server" AllowSorting="True" AutoGenerateColumns="False" CssClass="GridViewStyle" Width="98%" OnSorting="GridView2_Sorting" AllowPaging="True" OnPageIndexChanging="GridView2_PageIndexChanging">
                        <AlternatingRowStyle CssClass="AlternatingRowStyle" />
@@ -106,7 +105,26 @@
                        <RowStyle CssClass="RowStyle" />
                        <PagerSettings Mode="NumericFirstLast" FirstPageText="[第一頁]" LastPageText="[最末頁]" />
                    </asp:GridView>
-			</div>
+       			   </div>
+                   </div>
+                   <div class="panel-body">
+
+                        <h5 class="panel-title">簽收狀況：</h5>
+                       <div style="width: 98%">
+
+                   <asp:GridView ID="GridView3" runat="server"  AutoGenerateColumns="False" CssClass="GridViewStyle" Width="98%" >
+                       <AlternatingRowStyle CssClass="AlternatingRowStyle" />
+                       <Columns>
+                           <asp:BoundField HeaderText="收文文號" DataField="WPINNO" SortExpression="WPINNO"></asp:BoundField>
+                           <asp:BoundField HeaderText="接 收 文 件 者" DataField="RECEIVER" SortExpression="RECEIVER"></asp:BoundField>
+                           <asp:BoundField HeaderText="收文日期" DataField="TRANSTIME" SortExpression="TRANSTIME"></asp:BoundField>
+                       </Columns>
+                       <FooterStyle CssClass="FooterStyle" />
+                       <HeaderStyle CssClass="HeaderStyle" />
+                       <PagerStyle CssClass="PagerStyle" HorizontalAlign="Center" />
+                       <RowStyle CssClass="RowStyle" />
+                   </asp:GridView>
+                   </div>
                    </div>
                    <table id="tbPageLayer_GridView1" style="border-right: #ffffff 1px solid; border-top: #ffffff 1px solid; border-left: #e6e6e6 1px solid; border-bottom: #e6e6e6 1px solid; width: 100%;" border="1">
                        <tr>
@@ -117,8 +135,9 @@
                        </tr>
                    </table>
                </div>
-           </div>
+               </div>
            <cc1:LiteralMessageBox ID="LiteralMessageBox1" runat="server"></cc1:LiteralMessageBox>
            <input id="HiddenMessage" type="Hidden" runat="server" />
            </div>
+
 </asp:Content>

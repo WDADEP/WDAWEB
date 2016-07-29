@@ -22,7 +22,7 @@ namespace WDA
                 {
                     this.HiddenShowPanel.Value = "false";
 
-                    //this.GridView1.PageSize = Convert.ToInt32(this.GetSystem("PageSize"));
+                    this.GridView1.PageSize = Convert.ToInt32(this.GetSystem("PageSize"));
 
                     this.InitInfo();
                 }

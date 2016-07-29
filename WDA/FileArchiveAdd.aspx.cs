@@ -146,8 +146,8 @@ namespace WDA
             if (!this.CheckWprec())
             {
                 this.HiddenShowPanel.Value = "false";
-
-                this.ShowMessage("查詢不到收文號，或此文號已歸檔", MessageMode.INFO); return;
+                //MODIFY BY RICHARD 20160517
+                this.ShowMessage("發文號為空值或是此收文號已經歸檔", MessageMode.INFO); return;
             }
 
 
@@ -241,7 +241,7 @@ namespace WDA
             try
             {
                 //MODIFY BY RICHARD 20160427 檢查該文號是否有發文(發文日期或發文人員有值)
-                where = string.Format("And WPINNO = '{0}'\n And FILENO is null And FILEDATE is null And KEEPYR is null And BOXNO is null AND  (SENDMAN is not null or WPOUTDATE is not null) ", this.txtQueryBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim());
+                where = string.Format(" WPINNO = '{0}'\n And FILENO is null And FILEDATE is null And KEEPYR is null And BOXNO is null AND  (SENDMAN is not null or WPOUTDATE is not null) ", this.txtQueryBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim());
 
                 strSql = this.Select.WprecCheck(where);
 
@@ -534,7 +534,7 @@ namespace WDA
                 result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
                 if (result < 1)
                 {
-                    this.ShowMessage("WPREC Table 找不到對應的收文號或是此文號已經歸檔");
+                    this.ShowMessage("發文號為空值或是此收文號已經歸檔");
                     this.WriteLog(global::Log.Mode.LogMode.ERROR, "Update WPREC Fail");
                     return false;
                 }

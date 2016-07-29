@@ -66,7 +66,7 @@
                                     <asp:ListItem Value="3">3. PM 02:30</asp:ListItem>
                                     <asp:ListItem Value="4">4. PM 04:00</asp:ListItem>
                                 </asp:DropDownList>
-                                ～迄：
+                                ～訖：
                                             <asp:TextBox ID="txtScanEndTime" runat="server" pattern="\d{4}/\d{1,2}/\d{1,2}" title="日期格式"></asp:TextBox>
                                 <asp:DropDownList ID="ddlEndTime" Style="width: 150px" runat="server">
                                     <asp:ListItem Value="1">1. AM 09:30</asp:ListItem>

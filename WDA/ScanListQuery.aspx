@@ -100,7 +100,7 @@
                            </td>
                            <td style="padding: 5px; text-align: left;">起：
      <asp:TextBox ID="txtScanCreateTime" runat="server" pattern="(\d{4})/(\d{1,2})/(\d{1,2}) (\d{2}):(\d{2})" title="日期格式"></asp:TextBox>
-                                ～迄：
+                                ～訖：
                                             <asp:TextBox ID="txtScanEndTime" runat="server" pattern="(\d{4})/(\d{1,2})/(\d{1,2}) (\d{2}):(\d{2})" title="日期格式"></asp:TextBox>
                            </td>
                        </tr>

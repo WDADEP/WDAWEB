@@ -131,7 +131,7 @@
                         <td class="HeadTD_green" style="padding: 5px;">卷宗號：</td>
                         <td style="padding: 5px; text-align: left;">
                             <strong>起：
-                                <asp:TextBox ID="txtBoxNoS" runat="server" TextMode="Number"></asp:TextBox>迄：
+                                <asp:TextBox ID="txtBoxNoS" runat="server" TextMode="Number"></asp:TextBox>訖：
 										<asp:TextBox ID="txtBoxNoE" runat="server" TextMode="Number"></asp:TextBox></strong>
                             <%--  <asp:TextBox ID="txtBoxNo" runat="server" TextMode="Number"></asp:TextBox>--%>
                         </td>

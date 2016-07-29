@@ -64,7 +64,7 @@
                            </td>
                            <td style="padding: 5px; text-align: left;">起：
                                               <asp:TextBox ID="txtCreateTime" runat="server" pattern="\d{4}/\d{1,2}/\d{1,2}" title="日期格式"></asp:TextBox>
-                               ～迄：
+                               ～訖：
                                             <asp:TextBox ID="txtEndTime" runat="server" pattern="\d{4}/\d{1,2}/\d{1,2}" title="日期格式"></asp:TextBox>
                                 23:59 以前
                            </td>

@@ -66,6 +66,17 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
+        <xs:element name="TransReceiverTable" msprop:Generator_TableClassName="TransReceiverTableDataTable" msprop:Generator_TableVarName="tableTransReceiverTable" msprop:Generator_RowChangedName="TransReceiverTableRowChanged" msprop:Generator_TablePropName="TransReceiverTable" msprop:Generator_RowDeletingName="TransReceiverTableRowDeleting" msprop:Generator_RowChangingName="TransReceiverTableRowChanging" msprop:Generator_RowEvHandlerName="TransReceiverTableRowChangeEventHandler" msprop:Generator_RowDeletedName="TransReceiverTableRowDeleted" msprop:Generator_RowClassName="TransReceiverTableRow" msprop:Generator_UserTableName="TransReceiverTable" msprop:Generator_RowEvArgName="TransReceiverTableRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="RECEIVER" msprop:Generator_ColumnVarNameInTable="columnRECEIVER" msprop:Generator_ColumnPropNameInRow="RECEIVER" msprop:Generator_ColumnPropNameInTable="RECEIVERColumn" msprop:Generator_UserColumnName="RECEIVER" type="xs:string" minOccurs="0" />
+              <xs:element name="TRANSTIME" msprop:Generator_ColumnVarNameInTable="columnTRANSTIME" msprop:Generator_ColumnPropNameInRow="TRANSTIME" msprop:Generator_ColumnPropNameInTable="TRANSTIMEColumn" msprop:Generator_UserColumnName="TRANSTIME" type="xs:string" minOccurs="0" />
+              <xs:element name="WPINNO" msprop:Generator_ColumnVarNameInTable="columnWPINNO" msprop:Generator_ColumnPropNameInRow="WPINNO" msprop:Generator_ColumnPropNameInTable="WPINNOColumn" msprop:Generator_UserColumnName="WPINNO" type="xs:string" minOccurs="0" />
+              <xs:element name="COMMNAME" msprop:Generator_ColumnVarNameInTable="columnCOMMNAME" msprop:Generator_ColumnPropNameInRow="COMMNAME" msprop:Generator_ColumnPropNameInTable="COMMNAMEColumn" msprop:Generator_UserColumnName="COMMNAME" type="xs:string" minOccurs="0" />
+              <xs:element name="KINDTYPE" msprop:Generator_ColumnVarNameInTable="columnKINDTYPE" msprop:Generator_ColumnPropNameInRow="KINDTYPE" msprop:Generator_ColumnPropNameInTable="KINDTYPEColumn" msprop:Generator_UserColumnName="KINDTYPE" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:choice>
     </xs:complexType>
   </xs:element>

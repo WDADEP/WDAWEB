@@ -75,6 +75,12 @@ namespace WDA.Class
 
                 strSql = string.Format(strSql, Where);
 
+                if (string.IsNullOrEmpty(Where))
+                    strSql = string.Format(strSql, "");
+                else
+                    strSql = string.Format(strSql, Where);
+
+
                 return strSql;
             }
 
@@ -176,7 +182,7 @@ namespace WDA.Class
                                 + "INNER JOIN WPBORROW wb ON fb.WPINNO = wb.WPINNO And fb.Receiver = wb.Receiver And fb.TRANST = wb.TRANST  \n"
                                 + "Inner Join {1} wpr On wb.wpinno = wpr.wpinno\n"
                                 + "Left JOIN BarcodeTable bt ON fb.WPINNO = bt.Barcodevalue\n"
-                                + "WHERE 1=1 And wb.REDATE Is Null  {0}\n  And ((fb.chk='Y' And wb.viewtype =2) or(fb.chk='N' And wb.viewtype =1)) order by fb.wpinno";
+                                + "WHERE wb.REDATE Is Null  {0}\n  And ((fb.chk='Y' And wb.viewtype =2) or(fb.chk='N' And wb.viewtype =1)) order by fb.wpinno";
 
                 #endregion
 
@@ -195,20 +201,19 @@ namespace WDA.Class
                 #region SQL Command
 
                 //REMARK BY RICHARD 20160408
-
                 //string strSql = "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,bk.onfile,'1' as viewtype\n"
                 string strSql = "Select wp.WPINNO\n"
                                 + " From {1} wp\n"
                                 + "Left Join {2} bk\n"
                                 + "On wp.wpinno = bk.wpinno\n"
-                                + "WHERE  1=1 {0}\n"
+                                + "WHERE 1=1   {0}\n"
                                 + " Union\n"
                 //              + "Select wp.WPINNO,wp.WpoutNo,wp.FileNo,wp.FileDate,wp.KeepYr,wp.BoxNo,wps.RECEIVER As OnFile,'1' as viewtype\n"
                                 + "Select wp.WPINNO\n"
                                 + " From {1} wp\n"
                                 + "Inner Join WPTRANS wps\n"
                                 + "On wp.wpinno = wps.wpinno\n"
-                                + "WHERE  1=1 {3}\n";
+                                + "WHERE 1=1 {3}\n";
 
                 #endregion
 
@@ -242,7 +247,7 @@ namespace WDA.Class
                    + "On wp.wpinno = wps.wpinno\n"
                    + "Left Join BarcodeTable bt\n"
                    + "On wp.wpinno = bt.BARCODEVALUE\n"
-                   + "WHERE  1=1 {1} Order By wp.BoxNo\n";
+                   + "WHERE 1=1 {1} Order By wp.BoxNo\n";
 
                 #endregion
 
@@ -298,7 +303,7 @@ namespace WDA.Class
                                 + "On wp.wpinno = wps.wpinno\n"
                                 + "Left Join BarcodeTable bt\n"
                                 + "On wp.wpinno = bt.BARCODEVALUE\n"
-                                + "WHERE  1=1 And wp.FileNo is not null {4} Order By wp.BoxNo\n";
+                                + "WHERE  wp.FileNo is not null {4} Order By wp.BoxNo\n";
 
                 #endregion
 
@@ -455,7 +460,8 @@ namespace WDA.Class
                                 + "Inner Join UserTable ut On wpb.receiver = ut.UserName\n"
                                 //ADD BY RICHARD 20160418 for展期日調檔新增開始起算
                                 + "Inner Join FILEBORO fb On (fb.wpinno = wpb.wpinno and fb.transt=wpb.transt)\n"
-                                + "Where 1=1 And wpb.REDATE IS null  And wpb.EXTEN  In('N','D') {0} And wpb.PRTFLAG In('P','T','F')";
+                                //MODIFY BY RICHARD 20160615 delete 1=1
+                                + "Where wpb.REDATE IS null  And wpb.EXTEN  In('N','D') {0} And wpb.PRTFLAG In('P','T','F')";
                 #endregion
 
                 strSql = string.Format(strSql, Where);
@@ -475,7 +481,8 @@ namespace WDA.Class
 
                 string strSql = "Select wpb.*\n"
                                 + "From wpborrow wpb\n"
-                                + "Where 1=1 And wpb.REDATE IS null And wpb.EXTEN = 'Y' {0}";
+                                // MODIFY BY RICHARD 20160615 delete 1=1
+                                + "Where wpb.REDATE IS null And wpb.EXTEN = 'Y' {0}";
 
                 #endregion
 
@@ -499,7 +506,8 @@ namespace WDA.Class
                                 + "Inner Join UserTable ut On wpb.receiver = ut.UserName\n"
                                 + "Left Join UserTable ut2 On wpb.USERID = ut2.USERID\n"
                                 + "Inner Join FILEBORO fb On wpb.wpinno = fb.wpinno AND wpb.TRANST = fb.TRANST AND wpb.RECEIVER = fb.RECEIVER\n"
-                                + "Where 1=1 And ViewType =1 {0} Order By wpb.transt DESC";
+                                //MODIFY BY 20160615 delete 1=1
+                                + "Where ViewType =1 {0} Order By wpb.transt DESC";
                 #endregion
 
                 strSql = string.Format(strSql, Where);
@@ -528,7 +536,8 @@ namespace WDA.Class
                                 + "Inner Join UserTable ut On wpb.receiver = ut.UserName\n"
                                 //ADD BY RICHARD 20160418 展期日為調檔新增開始起算
                                 + "Inner Join FILEBORO fb On (fb.wpinno = wpb.wpinno and fb.transt=wpb.transt)\n"
-                                + "Where 1=1 And REDATE IS null And EXTEN ='Y' {0}";
+                                //MODIFY BY RICHARD 20160615 delete 1=1
+                                + "Where REDATE IS null And EXTEN ='Y' {0}";
                 #endregion
 
                 strSql = string.Format(strSql, Where);
@@ -619,7 +628,8 @@ namespace WDA.Class
                 string strSql = "Select wp.wpinno,wp.IMAGEPRIV From WPBORROW wp\n" 
                                 + "Inner Join BARCODETABLE bt On wp.wpinno = bt.barcodevalue\n"
                                 + "Inner Join Casetable ct on bt.caseid = ct.caseid\n"
-                                + "Where 1=1 And wp.REDATE IS null {0}";
+                                //MODIFY BY RICHARD 20160615 delete 1=1
+                                + "Where wp.REDATE IS null {0}";
 
                 #endregion
 
@@ -1162,6 +1172,30 @@ namespace WDA.Class
 
                 return strSql;
             }
+
+            // Added by Luke 2016/05/30
+            /// <summary>
+            /// 使用者資訊之RoleID
+            /// </summary>
+            /// <param name="UserName">查詢條件</param>
+            /// <returns></returns>
+            public string RoleIDFromUserTable(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select roleid\n"
+                              + "From usertable\n"
+                                + "Where 1=1 {0}";
+                #endregion
+
+                if (!string.IsNullOrEmpty(Where))
+                    strSql = string.Format(strSql, Where);
+                else
+                    strSql = string.Format(strSql, "");
+
+                return strSql;
+            }
+
             #endregion
 
             #region UserInfo
@@ -1418,7 +1452,7 @@ namespace WDA.Class
                 //MODIFY BY RICHARD 20160427 for performance
                 string strSql = "Select wr.WPINNO \n"
                               + "From {0} wr\n"
-                              + "Where 1=1 {1}\n";
+                              + "Where {1}\n";
                 #endregion
 
                 strSql = string.Format(strSql, PageUtility.WprecSchema, Where);
@@ -1708,6 +1742,31 @@ namespace WDA.Class
             }
             #endregion
 
+            #region Transtable
+            // Added by Luke 2016/05/30
+            /// <summary>
+            /// Transtable
+            /// </summary>
+            /// <param name="Where"></param>
+            /// <returns></returns>
+            public string Transtable(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select RECEIVER, TRANSTIME, WPINNO, COMMNAME, ROW_NUMBER() OVER(ORDER BY TRANSTIME DESC) as RID \n"
+                                + " From TRANSTABLE \n"
+                                + " WHERE  1=1 {0}\n";
+
+                #endregion
+
+                if (!string.IsNullOrEmpty(Where))
+                    strSql = string.Format(strSql, Where);
+                else
+                    strSql = string.Format(strSql, "");
+
+                return strSql;
+            }
+            #endregion
         }
         #endregion
 
@@ -2864,6 +2923,28 @@ namespace WDA.Class
                 return strSql;
             }
             #endregion
+
+            #region TRANSTABLE
+            /// <summary>
+            /// 刪除 TRANSTABLE
+            /// </summary>
+            /// <param name="strWhere">收文文號</param>
+            /// <returns></returns>
+            public string TRANSTable(string strWhere)
+            {
+                #region SQL Command
+
+                string strSql = " Delete From TRANSTABLE Where 1=1 {0} \n";
+
+                #endregion
+
+                strSql = string.Format(strSql, strWhere);
+
+                return strSql;
+            }
+            #endregion
+
+
         }
         #endregion
 
@@ -3093,30 +3174,6 @@ namespace WDA.Class
                     Data["WPINNO"].ToString(),
                     Data["TRANST"].ToString(),
                     PageUtility.WprecSchema);
-
-                return strSql;
-            }
-            #endregion
-
-            #region LapTable
-            /// <summary>
-            /// 層級資料表
-            /// </summary>
-            /// <returns></returns>
-            public string LapTable()
-            {
-                #region SQL Command
-
-                string strSql = "WITH ParentTable(LapID,ParentID,Visible,LevelID,LapName,Seq,BcValue,CreateTime,CreateUserID,LastModifyTime,LastModifyUserID) AS (\n"
-                                + "Select ( Select (isnull(Max(LapID),0) + 1) As LapID From LapTable) ,0,0,0,@branchName,0,@branchCode,Getdate(),0,Getdate(),0\n"
-                                + "UNION ALL\n"
-                                + "Select (Select (isnull(Max(LapID),0) + 1) As LapID From LapTable)+ROW_NUMBER() OVER(ORDER BY CorpID) ,(Select (isnull(Max(LapID),0) + 1) As LapID From LapTable),0,1,ct.CorpName,ROW_NUMBER() OVER(ORDER BY CorpID),ct.CorpID,Getdate(),0,Getdate(),0  From CorpTable ct\n"
-                              + ")\n"
-                            + "INSERT INTO LapTable\n"
-                            + "SELECT *\n"
-                            + "FROM ParentTable";
-
-                #endregion
 
                 return strSql;
             }
@@ -3501,6 +3558,37 @@ namespace WDA.Class
                 return strSql;
             }
             #endregion
+
+            #region Transtable
+            // Added by Luke 2016/05/30
+            /// <summary>
+            /// Transtable
+            /// </summary>
+            /// <param name="Data"></param>
+            /// <returns></returns>
+            public string Transtable(Hashtable Data)
+            {
+                #region SQL Command
+
+                //MODIFY BY RICHARD20160705 因TRANSDATE改為系統時間故加上N''
+                string strSql = "Insert Into TRANSTABLE (WPINNO, TRANSTIME, RECEIVER, FLAG, COMMNAME, WPKIND, WPTYPE)\n"
+                              + "Values('{0}', N'{1}', N'{2}', '{3}',N'{4}','{5}','{6}') \n";
+
+                #endregion
+
+                strSql = string.Format(strSql,
+                    Data["Wpinno"].ToString(),
+                    Data["Transtime"].ToString(),
+                    Data["Receiver"].ToString(),
+                    Data["Flag"].ToString(),
+                    Data["COMMNAME"].ToString(),
+                    Data["WPKIND"].ToString(),
+                    Data["WPTYPE"].ToString());
+
+                return strSql;
+            }
+            #endregion
+
         }
 
         #endregion

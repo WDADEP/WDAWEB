@@ -10,16 +10,25 @@
 namespace WDA {
     
     
-    public partial class FileQuery {
+    public partial class TransReceiver {
         
         /// <summary>
-        /// TxtWPINNO 控制項。
+        /// TxtWpinno 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TxtWPINNO;
+        protected global::System.Web.UI.WebControls.TextBox TxtWpinno;
+        
+        /// <summary>
+        /// TxtReceiver 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TxtReceiver;
         
         /// <summary>
         /// BtnOK 控制項。
@@ -47,24 +56,6 @@ namespace WDA {
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView GridView1;
-        
-        /// <summary>
-        /// GridView2 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView GridView2;
-        
-        /// <summary>
-        /// GridView3 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView GridView3;
         
         /// <summary>
         /// lblTotalPage_GridView1 控制項。
@@ -101,5 +92,14 @@ namespace WDA {
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden HiddenMessage;
+        
+        /// <summary>
+        /// HiddenShowPanel 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden HiddenShowPanel;
     }
 }

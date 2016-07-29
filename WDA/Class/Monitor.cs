@@ -73,6 +73,11 @@ namespace WDA.Class
             /// 簽准展期
             /// </summary>
             public static string WDA15 = "15";
+            /// <summary>
+            /// 簽收功能
+            /// </summary>
+            public static string WDA16 = "16";
+
         }
         #endregion
 

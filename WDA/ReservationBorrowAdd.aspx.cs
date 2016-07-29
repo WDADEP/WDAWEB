@@ -249,7 +249,7 @@ namespace WDA
                 #endregion
 
                 #region WprecCheck
-                where = string.Format("And wr.WpinNo = '{0}'", this.txtWpinNo.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim());
+                where = string.Format(" wr.WpinNo = '{0}'", this.txtWpinNo.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim());
 
                 strSql = this.Select.WprecCheck(where);
 
@@ -499,20 +499,20 @@ namespace WDA
                     this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
 
                     //ADD BY RICHARD 20160420
-                    //DataTable dt = null;
-                    //string where = string.Format("And wb.WpinNo = '{0}' And wb.Receiver = '{1}' And wb.Prtflag = '{2}'  And wb.Viewtype ='{3}' ",
-                    //                   wpinNo.Trim(),
-                    //                   UserInfo.UserName,
-                    //                   "N",
-                    //                   "1");
+                    DataTable dt = null;
+                    string where = string.Format("And wb.WpinNo = '{0}' And wb.Receiver = '{1}' And wb.Prtflag = '{2}'  And wb.Viewtype ='{3}' ",
+                                       wpinNo.Trim(),
+                                       UserInfo.UserName,
+                                       "N",
+                                       "1");
 
-                    //strSql = this.Select.WpborrowQuery(where);
-                    //this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                    strSql = this.Select.WpborrowQuery(where);
+                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
 
-                    //dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+                    dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
 
-                    //if (dt.Rows.Count == 0)
-                    //{
+                    if (dt.Rows.Count == 0)
+                    {
                         strSql = this.Insert.Wpborrow(ht);
 
                         this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
@@ -525,7 +525,7 @@ namespace WDA
                         result = this.DBConn.GeneralSqlCmd.ExecuteNonQuery(strSql);
                         //ADD BY RICHARD 設定只能按一次 20160421 
                         bFlagAdd = false;
-                   // }
+                    }
                 }
 
             }

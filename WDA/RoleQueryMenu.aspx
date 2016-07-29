@@ -23,7 +23,7 @@
        <div class="well well-lg">
            <div class="panel panel-primary">
                <div class="panel-heading">
-                   <h3 class="panel-title">掃描清單作業─查詢</h3>
+                   <h3 class="panel-title">角色管理作業─查詢</h3>
                </div>
                <div class="panel-body">
                     <div style="width: 98%; text-align: right">

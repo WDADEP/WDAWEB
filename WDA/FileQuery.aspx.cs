@@ -75,6 +75,8 @@ namespace WDA
                     DataTable dt= null;
                     DataTable dtWprec = null;
                     DataTable dtWpborrow = null;
+                    //ADD BY RICHARD 20160531
+                    DataTable dtTRANST = null;
 
                     string wpinno = string.Empty;
                     //OleDbCommand command = (OleDbCommand)this.DBConn.GeneralSqlCmd.Command;
@@ -158,9 +160,19 @@ namespace WDA
 
                         dtWpborrow.Dispose(); dtWpborrow = null;
                     //}
+                        this.GridView2.DataBind((DataTable)ViewState[this.GridView2.ClientID], Anew, LockPageNum);
+                    
+                    //ADD BY RICHARD 20160531
+                    where = string.Format("And WPINNO ='{0}' ORDER BY TRANSTIME DESC ", wpinno);
+                    strSql = this.Select.Transtable(where);
+                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                    dtTRANST = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+                    ViewState[this.GridView3.ClientID] = dtTRANST;
+                    this.GridView3.DataBind((DataTable)ViewState[this.GridView3.ClientID], Anew, LockPageNum);
+
+
                 }
 
-                this.GridView2.DataBind((DataTable)ViewState[this.GridView2.ClientID], Anew, LockPageNum);
             }
             catch (System.Exception ex) { this.ShowMessage(ex); }
             finally
