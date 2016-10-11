@@ -21,20 +21,20 @@
             $("#MainContent_txtFileScanStartDate").datepicker("option", $.datepicker.regional["zh-TW"]);
             $("#MainContent_txtFileScanEndDate").datepicker("option", $.datepicker.regional["zh-TW"]);
 
-            $("#MainContent_txtFileScanStartDate").datetimepicker({
+            $("#MainContent_txtFileScanStartDate").datepicker({
                 defaultDate: new Date(),
                 changeMonth: true,
                 numberOfMonths: 1,
                 onClose: function (selectedDate) {
-                    $("#MainContent_txtFileScanEndDate").datetimepicker("option", "minDate", selectedDate);
+                    $("#MainContent_txtFileScanEndDate").datepicker("option", "minDate", selectedDate);
                 }
             });
-            $("#MainContent_txtFileScanEndDate").datetimepicker({
+            $("#MainContent_txtFileScanEndDate").datepicker({
                 defaultDate: new Date(),
                 changeMonth: true,
                 numberOfMonths: 1,
                 onClose: function (selectedDate) {
-                    $("#MainContent_txtFileScanStartDate").datetimepicker("option", "maxDate", selectedDate);
+                    $("#MainContent_txtFileScanStartDate").datepicker("option", "maxDate", selectedDate);
                 }
             });
 
@@ -65,24 +65,14 @@
 
         function ImageBtnOKClick() {
             try {
-                var txtBarcodeValue = $get('MainContent_txtBarcodeValue').value;
-                var txtWpoutNo = $get('MainContent_txtWpoutNo').value;
                 var txtFileNo = $get('MainContent_txtFileNo').value;
                 var txtFileScanStartDate = $get('MainContent_txtFileScanStartDate').value;
                 var txtFileScanEndDate = $get('MainContent_txtFileScanEndDate').value;
-                var txtKeepYr = $get('MainContent_txtKeepYr').value;
-                var txtBoxNoS = $get('MainContent_txtBoxNoS').value;
-                var txtBoxNoE = $get('MainContent_txtBoxNoE').value;
                 var txtOnFile = $get('MainContent_ddlOnFile').value;
 
-                if (txtBarcodeValue.length == 0 &&
-                    txtWpoutNo.length == 0 &&
-                    txtFileNo.length == 0 &&
+                if (txtFileNo.length == 0 &&
                     txtFileScanStartDate.length == 0 &&
                     txtFileScanEndDate.length == 0 &&
-                    txtKeepYr.length == 0 &&
-                    txtBoxNoS.length == 0 &&
-                    txtBoxNoE.length == 0 &&
                     txtOnFile.length == 0) {
 
                     alert('請輸入至少填入一個搜尋條件。');
@@ -96,14 +86,6 @@
             };
         }
     </script>
-    <div class="alert alert-info" id="success-alert">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <h4>說明：</h4>
-        <ol>
-            <li>您可設定一個以上的查詢條件，以取得更精確的查詢結果。</li>
-            <li>設定「查詢條件」，完成後請按【確定】鍵執行查詢動作。</li>
-        </ol>
-    </div>
     <div class="well well-lg">
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -112,49 +94,23 @@
             <div class="panel-body">
                 <table class="ItemTD_green" style="width: 98%; float: right; border-collapse: separate; border-spacing: 1px;" border="1">
                     <tr>
-                        <td class="HeadTD_green" style="padding: 5px;">收文文號：</td>
+                        <td class="HeadTD_green" style="padding: 5px;">歸檔作業者：</td>
                         <td style="padding: 5px; text-align: left;">
-                            <asp:TextBox ID="txtBarcodeValue" runat="server" TextMode="Number"></asp:TextBox>
+                                <asp:DropDownList ID="ddlOnFile" runat="server">
+                                </asp:DropDownList>
                         </td>
                     </tr>
                     <tr>
-                        <td class="HeadTD_green" style="padding: 5px;">發文文號：</td>
+                        <td class="HeadTD_green" style="padding: 5px;">歸檔起訖日：</td>
                         <td style="padding: 5px; text-align: left;">
-                            <asp:TextBox ID="txtWpoutNo" runat="server" TextMode="Number"></asp:TextBox>
+                            起：<asp:TextBox ID="txtFileScanStartDate"  runat="server"></asp:TextBox>
+                            ～訖：<asp:TextBox ID="txtFileScanEndDate"  runat="server"></asp:TextBox>
                         </td>
                     </tr>
                     <tr>
                         <td class="HeadTD_green" style="padding: 5px;">歸檔檔號：</td>
                         <td style="padding: 5px; text-align: left;">
                             <asp:TextBox ID="txtFileNo" runat="server" TextMode="Number"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="HeadTD_green" style="padding: 5px;">歸檔起訖日：</td>
-                        <td style="padding: 5px; text-align: left;">
-                            起：<asp:TextBox ID="txtFileScanStartDate" pattern="(\d{4})/(\d{1,2})/(\d{1,2}) " runat="server"></asp:TextBox>
-                            ～訖：<asp:TextBox ID="txtFileScanEndDate" pattern="(\d{4})/(\d{1,2})/(\d{1,2}) " runat="server"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="HeadTD_green" style="padding: 5px;">保存年限：</td>
-                        <td style="padding: 5px; text-align: left;">
-                            <asp:TextBox ID="txtKeepYr" runat="server" TextMode="Number"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="HeadTD_green" style="padding: 5px;">卷宗號：</td>
-                        <td style="padding: 5px; text-align: left;">
-                            <strong>起：
-                                <asp:TextBox ID="txtBoxNoS" runat="server" TextMode="Number"></asp:TextBox>～訖：
-										<asp:TextBox ID="txtBoxNoE" runat="server" TextMode="Number"></asp:TextBox></strong>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="HeadTD_green" style="padding: 5px;">歸檔作業者：</td>
-                        <td style="padding: 5px; text-align: left;">
-                                <asp:DropDownList ID="ddlOnFile" runat="server">
-                                </asp:DropDownList>
                         </td>
                     </tr>
                     <tr>
@@ -184,7 +140,7 @@
                 </div>
                 <div class="panel-body">
                     <div style="width: 98%; text-align: right">
-                        <asp:Button ID="BtnDetailPrint" runat="server" Text="匯出細項資料" class="btn btn-large btn-success" OnClientClick="JavaScript:if(!ImageBtnPringClick()) {return false} ;" PostBackUrl="~/FileArchiveDetailPrint.aspx" />
+                        <%--<asp:Button ID="BtnDetailPrint" runat="server" Text="匯出細項資料" class="btn btn-large btn-success" OnClientClick="JavaScript:if(!ImageBtnPringClick()) {return false} ;" PostBackUrl="~/FileArchiveDetailPrint.aspx" />--%>
                         <asp:Button ID="BtnPrint" runat="server" Text="列 印" class="btn btn-large btn-success" OnClick="BtnPrint_Click" OnClientClick="JavaScript:if(!ImageBtnPringClick()) {return false} ;" PostBackUrl="~/FileArchiveGroupPrint.aspx" />
                     </div>
                 </div>
@@ -197,6 +153,11 @@
                         <asp:BoundField HeaderText="檔號" DataField="FILENO" SortExpression="FILENO" ReadOnly="True" />
                         <asp:BoundField HeaderText="有無掃描" DataField="ISFILE" SortExpression="ISFILE" ReadOnly="True" />
                         <asp:BoundField HeaderText="數量" DataField="FILECOUNT" SortExpression="FILECOUNT" ReadOnly="True" />
+                        <asp:TemplateField HeaderText="匯出細項資料">
+                            <ItemTemplate>
+                                <asp:Button ID="BtnDetailPrint" runat="server" Text="匯出細項資料" class="btn btn-default btn-xs" OnClick="BtnDetailPrint_Click" PostBackUrl="~/FileArchiveDetailPrint.aspx" OnClientClick="JavaScript:if(!ImageBtnPringClick()) {return false} ;"/>
+                            </ItemTemplate>
+                        </asp:TemplateField>
                     </Columns>
                     <FooterStyle CssClass="FooterStyle" />
                     <HeaderStyle CssClass="HeaderStyle" />

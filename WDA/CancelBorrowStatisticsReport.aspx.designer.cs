@@ -10,61 +10,25 @@
 namespace WDA {
     
     
-    public partial class WebForm1 {
+    public partial class CancelBorrowStatisticsReport {
         
         /// <summary>
-        /// TxtWpinno 控制項。
+        /// txtBorrowCreateTime 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TxtWpinno;
+        protected global::System.Web.UI.WebControls.TextBox txtBorrowCreateTime;
         
         /// <summary>
-        /// ddlReceiver 控制項。
+        /// txtBorrowEndTime 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlReceiver;
-        
-        /// <summary>
-        /// txtScanCreateTime 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtScanCreateTime;
-        
-        /// <summary>
-        /// txtScanEndTime 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtScanEndTime;
-        
-        /// <summary>
-        /// TxtFileNo 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TxtFileNo;
-        
-        /// <summary>
-        /// radFile 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList radFile;
+        protected global::System.Web.UI.WebControls.TextBox txtBorrowEndTime;
         
         /// <summary>
         /// BtnOK 控制項。

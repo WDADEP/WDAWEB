@@ -10,16 +10,7 @@
 namespace WDA {
     
     
-    public partial class WebForm1 {
-        
-        /// <summary>
-        /// TxtWpinno 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TxtWpinno;
+    public partial class WpBorrowStatisticsReport {
         
         /// <summary>
         /// ddlReceiver 控制項。
@@ -31,22 +22,22 @@ namespace WDA {
         protected global::System.Web.UI.WebControls.DropDownList ddlReceiver;
         
         /// <summary>
-        /// txtScanCreateTime 控制項。
+        /// txtBorrowCreateTime 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtScanCreateTime;
+        protected global::System.Web.UI.WebControls.TextBox txtBorrowCreateTime;
         
         /// <summary>
-        /// txtScanEndTime 控制項。
+        /// txtBorrowEndTime 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtScanEndTime;
+        protected global::System.Web.UI.WebControls.TextBox txtBorrowEndTime;
         
         /// <summary>
         /// TxtFileNo 控制項。
@@ -58,13 +49,31 @@ namespace WDA {
         protected global::System.Web.UI.WebControls.TextBox TxtFileNo;
         
         /// <summary>
-        /// radFile 控制項。
+        /// ddlDept 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList radFile;
+        protected global::System.Web.UI.WebControls.DropDownList ddlDept;
+        
+        /// <summary>
+        /// radRe 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList radRe;
+        
+        /// <summary>
+        /// radViewType 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButtonList radViewType;
         
         /// <summary>
         /// BtnOK 控制項。

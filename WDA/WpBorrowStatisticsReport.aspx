@@ -1,25 +1,26 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="TransQueryStatisticsReport.aspx.cs" Inherits="WDA.WebForm1" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="WpBorrowStatisticsReport.aspx.cs" Inherits="WDA.WpBorrowStatisticsReport" %>
 <%@ Register Assembly="WDA" Namespace="WDA" TagPrefix="cc1" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <script type="text/javascript">
         function pageLoad() {
-            $("#MainContent_txtScanCreateTime").datepicker("option", $.datepicker.regional["zh-TW"]);
-            $("#MainContent_txtScanEndTime").datepicker("option", $.datepicker.regional["zh-TW"]);
+            $("#MainContent_txtBorrowCreateTime").datepicker("option", $.datepicker.regional["zh-TW"]);
+            $("#MainContent_txtBorrowEndTime").datepicker("option", $.datepicker.regional["zh-TW"]);
 
-            $("#MainContent_txtScanCreateTime").datepicker({
+            $("#MainContent_txtBorrowCreateTime").datepicker({
                 defaultDate: new Date(),
                 changeMonth: true,
                 numberOfMonths: 1,
                 onClose: function (selectedDate) {
-                    $("#MainContent_txtScanEndTime").datepicker("option", "minDate", selectedDate);
+                    $("#MainContent_txtBorrowEndTime").datepicker("option", "minDate", selectedDate);
                 }
             });
-            $("#MainContent_txtScanEndTime").datepicker({
+            $("#MainContent_txtBorrowEndTime").datepicker({
                 defaultDate: new Date(),
                 changeMonth: true,
                 numberOfMonths: 1,
                 onClose: function (selectedDate) {
-                    $("#MainContent_txtScanCreateTime").datepicker("option", "maxDate", selectedDate);
+                    $("#MainContent_txtBorrowCreateTime").datepicker("option", "maxDate", selectedDate);
                 }
             });
 
@@ -34,15 +35,14 @@
 
         function ImageBtnOKClick() {
             try {
-                var txtWPINNO = $get('MainContent_TxtWpinno').value;
                 var dReceiver = $get('MainContent_ddlReceiver').value;
                 if (dReceiver == 0) {
-                    alert('請選擇接收文件者');
+                    alert('請選擇借檔文件者');
                     return false;
                 }
-                var txtScanCreateTime = $get('MainContent_txtScanCreateTime').value;
+                var txtScanCreateTime = $get('MainContent_txtBorrowCreateTime').value;
 
-                if (txtWPINNO.length == 0 && dReceiver == 0 && txtScanCreateTime.length == 0) {
+                if (dReceiver == 0 && txtScanCreateTime.length == 0) {
                     alert('請輸入任一個查詢條件');
                     return false;
                 }
@@ -59,18 +59,12 @@
     <div class="well well-lg">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title">簽收功能(統計)</h3>
+                <h3 class="panel-title">還檔作業(統計)</h3>
             </div>
             <div class="panel-body">
                 <table class="ItemTD_green" style="width: 98%; float: right; border-collapse: separate; border-spacing: 1px;" border="1">
                     <tr>
-                        <td class="HeadTD_green" style="padding: 5px;">收文文號：</td>
-                        <td style="padding: 5px; text-align: left;">
-                            <asp:TextBox ID="TxtWpinno" runat="server" MaxLength="10"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="HeadTD_green" style="padding: 5px;">接 收 文 件 者：
+                        <td class="HeadTD_green" style="padding: 5px;">還檔作業者：
                         </td>
                         <td style="padding: 5px; text-align: left;">
                                 <asp:DropDownList ID="ddlReceiver" runat="server">
@@ -78,12 +72,12 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="HeadTD_green" style="padding: 5px;">收文日期起訖：
+                        <td class="HeadTD_green" style="padding: 5px;">還檔日期起訖：
                         </td>
                            <td style="padding: 5px; text-align: left;">起：
-     <asp:TextBox ID="txtScanCreateTime" runat="server"  title="日期格式"></asp:TextBox>
+     <asp:TextBox ID="txtBorrowCreateTime" runat="server"  title="日期格式"></asp:TextBox>
                                 ～訖：
-                                            <asp:TextBox ID="txtScanEndTime" runat="server"  title="日期格式"></asp:TextBox>
+                                            <asp:TextBox ID="txtBorrowEndTime" runat="server"  title="日期格式"></asp:TextBox>
                            </td>
                     </tr>
                     <tr>
@@ -93,11 +87,27 @@
                         </td>    
                     </tr>
                     <tr>
-                        <td class="HeadTD_green" style="padding: 5px">有無編目：</td>
+                        <td class="HeadTD_green" style="padding: 5px;">申請科室：</td>
                         <td style="padding: 5px; text-align: left;">
-                            <asp:RadioButtonList ID="radFile" runat="server">
+                                <asp:DropDownList ID="ddlDept" runat="server">
+                                </asp:DropDownList>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="HeadTD_green" style="padding: 5px">有無還檔：</td>
+                        <td style="padding: 5px; text-align: left;">
+                            <asp:RadioButtonList ID="radRe" runat="server">
                                 <asp:ListItem Value="0">無</asp:ListItem>
                                 <asp:ListItem Value="1">有</asp:ListItem>
+                            </asp:RadioButtonList>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="HeadTD_green" style="padding: 5px">電子調閱：</td>
+                        <td style="padding: 5px; text-align: left;">
+                            <asp:RadioButtonList ID="radViewType" runat="server">
+                                <asp:ListItem Value="0">否</asp:ListItem>
+                                <asp:ListItem Value="1">是</asp:ListItem>
                             </asp:RadioButtonList>
                         </td>
                     </tr>
@@ -109,7 +119,7 @@
                         <asp:Button ID="BtnOK" runat="server" Text="確 定" class="btn btn-large btn-success" OnClientClick="JavaScript:if(!ImageBtnOKClick()) {return false} ;" OnClick="BtnOK_Click" />
                     </td>
                     <td style="text-align: left">
-                        <asp:Button ID="BtnClear" runat="server" Text="取 消" class="btn btn-large btn-success" OnClick="BtnClear_Click" />
+                        <asp:Button ID="BtnClear" runat="server" Text="取 消" class="btn btn-large btn-success"  />
                     </td>
                 </tr>
             </table>
@@ -118,28 +128,24 @@
             <br>
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h3 class="panel-title">簽收功能─統計列表如下：</h3>
+                    <h3 class="panel-title">還檔作業─統計列表如下：</h3>
                 </div>
                 <div class="panel-body">
                     <div style="width: 98%; text-align: right">
-                        <%--<asp:Button ID="BtnDetailPrint" runat="server" Text="匯出細項資料" class="btn btn-large btn-success" OnClientClick="var scriptName=document.forms[0].action;window.document.forms[0].target='_blank';setTimeout(function(){window.document.forms[0].target='';document.forms[0].action=scriptName;}, 500);" PostBackUrl="~/TransQueryDetailPrint.aspx" />--%>
-                        <asp:Button ID="BtnPrint" runat="server" Text="列 印" class="btn btn-large btn-success" OnClientClick="var scriptName=document.forms[0].action;window.document.forms[0].target='_blank';setTimeout(function(){window.document.forms[0].target='';document.forms[0].action=scriptName;}, 500);" PostBackUrl="~/TransQueryGroupPrint.aspx" />
+                        <asp:Button ID="BtnPrint" runat="server" Text="列 印" class="btn btn-large btn-success" OnClientClick="var scriptName=document.forms[0].action;window.document.forms[0].target='_blank';setTimeout(function(){window.document.forms[0].target='';document.forms[0].action=scriptName;}, 500);" PostBackUrl="~/WpBorrowGroupPrint.aspx" />
                     </div>
                 </div>
                 <asp:GridView ID="GridView1" runat="server" AllowSorting="True"  AutoGenerateColumns="False" CssClass="GridViewStyle" Width="98%" OnSorting="GridView1_Sorting" AllowPaging="True" OnPageIndexChanging="GridView1_PageIndexChanging" OnRowDataBound="GridView1_RowDataBound" >
                     <AlternatingRowStyle CssClass="AlternatingRowStyle" />
                     <Columns>
                         <asp:BoundField HeaderText="序號" DataField="RID" SortExpression="RID" ReadOnly="True" />
-                        <asp:BoundField HeaderText="收文日期" DataField="TRANSTIME" SortExpression="TRANSTIME" ReadOnly="True" />
-                        <asp:BoundField HeaderText="接收文件者" DataField="RECEIVER" SortExpression="RECEIVER" ReadOnly="True" />
+                        <asp:BoundField HeaderText="還檔日期" DataField="TRANST" SortExpression="TRANST" ReadOnly="True" />
+                        <asp:BoundField HeaderText="還檔作業者" DataField="REALNAME" SortExpression="REALNAME" ReadOnly="True" />
                         <asp:BoundField HeaderText="檔號" DataField="FILENO" SortExpression="FILENO" ReadOnly="True" />
-                        <asp:BoundField HeaderText="有無編目" DataField="ISFILE" SortExpression="ISFILE" ReadOnly="True" />
-                        <asp:BoundField HeaderText="數量" DataField="TRANSCOUNT" SortExpression="TRANSCOUNT" ReadOnly="True" />
-                        <asp:TemplateField HeaderText="匯出細項資料">
-                            <ItemTemplate>
-                                <asp:Button ID="BtnDetailPrint" runat="server" Text="匯出細項資料" class="btn btn-default btn-xs" OnClick="BtnDetailPrint_Click" PostBackUrl="~/TransQueryDetailPrint.aspx" OnClientClick="var scriptName=document.forms[0].action;window.document.forms[0].target='_blank';setTimeout(function(){window.document.forms[0].target='';document.forms[0].action=scriptName;}, 500);"/>
-                            </ItemTemplate>
-                        </asp:TemplateField>
+                        <asp:BoundField HeaderText="申請科室"　DataField="DeptName" SortExpression="DeptName" ReadOnly="true" />
+                        <asp:BoundField HeaderText="有無還檔" DataField="CHK" SortExpression="CHK" ReadOnly="True" />
+                        <asp:BoundField HeaderText="電子調閱"　DataField="ViewType" SortExpression="ViewType" ReadOnly="True" />
+                        <asp:BoundField HeaderText="數量" DataField="FILECOUNT" SortExpression="TRANSCOUNT" ReadOnly="True" />
                     </Columns>
                     <FooterStyle CssClass="FooterStyle" />
                     <HeaderStyle CssClass="HeaderStyle" />

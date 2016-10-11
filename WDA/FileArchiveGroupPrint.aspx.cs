@@ -93,6 +93,16 @@ namespace WDA
                 {
                     this.LoginShowMessage("目前查詢沒有任何資料");
                 }
+                // add by Luke, 2016/10/06
+                else
+                {
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        string isFile = dr["ISFILE"].ToString();
+                        dr["ISFILE"] = (isFile.Length > 0 && isFile != "0") ? "有" : "無";
+                    }
+                }
+
             }
             catch (Exception ex)
             {

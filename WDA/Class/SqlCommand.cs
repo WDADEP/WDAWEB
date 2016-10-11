@@ -321,11 +321,12 @@ namespace WDA.Class
             {
                 #region SQL Command
 
-                string strSql = "Select  ROW_NUMBER() OVER(ORDER BY wt.RECEIVER) AS RID, wt.RECEIVER, count(wt.RECEIVER) AS FILECOUNT,substr(wt.TRANST,1,10) AS TRANST, wp.FILENO, NVL(wp.FILENO,0) as ISFILE  \n"
+                string strSql = "Select  ROW_NUMBER() OVER(ORDER BY wt.RECEIVER) AS RID, wt.RECEIVER, count(wt.RECEIVER) AS FILECOUNT,substr(wt.TRANST,1,10) AS TRANST, wp.FILENO, NVL(bt.BARCODEVALUE,0) as ISFILE  \n"
                                 + "From WPTRANS wt \n"
                                 + "inner Join {0} wp On wt.wpinno = wp.wpinno \n"
                                 + "Left Join BarcodeTable bt On wt.wpinno = bt.BARCODEVALUE\n"
-                                + "WHERE 1=1 {1} GROUP BY wt.RECEIVER,substr(wt.TRANST,1,10),wp.FILENO \n Order By wt.RECEIVER \n";
+                                + "WHERE 1=1 {1} GROUP BY wt.RECEIVER,substr(wt.TRANST,1,10),wp.FILENO,bt.BARCODEVALUE \n"
+                                + "Order By wt.RECEIVER \n";
 
                 #endregion
 
@@ -334,7 +335,7 @@ namespace WDA.Class
                 return strSql;
             }
 
-            // Added by Luke 2016/09/12
+            // Added by Luke 2016/09/12 modify 2016/10/06
             /// <summary>
             /// ScanListStatistsDetail
             /// </summary>
@@ -363,6 +364,31 @@ namespace WDA.Class
                 return strSql;
             }
 
+            #endregion
+
+            #region FileBorrowStatisticsReport
+            /// <summary>
+            /// 
+            /// </summary>
+            public string FileBorrowStatistics(string sWhere)
+            {
+                #region SQL Command
+
+                string strSql = "Select  ROW_NUMBER() OVER(ORDER BY fb.workerid) AS RID, fb.workerid, substr(fb.GETIME,1,10) AS TRANST,wp.FILENO,dt.DEPTNAME,fb.chk,wb.VIEWTYPE,count(fb.workerid) AS FILECOUNT  \n"
+                                + "From FILEBORO fb \n"
+                                + "inner Join {0} wp On fb.wpinno = wp.wpinno \n"
+                                + "inner Join WPBORROW wb On (wb.wpinno = fb.WPINNO and wb.RECEIVER=fb.RECEIVER and wb.TRANST=fb.TRANST)\n"
+                                + "INNER JOIN USERTABLE UT ON wb.RECEIVER=UT.USERNAME \n"
+                                + "INNER JOIN DEPT dt ON dt.DEPTID=UT.DEPTID \n"
+                                + "WHERE 1=1 {1} GROUP BY fb.workerid, substr(fb.GETIME,1,10) ,wp.FILENO,dt.DEPTNAME,fb.chk,wb.VIEWTYPE \n "
+                                + "Order By fb.workerid \n";
+
+                #endregion
+
+                strSql = string.Format(strSql, PageUtility.WprecSchema, sWhere);
+
+                return strSql;
+            }
             #endregion
 
             #region Wpborrow
@@ -753,7 +779,7 @@ namespace WDA.Class
                 #region SQL Command
                 string strSql= string.Empty;
                 if (string.IsNullOrEmpty(strDeptName))
-                    strSql  = "Select DEPTID,DEPTNAME,Status From Dept order by DEPTID \n";
+                    strSql  = "Select DEPTID,DEPTNAME,Status From Dept where Status=0 order by DEPTID \n";
                 else
                     strSql = string.Format("Select DEPTID,DEPTNAME,Status From Dept where DEPTNAME like '%{0}' order by DEPTID \n",strDeptName.Trim());
 
@@ -1052,7 +1078,7 @@ namespace WDA.Class
                 return strSql;
             }
 
-            // Added by Luke 2016/09/12
+            // Added by Luke 2016/09/12, modified 2016/10/06
             /// <summary>
             /// ScanListStatistsDetail
             /// </summary>
@@ -1066,8 +1092,8 @@ namespace WDA.Class
                                 + " From BARCODETABLE bt \n"
                                 + " INNER JOIN usertable ut ON ut.USERID=bt.CREATEUSERID \n"
                                 + " INNER JOIN {0} wp ON bt.BARCODEVALUE=wp.WPINNO \n"
-                                + " INNER JOIN WPTRANS wt ON wt.WPINNO=bt.BARCODEVALUE \n"
-                                + " INNER JOIN TRANSTABLE tt ON bt.BARCODEVALUE=tt.WPINNO \n"
+                                + " LEFT JOIN WPTRANS wt ON wt.WPINNO=bt.BARCODEVALUE \n"
+                                + " LEFT JOIN TRANSTABLE tt ON bt.BARCODEVALUE=tt.WPINNO \n"
                                 + " LEFT JOIN {1} um ON wp.SENDMAN=um.userid \n"
                                 + " WHERE  1=1 {2}\n ";
 
@@ -1722,6 +1748,57 @@ namespace WDA.Class
                 #endregion
 
                 strSql = string.Format(strSql, PageUtility.WprecSchema, Where);
+
+                return strSql;
+            }
+            #endregion
+
+            #region WpBorrowStatisticsReport
+            /// <summary>
+            /// 
+            /// </summary>
+            public string WpBorrowStatistics(string sWhere)
+            {
+                #region SQL Command
+
+                string strSql = "Select  ROW_NUMBER() OVER(ORDER BY wb.USERID) AS RID, UT.REALNAME, substr(wb.TRANST,1,10) AS TRANST,wp.FILENO,dt.DEPTNAME,fb.chk,wb.VIEWTYPE,count(wb.USERID) AS FILECOUNT  \n"
+                                + "From WPBORROW wb \n"
+                                + "inner Join {0} wp On wb.wpinno = wp.wpinno \n"
+                                + "inner Join FILEBORO fb On (wb.wpinno = fb.WPINNO and wb.RECEIVER=fb.RECEIVER and wb.TRANST=fb.TRANST)\n"
+                                + "INNER JOIN USERTABLE UT ON wb.USERID=UT.USERID \n"
+                                + "INNER JOIN USERTABLE UT2 ON wb.RECEIVER=UT2.USERNAME \n"
+                                + "INNER JOIN DEPT dt ON dt.DEPTID=UT2.DEPTID \n"
+                                + "WHERE 1=1 {1} \n GROUP BY wb.USERID,UT.REALNAME, substr(wb.TRANST,1,10) ,wp.FILENO,dt.DEPTNAME,fb.chk,wb.VIEWTYPE \n "
+                                + "Order By wb.USERID \n";
+
+                #endregion
+
+                strSql = string.Format(strSql, PageUtility.WprecSchema, sWhere);
+
+                return strSql;
+            }
+            #endregion
+
+            #region CancelBorrowStatisticsReport
+            /// <summary>
+            /// 
+            /// </summary>
+            public string CancelBorrowStatistics(string sWhere)
+            {
+                #region SQL Command
+
+                string strSql = "Select  ROW_NUMBER() OVER(ORDER BY fb.workerid) AS RID, fb.workerid, substr(wb.TRANST,1,10) AS TRANST,wp.FILENO,dt.DEPTNAME,count(fb.workerid) AS FILECOUNT  \n"
+                                + "From FILEBORO fb \n"
+                                + "inner Join {0} wp On fb.wpinno = wp.wpinno \n"
+                                + "inner Join WPBORROW wb On (wb.wpinno = fb.WPINNO and wb.RECEIVER=fb.RECEIVER and wb.TRANST=fb.TRANST)\n"
+                                + "INNER JOIN USERTABLE UT ON wb.RECEIVER=UT.USERNAME \n"
+                                + "INNER JOIN DEPT dt ON dt.DEPTID=UT.DEPTID \n"
+                                + "WHERE 1=1 {1} GROUP BY fb.workerid, substr(wb.TRANST,1,10) ,wp.FILENO,dt.DEPTNAME \n "
+                                + "Order By fb.workerid \n";
+
+                #endregion
+
+                strSql = string.Format(strSql, PageUtility.WprecSchema, sWhere);
 
                 return strSql;
             }

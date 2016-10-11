@@ -13,31 +13,13 @@ namespace WDA {
     public partial class FileArchiveStatisticsReport {
         
         /// <summary>
-        /// txtBarcodeValue 控制項。
+        /// ddlOnFile 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtBarcodeValue;
-        
-        /// <summary>
-        /// txtWpoutNo 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtWpoutNo;
-        
-        /// <summary>
-        /// txtFileNo 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFileNo;
+        protected global::System.Web.UI.WebControls.DropDownList ddlOnFile;
         
         /// <summary>
         /// txtFileScanStartDate 控制項。
@@ -58,40 +40,13 @@ namespace WDA {
         protected global::System.Web.UI.WebControls.TextBox txtFileScanEndDate;
         
         /// <summary>
-        /// txtKeepYr 控制項。
+        /// txtFileNo 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtKeepYr;
-        
-        /// <summary>
-        /// txtBoxNoS 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtBoxNoS;
-        
-        /// <summary>
-        /// txtBoxNoE 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtBoxNoE;
-        
-        /// <summary>
-        /// ddlOnFile 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlOnFile;
+        protected global::System.Web.UI.WebControls.TextBox txtFileNo;
         
         /// <summary>
         /// radScanFile 控制項。
@@ -110,15 +65,6 @@ namespace WDA {
         /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button BtnOK;
-        
-        /// <summary>
-        /// BtnDetailPrint 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 將移動欄位宣告從設計檔案修改為程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button BtnDetailPrint;
         
         /// <summary>
         /// BtnPrint 控制項。

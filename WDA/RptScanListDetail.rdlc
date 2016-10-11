@@ -9,16 +9,16 @@
               <Width>1.25646cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.95016cm</Width>
+              <Width>1.42196cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>1.24037cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.2935cm</Width>
+              <Width>2.10463cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.95968cm</Width>
+              <Width>1.25072cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>0.89133cm</Width>
@@ -39,16 +39,16 @@
               <Width>1.25117cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.95483cm</Width>
+              <Width>1.03421cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.93367cm</Width>
+              <Width>1.19825cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.92666cm</Width>
+              <Width>1.24416cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.95251cm</Width>
+              <Width>1.27001cm</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
@@ -1068,7 +1068,7 @@
         </TablixRowHierarchy>
         <DataSetName>ScanListDetailTable</DataSetName>
         <Height>1.72917cm</Height>
-        <Width>16.57267cm</Width>
+        <Width>19.1256cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -1079,7 +1079,7 @@
     <Height>0.73078in</Height>
     <Style />
   </Body>
-  <Width>6.52467in</Width>
+  <Width>7.52976in</Width>
   <Page>
     <PageHeader>
       <Height>3.57188cm</Height>
@@ -1134,7 +1134,7 @@
           <Top>0.32844cm</Top>
           <Left>0.00001cm</Left>
           <Height>0.87514cm</Height>
-          <Width>16.53266cm</Width>
+          <Width>19.12559cm</Width>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1204,9 +1204,9 @@
           </Paragraphs>
           <rd:DefaultName>Textbox30</rd:DefaultName>
           <Top>2.42094cm</Top>
-          <Left>10.1545cm</Left>
+          <Left>11.72847cm</Left>
           <Height>0.7276cm</Height>
-          <Width>6.41816cm</Width>
+          <Width>7.39713cm</Width>
           <ZIndex>2</ZIndex>
           <Style>
             <Border>
@@ -1248,9 +1248,9 @@
           </Paragraphs>
           <rd:DefaultName>Textbox4</rd:DefaultName>
           <Top>1.72392cm</Top>
-          <Left>10.1545cm</Left>
+          <Left>11.72847cm</Left>
           <Height>0.66174cm</Height>
-          <Width>6.41817cm</Width>
+          <Width>7.39713cm</Width>
           <ZIndex>3</ZIndex>
           <Style>
             <Border>

@@ -9,16 +9,16 @@
               <Width>1.25646cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.95016cm</Width>
+              <Width>1.63808cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.24037cm</Width>
+              <Width>1.74309cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.2935cm</Width>
+              <Width>2.12662cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.95968cm</Width>
+              <Width>1.25072cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>0.89133cm</Width>
@@ -42,13 +42,13 @@
               <Width>0.95483cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.93367cm</Width>
+              <Width>1.22471cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.92666cm</Width>
+              <Width>1.34999cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>0.95251cm</Width>
+              <Width>1.19063cm</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
@@ -97,7 +97,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>收文文號</Value>
+                              <Value>文號</Value>
                               <Style>
                                 <Color>White</Color>
                               </Style>
@@ -1068,7 +1068,7 @@
         </TablixRowHierarchy>
         <DataSetName>TransQueryDetailTable</DataSetName>
         <Height>1.72917cm</Height>
-        <Width>16.57267cm</Width>
+        <Width>19.83997cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -1079,7 +1079,7 @@
     <Height>0.73078in</Height>
     <Style />
   </Body>
-  <Width>6.52467in</Width>
+  <Width>7.81101in</Width>
   <Page>
     <PageHeader>
       <Height>3.57188cm</Height>
@@ -1134,7 +1134,7 @@
           <Top>0.32844cm</Top>
           <Left>0.00001cm</Left>
           <Height>0.87514cm</Height>
-          <Width>16.53266cm</Width>
+          <Width>19.83996cm</Width>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1172,7 +1172,7 @@
           <rd:DefaultName>Textbox1</rd:DefaultName>
           <Top>1.53219cm</Top>
           <Height>0.6cm</Height>
-          <Width>5.70017cm</Width>
+          <Width>5.57361cm</Width>
           <ZIndex>1</ZIndex>
           <Style>
             <Border>
@@ -1204,9 +1204,9 @@
           </Paragraphs>
           <rd:DefaultName>Textbox30</rd:DefaultName>
           <Top>2.38566cm</Top>
-          <Left>11.55383cm</Left>
+          <Left>13.86863cm</Left>
           <Height>0.7276cm</Height>
-          <Width>4.97884cm</Width>
+          <Width>5.97134cm</Width>
           <ZIndex>2</ZIndex>
           <Style>
             <Border>
@@ -1248,9 +1248,9 @@
           </Paragraphs>
           <rd:DefaultName>Textbox4</rd:DefaultName>
           <Top>1.72392cm</Top>
-          <Left>11.55383cm</Left>
+          <Left>13.86863cm</Left>
           <Height>0.66174cm</Height>
-          <Width>4.97884cm</Width>
+          <Width>5.97134cm</Width>
           <ZIndex>3</ZIndex>
           <Style>
             <Border>

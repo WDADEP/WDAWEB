@@ -42,17 +42,11 @@ namespace WDA
                 this.DataBind(true, false);
 
                 #region Monitor
-                string wpinno = string.Empty;
-
-                if (!string.IsNullOrEmpty(this.txtBarcodeValue.Text.Trim()))
-                {
-                    wpinno = this.txtBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql);
-                }
 
                 string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
 
                 //MODIFY BY RICHARD 20160407
-                this.MonitorLog.LogMonitor(wpinno, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA04, "統計報表");
+                this.MonitorLog.LogMonitor("", this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA04, "統計報表");
                 #endregion
             }
             catch (Exception ex)
@@ -89,33 +83,18 @@ namespace WDA
             string strSql = string.Empty, wptransWhere = string.Empty;
 
             // Added by Luke 2016/09/12
-            string strDetailSql = string.Empty;
-            string whereDetail = string.Empty;
+            //string strDetailSql = string.Empty;
+            //string whereDetail = string.Empty;
 
             DataTable dt = null;
             try
             {
                 if (Anew)
                 {
-                    string barcodeValue = this.txtBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
-                    string wpoutNo = this.txtWpoutNo.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
                     string fileNo = this.txtFileNo.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
                     string fileStartDate = this.txtFileScanStartDate.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
                     string fileEndDate = this.txtFileScanEndDate.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
-                    string keepYr = this.txtKeepYr.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
-                    string boxNoS = this.txtBoxNoS.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
-                    string boxNoE = this.txtBoxNoE.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
                     string onFile = this.ddlOnFile.SelectedValue.Trim().Replace(StringFormatException.Mode.Sql).Trim();
-
-                    if (barcodeValue.Length > 0)
-                    {
-                        wptransWhere += string.Format("And wp.wpinno = '{0}'\n", barcodeValue);
-                    }
-
-                    if (wpoutNo.Length > 0)
-                    {
-                        wptransWhere += string.Format("And wp.WpoutNo = '{0}'\n", wpoutNo);
-                    }
 
                     if (fileNo.Length > 0)
                     {
@@ -124,20 +103,11 @@ namespace WDA
 
                     if (fileStartDate.Length > 0 && fileEndDate.Length > 0) 
                     {
-                        wptransWhere += string.Format("And wp.FileDate >= '{0}'\n", fileStartDate.Replace("/", string.Empty));
+                        wptransWhere += string.Format("And wp.FileDate >= '{0}' \n", fileStartDate.Replace("/",string.Empty));
 
-                        wptransWhere += string.Format("And wp.FileDate <= '{0}'\n", fileEndDate.Replace("/", string.Empty)); 
+                        wptransWhere += string.Format("And wp.FileDate <= '{0}' \n", fileEndDate.Replace("/",string.Empty)); 
                     }
 
-                    if (keepYr.Length > 0)
-                    {
-                        wptransWhere += string.Format("And wp.KeepYr = '{0}'\n", keepYr);
-                    }
-
-                    if (boxNoS.Length > 0 && boxNoE.Length > 0)
-                    {
-                        wptransWhere += string.Format("And wp.BoxNo >= '{0}' And wp.BoxNo <='{1}'\n", boxNoS, boxNoE);
-                    }
 
                     if (onFile != "選擇人員")
                     {
@@ -155,22 +125,22 @@ namespace WDA
                     }
 
                     // Added by Luke 2016/09/12
-                    whereDetail = wptransWhere;        // the same filter
+                    //whereDetail = wptransWhere;        // the same filter
 
                     // Added by Luke 2016/09/12
-                    whereDetail += "  ORDER BY wt.RECEIVER, bt.BARCODEVALUE, wp.WPINNO ";
+                    //whereDetail += "  ORDER BY wt.RECEIVER, bt.BARCODEVALUE, wp.WPINNO ";
 
                     strSql = this.Select.FileArchiveStatisticsReport(wptransWhere);
 
                     this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
 
                     // Added by Luke 2016/09/12
-                    strDetailSql = this.Select.FileArchiveStatisticsDetail(whereDetail);
-                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, strDetailSql);
+                    //strDetailSql = this.Select.FileArchiveStatisticsDetail(whereDetail);
+                    //this.WriteLog(global::Log.Mode.LogMode.DEBUG, strDetailSql);
 
                     // Added by Luke 2016/09/12
                     Session["FileArchiveStatists"] = strSql;
-                    Session["FileArchiveStatistsDetail"] = strDetailSql; // used for printing report
+                    //Session["FileArchiveStatistsDetail"] = strDetailSql; // used for printing report
 
                     this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
 
@@ -286,6 +256,54 @@ namespace WDA
             }
         }
         #endregion
+
+        #region BtnDetailPrint_Click()
+        // Added by Luke 2016/10/06
+        protected void BtnDetailPrint_Click(object sender, EventArgs e)
+        {
+            GridViewRow gridViewRow = (GridViewRow)((Button)sender).NamingContainer;
+            int DataIndex = this.GridView1.PageSize * this.GridView1.PageIndex + gridViewRow.RowIndex;
+
+            string strSql = string.Empty;
+            string where = string.Empty;
+
+            // 統計項目1
+            string transTime = gridViewRow.Cells[1].Text.Trim().Replace('-', '/');
+            string startTime = string.Format("{0} 00:00:00", transTime);//開始日期
+            string endTime = string.Format("{0} 23:59:59", transTime);//結束日期
+            where += string.Format(" AND wt.TRANST Between TO_DATE('{0}','YYYY/MM/DD HH24:MI:SS') And TO_DATE('{1}','YYYY/MM/DD HH24:MI:SS') ", startTime, endTime);
+
+            // 統計項目2
+            string realName = gridViewRow.Cells[2].Text.Trim();
+            where += string.Format(" AND wt.RECEIVER = N'{0}'", realName);
+
+            // 統計項目3
+            string strFileNo = gridViewRow.Cells[3].Text.Trim();
+            if (strFileNo == "&nbsp;" || strFileNo.Length == 0)
+                where += string.Format(" And NVL(wp.FILENO,'WDA_RPT') = 'WDA_RPT'", strFileNo);
+            else
+                where += string.Format(" And wp.FILENO = '{0}'", strFileNo);
+
+            // 統計項目4
+            string strIsFile = gridViewRow.Cells[4].Text.Trim();
+            if (strIsFile == "無")
+                where += string.Format(" AND bt.BARCODEVALUE is null");
+            else if (strIsFile == "有")
+                where += string.Format(" AND bt.BARCODEVALUE is not null");
+
+            // 產生SQL
+            where += "  ORDER BY wt.RECEIVER, bt.BARCODEVALUE, wp.WPINNO ";
+
+            strSql = this.Select.FileArchiveStatisticsDetail(where);
+
+            this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+            Session["FileArchiveStatistsDetail"] = strSql; // used for printing report
+
+
+        }
+        #endregion
+
 
     }
 }

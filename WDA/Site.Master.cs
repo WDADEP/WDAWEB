@@ -338,7 +338,17 @@ namespace WDA
                     { this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"ScanListStatisticsReport.aspx\">掃描作業(統計)</a></li>"; }
 
                     if (pageUtility.UserInfo.Privilege.Tables[0].Select(string.Format("PrivID={0}", 37)).Length > 0)
-                    { this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"FileArchiveStatisticsReport.aspx\">歸檔登入(統計)</a></li>"; }
+                    { this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"FileArchiveStatisticsReport.aspx\">歸檔作業(統計)</a></li>"; }
+
+                    if (pageUtility.UserInfo.Privilege.Tables[0].Select(string.Format("PrivID={0}", 39)).Length > 0)
+                    { this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"FileBorrowStatisticsReport.aspx\">調借作業(統計)</a></li>"; }
+
+                    if (pageUtility.UserInfo.Privilege.Tables[0].Select(string.Format("PrivID={0}", 38)).Length > 0)
+                    { this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"WpBorrowStatisticsReport.aspx\">還檔作業(統計)</a></li>"; }
+
+
+                    if (pageUtility.UserInfo.Privilege.Tables[0].Select(string.Format("PrivID={0}", 40)).Length > 0)
+                    { this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"CancelBorrowStatisticsReport.aspx\">取消還檔作業(統計)</a></li>"; }
 
                     this.LiteralMenu.Text += "</ol>";
                     this.LiteralMenu.Text += "</div>";

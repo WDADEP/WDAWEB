@@ -7,20 +7,20 @@
             $("#MainContent_txtScanCreateTime").datepicker("option", $.datepicker.regional["zh-TW"]);
             $("#MainContent_txtScanEndTime").datepicker("option", $.datepicker.regional["zh-TW"]);
 
-            $("#MainContent_txtScanCreateTime").datetimepicker({
+            $("#MainContent_txtScanCreateTime").datepicker({
                 defaultDate: new Date(),
                 changeMonth: true,
                 numberOfMonths: 1,
                 onClose: function (selectedDate) {
-                    $("#MainContent_txtScanEndTime").datetimepicker("option", "minDate", selectedDate);
+                    $("#MainContent_txtScanEndTime").datepicker("option", "minDate", selectedDate);
                 }
             });
-            $("#MainContent_txtScanEndTime").datetimepicker({
+            $("#MainContent_txtScanEndTime").datepicker({
                 defaultDate: new Date(),
                 changeMonth: true,
                 numberOfMonths: 1,
                 onClose: function (selectedDate) {
-                    $("#MainContent_txtScanCreateTime").datetimepicker("option", "maxDate", selectedDate);
+                    $("#MainContent_txtScanCreateTime").datepicker("option", "maxDate", selectedDate);
                 }
             });
 
@@ -88,9 +88,9 @@
                         <td class="HeadTD_green" style="padding: 5px;">掃瞄起訖日：
                         </td>
                         <td style="padding: 5px; text-align: left;">起：
-     <asp:TextBox ID="txtScanCreateTime" runat="server" pattern="(\d{4})/(\d{1,2})/(\d{1,2}) " title="日期格式"></asp:TextBox>
+     <asp:TextBox ID="txtScanCreateTime" runat="server"  title="日期格式"></asp:TextBox>
                             ～訖：
-                                            <asp:TextBox ID="txtScanEndTime" runat="server" pattern="(\d{4})/(\d{1,2})/(\d{1,2}) " title="日期格式"></asp:TextBox>
+                                            <asp:TextBox ID="txtScanEndTime" runat="server"  title="日期格式"></asp:TextBox>
                         </td>
                     </tr>
                     <tr>
@@ -117,11 +117,11 @@
             <br>
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h3 class="panel-title">掃描清單查詢─統計如下：</h3>
+                    <h3 class="panel-title">掃描清單作業─統計如下：</h3>
                 </div>
                 <div class="panel-body">
                     <div style="width: 98%; text-align: right">
-                        <asp:Button ID="BtnDetailPrint" runat="server" Text="匯出細項資料" class="btn btn-large btn-success" OnClientClick="var scriptName=document.forms[0].action;window.document.forms[0].target='_blank';setTimeout(function(){window.document.forms[0].target='';document.forms[0].action=scriptName;}, 500);" PostBackUrl="~/ScanListDetailPrint.aspx" />
+                        <%--<asp:Button ID="BtnDetailPrint" runat="server" Text="匯出細項資料" class="btn btn-large btn-success" OnClientClick="var scriptName=document.forms[0].action;window.document.forms[0].target='_blank';setTimeout(function(){window.document.forms[0].target='';document.forms[0].action=scriptName;}, 500);" PostBackUrl="~/ScanListDetailPrint.aspx" />--%>
                         <asp:Button ID="BtnPrint" runat="server" Text="列 印" class="btn btn-large btn-success" OnClientClick="var scriptName=document.forms[0].action;window.document.forms[0].target='_blank';setTimeout(function(){window.document.forms[0].target='';document.forms[0].action=scriptName;}, 500);" PostBackUrl="~/ScanListGroupPrint.aspx" />
                     </div>
                 </div>
@@ -133,6 +133,11 @@
                         <asp:BoundField HeaderText="掃瞄作業者" DataField="RealName" SortExpression="RealName" ReadOnly="True" />
                         <asp:BoundField HeaderText="檔號" DataField="FILENO" SortExpression="FILENO" ReadOnly="True" />
                         <asp:BoundField HeaderText="數量" DataField="SCANCOUNT" SortExpression="SCANCOUNT" ReadOnly="True" />
+                        <asp:TemplateField HeaderText="匯出細項資料">
+                            <ItemTemplate>
+                                <asp:Button ID="BtnDetailPrint" runat="server" Text="匯出細項資料" class="btn btn-default btn-xs" OnClick="BtnDetailPrint_Click" PostBackUrl="~/ScanListDetailPrint.aspx" OnClientClick="var scriptName=document.forms[0].action;window.document.forms[0].target='_blank';setTimeout(function(){window.document.forms[0].target='';document.forms[0].action=scriptName;}, 500);"/>
+                            </ItemTemplate>
+                        </asp:TemplateField>
                     </Columns>
                     <FooterStyle CssClass="FooterStyle" />
                     <HeaderStyle CssClass="HeaderStyle" />

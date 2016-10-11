@@ -102,8 +102,8 @@ namespace WDA
                 string where = string.Empty;
 
                 // Added by Luke 2016/09/12
-                string strDetailSql = string.Empty;
-                string whereDetail = string.Empty;
+                //string strDetailSql = string.Empty;
+                //string whereDetail = string.Empty;
 
                 if (Anew)
                 {
@@ -127,35 +127,35 @@ namespace WDA
                         string startTime = this.txtScanCreateTime.Text.Trim().Replace(StringFormatException.Mode.Sql);//開始日期
                         string endTime = this.txtScanEndTime.Text.Trim().Replace(StringFormatException.Mode.Sql);//結束日期
 
-                        where += string.Format(" And bt.CreateTime Between  TO_DATE('{0}', 'YYYY/MM/DD HH24:MI:SS') And TO_DATE('{1}', 'YYYY/MM/DD HH24:MI:SS')", startTime, endTime);
+                        where += string.Format(" And bt.CreateTime Between  TO_DATE('{0} 00:00:00', 'YYYY/MM/DD HH24:MI:SS') And TO_DATE('{1} 23:59:59', 'YYYY/MM/DD HH24:MI:SS')", startTime, endTime);
                     }
 
                     if (!string.IsNullOrEmpty(this.TxtFileNo.Text.Trim()))
                     {
                         string strFileNo = this.TxtFileNo.Text.Trim();
 
-                        where += string.Format(" And bt.FileNo = '{0}' \n", strFileNo);
+                        where += string.Format(" And bt.FileNo like '{0}%' \n", strFileNo);
                     }
 
                     // Added by Luke 2016/09/12
-                    whereDetail = where;        // the same filter
+                    //whereDetail = where;        // the same filter
 
                     // Added by Luke 2016/09/12
-                    whereDetail += "  ORDER BY bt.CREATETIME, bt.BARCODEVALUE ";
+                    //whereDetail += "  ORDER BY bt.CREATETIME, bt.BARCODEVALUE ";
 
                     strSql = this.Select.ScanListStatists(where);
 
                     this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
 
                     // Added by Luke 2016/09/12
-                    strDetailSql = this.Select.ScanListStatistsDetail(whereDetail);
-                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, strDetailSql);
+                    //strDetailSql = this.Select.ScanListStatistsDetail(whereDetail);
+                    //this.WriteLog(global::Log.Mode.LogMode.DEBUG, strDetailSql);
 
                     // Modified by Luke 2016/09/12
                     Session["ScanListStatists"] = strSql;
 
                     // Added by Luke 2016/09/12
-                    Session["ScanListStatistsDetail"] = strDetailSql; // used for printing report
+                    //Session["ScanListStatistsDetail"] = strDetailSql; // used for printing report
 
                     this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
 
@@ -198,7 +198,7 @@ namespace WDA
                 #region Monitor
                 string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
 
-                this.MonitorLog.LogMonitor(string.Empty, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA02, string.Empty);
+                this.MonitorLog.LogMonitor(string.Empty, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA03, "掃描清單作業");
                 #endregion
             }
             catch (Exception ex)
@@ -281,5 +281,46 @@ namespace WDA
             }
         }
         #endregion
+
+        #region BtnDetailPrint_Click()
+        // Added by Luke 2016/10/06
+        protected void BtnDetailPrint_Click(object sender, EventArgs e)
+        {
+            GridViewRow gridViewRow = (GridViewRow)((Button)sender).NamingContainer;
+            int DataIndex = this.GridView1.PageSize * this.GridView1.PageIndex + gridViewRow.RowIndex;
+
+            string strSql = string.Empty;
+            string where = string.Empty;
+
+            // 統計項目1
+            string scanTime = gridViewRow.Cells[1].Text.Trim().Replace('-', '/');
+            string startTime = string.Format("{0} 00:00:00", scanTime);//開始日期
+            string endTime = string.Format("{0} 23:59:59", scanTime);//結束日期
+            where += string.Format(" AND bt.CreateTime Between TO_DATE('{0}','YYYY/MM/DD HH24:MI:SS') And TO_DATE('{1}','YYYY/MM/DD HH24:MI:SS') ", startTime, endTime);
+
+            // 統計項目2
+            string realName = gridViewRow.Cells[2].Text.Trim();
+            where += string.Format(" AND ut.RealName = N'{0}'  ", realName);
+
+            // 統計項目3
+            string strFileNo = gridViewRow.Cells[3].Text.Trim();
+            if (strFileNo == "&nbsp;" || strFileNo.Length == 0)
+                where += string.Format(" And NVL(bt.FileNo,'WDA_RPT') = 'WDA_RPT'", strFileNo);
+            else
+                where += string.Format(" And bt.FileNo = '{0}'", strFileNo);
+
+            // 產生SQL
+            where += "  ORDER BY bt.CREATETIME, bt.BARCODEVALUE ";
+
+            strSql = this.Select.ScanListStatistsDetail(where);
+
+            this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+            Session["ScanListStatistsDetail"] = strSql; // used for printing report
+
+
+        }
+        #endregion
+
     }
 }
