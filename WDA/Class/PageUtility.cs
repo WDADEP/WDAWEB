@@ -601,7 +601,9 @@ namespace WDA.Class
         {
             if (Session[SessionName.ClientIP] == null || Session[SessionName.ClientIP].ToString().Length == 0) Session[SessionName.ClientIP] = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
 
-            if (CheckSession == true && Session[SessionName.UserID] == null) this.Response.Redirect("Login.aspx?RePage=1");
+            // Modified by Luke 2016/08/12
+            //if (CheckSession == true && Session[SessionName.UserID] == null) this.Response.Redirect("Login.aspx?RePage=1");
+            if (CheckSession == true && Session[SessionName.UserID] == null) this.Response.Redirect("LoginPost.aspx");
 
             if (this.ViewState[SessionName.UserID] == null && this.Session[SessionName.UserID] != null) this.ViewState[SessionName.UserID] = Session[SessionName.UserID].ToString();
 

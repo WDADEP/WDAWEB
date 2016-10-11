@@ -63,7 +63,7 @@
                                                                 <span style="white-space: nowrap">使用者帳號：</span>
                                                             </td>
                                                             <td style="padding-top: 10px">
-                                                                <asp:TextBox ID="txtUserName" Style="ime-mode: disabled" runat="server" ClientIDMode="Static" ></asp:TextBox>
+                                                                <asp:TextBox ID="txtUserName" Style="ime-mode: disabled" runat="server" ClientIDMode="Static" AutoCompleteType="Disabled"></asp:TextBox>
                                                             </td>
                                                         </tr>
                                                         <tr>

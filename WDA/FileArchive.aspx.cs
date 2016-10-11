@@ -565,7 +565,8 @@ namespace WDA
                 }
 
                 //ADD BY RICHARD 20160407 for 歸檔資料（檔號、日期、卷宗號及文件類型）編輯僅能由原始歸檔者進行操作
-                if (!UserInfo.RealName.Equals(e.Row.Cells[8].Text.Trim()))
+                //ADD BY RICHARD 20160715 for 稽催同仁(陳相如)可以編輯歸檔資料
+                if (!UserInfo.RealName.Equals(e.Row.Cells[8].Text.Trim()) && !UserInfo.RoleID.Equals(6))
                 {
                     e.Row.Cells[0].Text = "";
                     e.Row.Cells[1].Text = "";

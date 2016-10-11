@@ -313,6 +313,58 @@ namespace WDA.Class
             }
             #endregion
 
+            #region FileArchiveStatisticsReport
+            /// <summary>
+            /// 
+            /// </summary>
+            public string FileArchiveStatisticsReport(string WptransWhere)
+            {
+                #region SQL Command
+
+                string strSql = "Select  ROW_NUMBER() OVER(ORDER BY wt.RECEIVER) AS RID, wt.RECEIVER, count(wt.RECEIVER) AS FILECOUNT,substr(wt.TRANST,1,10) AS TRANST, wp.FILENO, NVL(wp.FILENO,0) as ISFILE  \n"
+                                + "From WPTRANS wt \n"
+                                + "inner Join {0} wp On wt.wpinno = wp.wpinno \n"
+                                + "Left Join BarcodeTable bt On wt.wpinno = bt.BARCODEVALUE\n"
+                                + "WHERE 1=1 {1} GROUP BY wt.RECEIVER,substr(wt.TRANST,1,10),wp.FILENO \n Order By wt.RECEIVER \n";
+
+                #endregion
+
+                strSql = string.Format(strSql, PageUtility.WprecSchema, WptransWhere);
+
+                return strSql;
+            }
+
+            // Added by Luke 2016/09/12
+            /// <summary>
+            /// ScanListStatistsDetail
+            /// </summary>
+            /// <param name="Where"></param>
+            /// <returns></returns>
+            public string FileArchiveStatisticsDetail(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "SELECT wp.WPINNO AS BARCODEVALUE,wp.COMMNAME,wp.COMMADD,wp.WPOUTDATE,um.USERNAME as SENDMAN,wp.FILENO,wp.BOXNO,wt.RECEIVER,ut.REALNAME,tt.RECEIVER AS RECEIVER2,wp.KEEPYR,tt.TRANSTIME,wp.FILEDATE,bt.CREATETIME \n"
+                                + " From WPTRANS wt \n"
+                                + " INNER JOIN {0} wp ON wt.WPINNO=wp.WPINNO \n"
+                                + " LEFT OUTER JOIN TRANSTABLE tt ON wt.WPINNO=tt.WPINNO \n"
+                                + " LEFT OUTER JOIN BARCODETABLE bt ON wt.WPINNO=bt.BARCODEVALUE \n"
+                                + " LEFT OUTER JOIN usertable ut ON ut.USERID=bt.CREATEUSERID \n"
+                                + " LEFT OUTER JOIN {1} um ON wp.SENDMAN=um.userid \n"
+                                + " WHERE  1=1 {2}\n ";
+
+                #endregion
+
+                if (!string.IsNullOrEmpty(Where))
+                    strSql = string.Format(strSql, PageUtility.WprecSchema,PageUtility.UsermSchema, Where);
+                else
+                    strSql = string.Format(strSql, PageUtility.WprecSchema,PageUtility.UsermSchema, "");
+
+                return strSql;
+            }
+
+            #endregion
+
             #region Wpborrow
             /// <summary>
             /// 
@@ -978,6 +1030,59 @@ namespace WDA.Class
             }
             #endregion
 
+            #region ScanListStatisticsReport
+            /// <summary>
+            /// 統計資訊
+            /// </summary>
+            public string ScanListStatists(string Where)
+            {
+                #region SQL Command
+                //MODIFY BY RICHARD 20160908
+                string strSql = " Select count(bt.BARCODEVALUE) AS SCANCOUNT,substr(bt.CREATETIME,1,10) AS SCANTIME,UT.REALNAME,ROW_NUMBER() OVER (ORDER BY substr(bt.CREATETIME,1,10) ASC) AS RID, bt.FILENO \n"
+                    + " FROM BARCODETABLE bt \n"
+                    + "Inner Join Casetable ct On bt.caseid = ct.caseid\n"
+                    + "Inner Join Usertable ut On bt.CreateUserID = ut.UserID\n"
+                    + " Where 1=1\n"
+                    + " {0} GROUP BY substr(bt.CREATETIME,1,10),UT.REALNAME,bt.FILENO \n  ORDER BY substr(bt.CREATETIME,1,10) \n";
+                #endregion
+
+                if (Where != null && Where.Length > 0) strSql = string.Format(strSql, Where);
+                else strSql = string.Format(strSql, "");
+
+                return strSql;
+            }
+
+            // Added by Luke 2016/09/12
+            /// <summary>
+            /// ScanListStatistsDetail
+            /// </summary>
+            /// <param name="Where"></param>
+            /// <returns></returns>
+            public string ScanListStatistsDetail(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "SELECT bt.BARCODEVALUE,wp.COMMNAME,wp.COMMADD,wp.WPOUTDATE,um.USERNAME as SENDMAN,wp.FILENO,wp.BOXNO,wt.RECEIVER,ut.REALNAME,tt.RECEIVER AS RECEIVER2,wp.KEEPYR,tt.TRANSTIME,wp.FILEDATE,bt.CREATETIME \n"
+                                + " From BARCODETABLE bt \n"
+                                + " INNER JOIN usertable ut ON ut.USERID=bt.CREATEUSERID \n"
+                                + " INNER JOIN {0} wp ON bt.BARCODEVALUE=wp.WPINNO \n"
+                                + " INNER JOIN WPTRANS wt ON wt.WPINNO=bt.BARCODEVALUE \n"
+                                + " INNER JOIN TRANSTABLE tt ON bt.BARCODEVALUE=tt.WPINNO \n"
+                                + " LEFT JOIN {1} um ON wp.SENDMAN=um.userid \n"
+                                + " WHERE  1=1 {2}\n ";
+
+                #endregion
+
+                if (!string.IsNullOrEmpty(Where))
+                    strSql = string.Format(strSql, PageUtility.WprecSchema,PageUtility.UsermSchema, Where);
+                else
+                    strSql = string.Format(strSql, PageUtility.WprecSchema,PageUtility.UsermSchema, "");
+
+                return strSql;
+            }
+
+            #endregion
+
             #region RoleInfo
             /// <summary>
             /// 角色資訊
@@ -1632,7 +1737,7 @@ namespace WDA.Class
             {
                 #region SQL Command
 
-                string strSql = "SELECT ROW_NUMBER() OVER(ORDER BY WP.TRANST DESC) AS RID,WP.TRANST,WP.RECEIVER,UT.REALNAME as REALNAME1,WP.REDATE,WP.USERID,UT2.REALNAME as REALNAME2,WP.APPROVEUSERID,UT3.REALNAME as REALNAME3,WP.APPROVEDATE,FB.WORKERID,FB.GETIME,UT.TEL FROM WPBORROW WP\n"
+                string strSql = "SELECT ROW_NUMBER() OVER(ORDER BY WP.TRANST DESC) AS RID,WP.WPINNO,WP.TRANST,WP.RECEIVER,UT.REALNAME as REALNAME1,WP.REDATE,WP.USERID,UT2.REALNAME as REALNAME2,WP.APPROVEUSERID,UT3.REALNAME as REALNAME3,WP.APPROVEDATE,FB.WORKERID,FB.GETIME,UT.TEL FROM WPBORROW WP\n"
                                 + "Left JOIN FILEBORO FB ON WP.WPINNO=FB.WPINNO AND WP.TRANST=FB.TRANST AND WP.RECEIVER=FB.RECEIVER\n"
                                 + "Left JOIN USERTABLE UT ON WP.RECEIVER=UT.USERNAME\n"
                                 + "Left JOIN USERTABLE UT2 ON WP.USERID=UT2.USERID\n"
@@ -1753,20 +1858,76 @@ namespace WDA.Class
             {
                 #region SQL Command
 
-                string strSql = "Select RECEIVER, TRANSTIME, WPINNO, COMMNAME, ROW_NUMBER() OVER(ORDER BY TRANSTIME DESC) as RID \n"
-                                + " From TRANSTABLE \n"
-                                + " WHERE  1=1 {0}\n";
+                string strSql = "Select tt.RECEIVER, tt.TRANSTIME, tt.WPINNO, tt.COMMNAME, ROW_NUMBER() OVER(ORDER BY tt.TRANSTIME DESC) as RID \n"
+                                + " From TRANSTABLE tt \n"
+                                + " WHERE  1=1 {0}\n ";
 
                 #endregion
 
                 if (!string.IsNullOrEmpty(Where))
-                    strSql = string.Format(strSql, Where);
+                    strSql = string.Format(strSql ,Where);
                 else
-                    strSql = string.Format(strSql, "");
+                    strSql = string.Format(strSql,"");
 
                 return strSql;
             }
             #endregion
+
+            #region TransQueryStatisticsReport
+            /// <summary>
+            /// TranstableGroup
+            /// </summary>
+            /// <param name="Where"></param>
+            /// <returns></returns>
+            public string TranstableGroup(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "Select count(tt.TRANSTIME) AS TRANSCOUNT,substr(tt.TRANSTIME,1,10) AS TRANSTIME,tt.RECEIVER,ROW_NUMBER() OVER (ORDER BY substr(tt.TRANSTIME,1,10) ASC) AS RID, wp.FILENO, NVL(wp.FILENO,0) as ISFILE \n"
+                                + " From TRANSTABLE tt \n"
+                                + " INNER JOIN {0} wp ON tt.WPINNO=wp.wpinno \n"
+                                + " WHERE  1=1 {1}\n ";
+
+                #endregion
+
+                if (!string.IsNullOrEmpty(Where))
+                    strSql = string.Format(strSql, PageUtility.WprecSchema, Where);
+                else
+                    strSql = string.Format(strSql, PageUtility.WprecSchema, "");
+
+                return strSql;
+            }
+
+            // Added by Luke 2016/09/12
+            /// <summary>
+            /// TranstableDetail
+            /// </summary>
+            /// <param name="Where"></param>
+            /// <returns></returns>
+            public string TranstableDetail(string Where)
+            {
+                #region SQL Command
+
+                string strSql = "SELECT tt.WPINNO,wp.COMMNAME,wp.COMMADD,wp.WPOUTDATE,um.USERNAME as SENDMAN,wp.FILENO,wp.BOXNO,wt.RECEIVER,ut.REALNAME,tt.RECEIVER AS RECEIVER2,wp.KEEPYR,tt.TRANSTIME,wp.FILEDATE,bt.CREATETIME \n"
+                                + " From TRANSTABLE tt \n"
+                                + " INNER JOIN {0} wp ON tt.WPINNO=wp.WPINNO \n"
+                                + " LEFT OUTER JOIN WPTRANS wt ON wt.WPINNO=tt.WPINNO \n"
+                                + " LEFT OUTER JOIN BARCODETABLE bt ON bt.BARCODEVALUE=tt.WPINNO \n"
+                                + " LEFT OUTER JOIN usertable ut ON ut.USERID=bt.CREATEUSERID \n"
+                                + " LEFT OUTER JOIN {1} um ON wp.SENDMAN=um.userid \n"
+                                + " WHERE  1=1 {2}\n ";
+
+                #endregion
+
+                if (!string.IsNullOrEmpty(Where))
+                    strSql = string.Format(strSql, PageUtility.WprecSchema,PageUtility.UsermSchema, Where);
+                else
+                    strSql = string.Format(strSql, PageUtility.WprecSchema,PageUtility.UsermSchema, "");
+
+                return strSql;
+            }
+            #endregion
+
         }
         #endregion
 

@@ -163,7 +163,7 @@ namespace WDA
                         this.GridView2.DataBind((DataTable)ViewState[this.GridView2.ClientID], Anew, LockPageNum);
                     
                     //ADD BY RICHARD 20160531
-                    where = string.Format("And WPINNO ='{0}' ORDER BY TRANSTIME DESC ", wpinno);
+                    where = string.Format("And tt.WPINNO ='{0}' ORDER BY tt.TRANSTIME DESC ", wpinno);
                     strSql = this.Select.Transtable(where);
                     this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
                     dtTRANST = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);

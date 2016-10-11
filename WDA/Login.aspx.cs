@@ -27,7 +27,9 @@ namespace WDA
         /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
-            int rePage = this.Request.QueryString["RePage"] != null ? Convert.ToInt16(this.Request.QueryString["RePage"].Trim()) : 0;
+            // Modified by Luke 2016/08/12
+            //int rePage = this.Request.QueryString["RePage"] != null ? Convert.ToInt16(this.Request.QueryString["RePage"].Trim()) : 0;
+            int rePage = this.Request.Form["RePage"] != null ? Convert.ToInt16(this.Request.Form["RePage"].Trim()) : 0;
 
             this.LoadPage(false);
 

@@ -59,32 +59,16 @@ namespace WDA
 
                 if (Anew)
                 {
-                    //OleDbCommand command = (OleDbCommand)this.DBConn.GeneralSqlCmd.Command;
-
-                    //command.Parameters.Clear();
-
-                    //if (!string.IsNullOrEmpty(this.TxtWpinno.Text.Trim()))
-                    //{
-                    //    string wpinno = this.TxtWpinno.Text.Trim();
-
-                    //    command.Parameters.Add(new OleDbParameter("Wpinno", OleDbType.VarChar)).Value = wpinno;
-
-                    //    where += string.Format(" And Wpinno =:Wpinno");
-                    //}
 
                     if (!string.IsNullOrEmpty(this.TxtReceiver.Text.Trim()))
                     {
                         string realName = this.TxtReceiver.Text.Trim();
-
-                        //command.Parameters.Add(new OleDbParameter("Receiver", OleDbType.VarChar)).Value = realName;
-                        //where += string.Format(" And tt.Receiver =:RealName");
-
-                        where += string.Format(" And RECEIVER = '{0}'", realName);
+                        where += string.Format(" And tt.RECEIVER = '{0}'", realName);
 
                     }
 
                     DateTime dTime = DateTime.Now.Date;
-                    where += string.Format(" AND TRANSTIME Between TO_DATE('{0}','YYYY/MM/DD HH24:MI:SS') And TO_DATE('{1}','YYYY/MM/DD HH24:MI:SS') ORDER BY TRANSTIME DESC", dTime.ToString("yyyy/MM/dd HH:mm:ss"), dTime.AddDays(1.0).ToString("yyyy/MM/dd HH:mm:ss"));
+                    where += string.Format(" AND tt.TRANSTIME Between TO_DATE('{0}','YYYY/MM/DD HH24:MI:SS') And TO_DATE('{1}','YYYY/MM/DD HH24:MI:SS') ORDER BY tt.TRANSTIME DESC", dTime.ToString("yyyy/MM/dd HH:mm:ss"), dTime.AddDays(1.0).ToString("yyyy/MM/dd HH:mm:ss"));
 
 
                     strSql = this.Select.Transtable(where);
@@ -176,7 +160,7 @@ namespace WDA
 
 
                 //檢查是否有同一個人重複新增相同文號 Richard 20160603
-                strWhere = string.Format("And WPINNO = '{0}' and RECEIVER=N'{1}' \n", Wpinno,Receiver);
+                strWhere = string.Format("And tt.WPINNO = '{0}' and tt.RECEIVER=N'{1}' \n", Wpinno,Receiver);
                 strSql = this.Select.Transtable(strWhere);
                 this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
                 dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);

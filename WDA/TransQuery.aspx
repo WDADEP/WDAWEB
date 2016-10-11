@@ -43,10 +43,16 @@
         function ImageBtnOKClick() {
             try {
                 var txtWPINNO = $get('MainContent_TxtWpinno').value;
-                var txtReceiver = $get('MainContent_TxtReceiver').value;
                 var txtScanCreateTime = $get('MainContent_txtScanCreateTime').value;
 
-                if (txtWPINNO.length == 0 && txtReceiver.length == 0 && txtScanCreateTime.length== 0) {
+                var dReceiver = $get('MainContent_ddlReceiver').value;
+                if (dReceiver == 0) {
+                    alert('請選擇接收文件者');
+                    return false;
+                }
+
+
+                if (txtWPINNO.length == 0 && dReceiver == 0 && txtScanCreateTime.length == 0) {
                     alert('請輸入任一個查詢條件');
                     return false;
                 }
@@ -77,7 +83,8 @@
                         <td class="HeadTD_green" style="padding: 5px;">接 收 文 件 者：
                         </td>
                         <td style="padding: 5px; text-align: left;">
-                            <asp:TextBox ID="TxtReceiver" runat="server" ></asp:TextBox>
+                                <asp:DropDownList ID="ddlReceiver" runat="server">
+                                </asp:DropDownList>
                         </td>
                     </tr>
                     <tr>

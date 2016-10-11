@@ -204,6 +204,9 @@ namespace WDA
                     if (pageUtility.UserInfo.Privilege.Tables[0].Select(string.Format("PrivID={0}", 30)).Length > 0)
                     { this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"FileQuery.aspx\">檔案借閱查詢</a></li>"; }
 
+                    if (pageUtility.UserInfo.Privilege.Tables[0].Select(string.Format("PrivID={0}", 34)).Length > 0)
+                    { this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"FileSearch.aspx\">檔案借閱未還檔查詢</a></li>"; }
+
                     this.LiteralMenu.Text += "</ol>";
                     this.LiteralMenu.Text += "</div>";
                     this.LiteralMenu.Text += "</div>";
@@ -314,6 +317,36 @@ namespace WDA
                 }
                 #endregion
 
+                #region 統計報表
+                if (pageUtility.UserInfo.Privilege.Tables[0].Select(string.Format("PrivID={0}", 999)).Length > 0)
+                {
+                    this.LiteralMenu.Text += "<div class=\"accordion-group\">";
+                    this.LiteralMenu.Text += "<div class=\"accordion-heading\">";
+                    this.LiteralMenu.Text += "<a class=\"accordion-toggle\" data-toggle=\"collapse\" data-parent=\"#leftMenu\" href=\"#collapseNineNineNine\">";
+                    this.LiteralMenu.Text += "<span class=\"glyphicon glyphicon-wrench\" aria-hidden=\"true\">統計報表</span></a>";
+                    this.LiteralMenu.Text += "</div>";
+                    this.LiteralMenu.Text += "<div id=\"collapseNineNineNine\" class=\"accordion-body collapse\" style=\"height:0px;\">";
+                    this.LiteralMenu.Text += "<div class=\"accordion-inner\">";
+                    this.LiteralMenu.Text += "<ol class=\"nav\">";
+
+                    // Add by Richard 2016/09/08
+                    if (pageUtility.UserInfo.Privilege.Tables[0].Select(string.Format("PrivID={0}", 35)).Length > 0)
+                    { this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"TransQueryStatisticsReport.aspx\">簽收作業(統計)</a></li>"; }
+
+                    // Add by Richard 2016/09/08
+                    if (pageUtility.UserInfo.Privilege.Tables[0].Select(string.Format("PrivID={0}", 36)).Length > 0)
+                    { this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"ScanListStatisticsReport.aspx\">掃描作業(統計)</a></li>"; }
+
+                    if (pageUtility.UserInfo.Privilege.Tables[0].Select(string.Format("PrivID={0}", 37)).Length > 0)
+                    { this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"FileArchiveStatisticsReport.aspx\">歸檔登入(統計)</a></li>"; }
+
+                    this.LiteralMenu.Text += "</ol>";
+                    this.LiteralMenu.Text += "</div>";
+                    this.LiteralMenu.Text += "</div>";
+                    this.LiteralMenu.Text += "</div>";
+                }
+                #endregion
+
                 #region 登出系統
                 this.LiteralMenu.Text += "<div class=\"accordion-group\">";
                 this.LiteralMenu.Text += "<div class=\"accordion-heading\">";
@@ -324,7 +357,9 @@ namespace WDA
                 this.LiteralMenu.Text += "<div class=\"accordion-inner\">";
                 this.LiteralMenu.Text += "<ol class=\"nav\">";
 
-                { this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"Login.aspx?RePage=1\">回登入頁面</a></li>"; }
+                // Modified by Luke 2016/08/12
+                //{ this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"Login.aspx?RePage=1\">回登入頁面</a></li>"; }
+                { this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"LoginPost.aspx\">回登入頁面</a></li>"; }
 
                 this.LiteralMenu.Text += "</ol>";
                 this.LiteralMenu.Text += "</div>";

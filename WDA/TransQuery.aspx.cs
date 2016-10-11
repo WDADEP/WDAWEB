@@ -24,7 +24,8 @@ namespace WDA
                     this.HiddenShowPanel.Value = "false";
                     this.GridView1.PageSize = Convert.ToInt32(this.GetSystem("PageSize"));
                     this.TxtWpinno.Focus();
-                    this.TxtReceiver.Text = this.UserInfo.RealName;
+                    //ADD BY RICHARD 20160816
+                    this.GetFileUserList();
                 }
             }
             catch (Exception ex)
@@ -32,6 +33,50 @@ namespace WDA
                 this.ShowMessage(ex);
             }
 
+        }
+        #endregion
+
+        #region GetFileUserList
+        /// <summary>
+        /// 取得檔案室人員列表
+        /// </summary>
+        private void GetFileUserList()
+        {
+            string strSql = string.Empty;
+
+            DataTable dt = null;
+            try
+            {
+                //ADD 增加部門別判斷
+                // Modified by Luke 2016/09/12
+                strSql = this.Select.UserTable(" AND DEPTID IN (10,12) AND USERSTATUS=0");
+
+                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+                dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+
+                DataRow defaultRow = dt.NewRow();
+                defaultRow["RealName"] = "選擇人員";
+                dt.Rows.Add(defaultRow);
+
+                dt.DefaultView.Sort = "UserID";
+                this.ddlReceiver.DataSource = dt;
+
+                this.ddlReceiver.DataTextField = "RealName";
+                this.ddlReceiver.DataValueField = "RealName";
+
+                this.ddlReceiver.DataBind();
+
+                dt.Dispose(); dt = null;
+            }
+            catch (Exception ex)
+            {
+                this.ShowMessage(ex.Message);
+            }
+            finally
+            {
+                this.DBConn.Dispose(); this.DBConn = null;
+            }
         }
         #endregion
 
@@ -57,19 +102,15 @@ namespace WDA
                     if (!string.IsNullOrEmpty(this.TxtWpinno.Text.Trim()))
                     {
                         string wpinno = this.TxtWpinno.Text.Trim();
-
-
                         where += string.Format(" And WPINNO = '{0}'", wpinno);
-
                     }
 
-                    if (!string.IsNullOrEmpty(this.TxtReceiver.Text.Trim()))
+                    string realName = this.ddlReceiver.SelectedValue;
+                    if (!string.IsNullOrEmpty(realName))
                     {
-                        string realName = this.TxtReceiver.Text.Trim();
-
-                        where += string.Format(" AND RECEIVER = '{0}'", realName);
-
+                        where += string.Format(" AND tt.RECEIVER = '{0}'", realName.Trim());
                     }
+
 
                     if (!string.IsNullOrEmpty(this.txtScanCreateTime.Text.Trim()))
                     {
