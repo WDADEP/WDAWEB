@@ -242,6 +242,71 @@ namespace WDA
         }
         #endregion
 
+        #region BtnClear_Click()
+        protected void BtnClear_Click(object sender, EventArgs e)
+        {
+            this.Response.Redirect(this.Request.Url.AbsoluteUri);
+        }
+        #endregion
+
+        #region BtnDetailPrint_Click()
+        // Added by Luke 2016/10/17
+        protected void BtnDetailPrint_Click(object sender, EventArgs e)
+        {
+            GridViewRow gridViewRow = (GridViewRow)((Button)sender).NamingContainer;
+            int DataIndex = this.GridView1.PageSize * this.GridView1.PageIndex + gridViewRow.RowIndex;
+
+            string strSql = string.Empty;
+            string where = string.Empty;
+
+            // 統計項目1
+            string transTime = gridViewRow.Cells[1].Text.Trim().Replace('-', '/');
+            string startTime = string.Format("{0} 00:00:00", transTime);//開始日期
+            string endTime = string.Format("{0} 23:59:59", transTime);//結束日期
+            where += string.Format(" AND fb.GETIME Between TO_DATE('{0}','YYYY/MM/DD HH24:MI:SS') And TO_DATE('{1}','YYYY/MM/DD HH24:MI:SS') ", startTime, endTime);
+
+            // 統計項目2
+            string realName = gridViewRow.Cells[2].Text.Trim();
+            where += string.Format(" AND UT.REALNAME = N'{0}'", realName);
+
+            // 統計項目3
+            string strFileNo = gridViewRow.Cells[3].Text.Trim();
+            if (strFileNo == "&nbsp;" || strFileNo.Length == 0)
+                where += string.Format(" And NVL(wp.FileNo,'WDA_RPT') = 'WDA_RPT'", strFileNo);
+            else
+                where += string.Format(" And wp.FileNo = '{0}'", strFileNo);
+
+            // 統計項目4
+            string strDept = gridViewRow.Cells[4].Text.Trim();
+            where += string.Format(" AND dt.DEPTNAME = N'{0}'", strDept);
+
+            // 統計項目5
+            string chk = gridViewRow.Cells[5].Text.Trim();
+            if (chk == "無")
+                where += string.Format(" AND fb.chk = 'N'");
+            else if (chk == "有")
+                where += string.Format(" AND fb.chk = 'Y'");
+
+            // 統計項目6
+            string viewType = gridViewRow.Cells[6].Text.Trim();
+            if (viewType == "否")
+                where += string.Format(" AND wb.VIEWTYPE = 1");
+            else if (viewType == "是")
+                where += string.Format(" AND wb.VIEWTYPE = 2");
+
+            // 產生SQL
+            where += "  ORDER BY wt.RECEIVER, bt.BARCODEVALUE, wp.WPINNO ";
+
+            strSql = this.Select.WpBorrowStatisticsDetail(where);
+
+            this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+            Session["WpBorrowStatistsDetail"] = strSql; // used for printing report
+
+
+        }
+        #endregion
+
         #region GridView Events
 
         #region GridView1_Sorting()

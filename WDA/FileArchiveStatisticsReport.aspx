@@ -89,7 +89,7 @@
     <div class="well well-lg">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title">歸檔登入─統計</h3>
+                <h3 class="panel-title">歸檔作業─統計</h3>
             </div>
             <div class="panel-body">
                 <table class="ItemTD_green" style="width: 98%; float: right; border-collapse: separate; border-spacing: 1px;" border="1">
@@ -136,7 +136,7 @@
             <br>
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h3 class="panel-title">歸檔登入統計─詳細列表如下：</h3>
+                    <h3 class="panel-title">歸檔作業統計─詳細列表如下：</h3>
                 </div>
                 <div class="panel-body">
                     <div style="width: 98%; text-align: right">

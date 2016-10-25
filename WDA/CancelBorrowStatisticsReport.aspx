@@ -33,6 +33,29 @@
             showMessage();
         }
 
+        function ImageBtnPringClick() {
+            try {
+                if ($("#MainContent_HiddenShowPanel").val() == "true") {
+                    var scriptName = document.forms[0].action;
+                    window.document.forms[0].target = '_blank';
+                    setTimeout(function () {
+                        window.document.forms[0].target = '';
+                        document.forms[0].action = scriptName;
+                    }, 500);
+                    return true;
+                }
+                else {
+                    alert('請先進行查詢。');
+                    return false;
+                }
+            }
+            catch (e) {
+                alert(e.message);
+                Sys.Debug.traceDump(e);
+            };
+        }
+
+
         function ImageBtnOKClick() {
             try {
                 var txtScanCreateTime = $get('MainContent_txtBorrowCreateTime').value;
@@ -75,7 +98,7 @@
                         <asp:Button ID="BtnOK" runat="server" Text="確 定" class="btn btn-large btn-success" OnClientClick="JavaScript:if(!ImageBtnOKClick()) {return false} ;" OnClick="BtnOK_Click" />
                     </td>
                     <td style="text-align: left">
-                        <asp:Button ID="BtnClear" runat="server" Text="取 消" class="btn btn-large btn-success"  />
+                        <asp:Button ID="BtnClear" runat="server" Text="取 消" class="btn btn-large btn-success" OnClick="BtnClear_Click"  />
                     </td>
                 </tr>
             </table>
@@ -88,7 +111,7 @@
                 </div>
                 <div class="panel-body">
                     <div style="width: 98%; text-align: right">
-                        <asp:Button ID="BtnPrint" runat="server" Text="列 印" class="btn btn-large btn-success" OnClientClick="var scriptName=document.forms[0].action;window.document.forms[0].target='_blank';setTimeout(function(){window.document.forms[0].target='';document.forms[0].action=scriptName;}, 500);" PostBackUrl="~/WpBorrowGroupPrint.aspx" />
+                        <asp:Button ID="BtnPrint" runat="server" Text="列 印" class="btn btn-large btn-success" OnClientClick="var scriptName=document.forms[0].action;window.document.forms[0].target='_blank';setTimeout(function(){window.document.forms[0].target='';document.forms[0].action=scriptName;}, 500);" PostBackUrl="~/CancelBorrowGroupPrint.aspx" />
                     </div>
                 </div>
                 <asp:GridView ID="GridView1" runat="server" AllowSorting="True"  AutoGenerateColumns="False" CssClass="GridViewStyle" Width="98%" OnSorting="GridView1_Sorting" AllowPaging="True" OnPageIndexChanging="GridView1_PageIndexChanging"  >
@@ -99,7 +122,12 @@
                         <asp:BoundField HeaderText="借檔作業者" DataField="WORKERID" SortExpression="WORKERID" ReadOnly="True" />
                         <asp:BoundField HeaderText="檔號" DataField="FILENO" SortExpression="FILENO" ReadOnly="True" />
                         <asp:BoundField HeaderText="申請科室"　DataField="DeptName" SortExpression="DeptName" ReadOnly="true" />
-                        <asp:BoundField HeaderText="數量" DataField="FILECOUNT" SortExpression="TRANSCOUNT" ReadOnly="True" />
+                        <asp:BoundField HeaderText="數量" DataField="FILECOUNT" SortExpression="FILECOUNT" ReadOnly="True" />
+                        <asp:TemplateField HeaderText="匯出細項資料">
+                            <ItemTemplate>
+                                <asp:Button ID="BtnDetailPrint" runat="server" Text="匯出細項資料" class="btn btn-default btn-xs" OnClick="BtnDetailPrint_Click" PostBackUrl="~/CancelBorrowDetailPrint.aspx" OnClientClick="JavaScript:if(!ImageBtnPringClick()) {return false} ;"/>
+                            </ItemTemplate>
+                        </asp:TemplateField>
                     </Columns>
                     <FooterStyle CssClass="FooterStyle" />
                     <HeaderStyle CssClass="HeaderStyle" />

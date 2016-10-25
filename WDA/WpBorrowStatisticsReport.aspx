@@ -33,6 +33,29 @@
             showMessage();
         }
 
+        function ImageBtnPringClick() {
+            try {
+                if ($("#MainContent_HiddenShowPanel").val() == "true") {
+                    var scriptName = document.forms[0].action;
+                    window.document.forms[0].target = '_blank';
+                    setTimeout(function () {
+                        window.document.forms[0].target = '';
+                        document.forms[0].action = scriptName;
+                    }, 500);
+                    return true;
+                }
+                else {
+                    alert('請先進行查詢。');
+                    return false;
+                }
+            }
+            catch (e) {
+                alert(e.message);
+                Sys.Debug.traceDump(e);
+            };
+        }
+
+
         function ImageBtnOKClick() {
             try {
                 var dReceiver = $get('MainContent_ddlReceiver').value;
@@ -145,7 +168,12 @@
                         <asp:BoundField HeaderText="申請科室"　DataField="DeptName" SortExpression="DeptName" ReadOnly="true" />
                         <asp:BoundField HeaderText="有無還檔" DataField="CHK" SortExpression="CHK" ReadOnly="True" />
                         <asp:BoundField HeaderText="電子調閱"　DataField="ViewType" SortExpression="ViewType" ReadOnly="True" />
-                        <asp:BoundField HeaderText="數量" DataField="FILECOUNT" SortExpression="TRANSCOUNT" ReadOnly="True" />
+                        <asp:BoundField HeaderText="數量" DataField="FILECOUNT" SortExpression="FILECOUNT" ReadOnly="True" />
+                        <asp:TemplateField HeaderText="匯出細項資料">
+                            <ItemTemplate>
+                                <asp:Button ID="BtnDetailPrint" runat="server" Text="匯出細項資料" class="btn btn-default btn-xs" OnClick="BtnDetailPrint_Click" PostBackUrl="~/WpBorrowDetailPrint.aspx" OnClientClick="JavaScript:if(!ImageBtnPringClick()) {return false} ;"/>
+                            </ItemTemplate>
+                        </asp:TemplateField>
                     </Columns>
                     <FooterStyle CssClass="FooterStyle" />
                     <HeaderStyle CssClass="HeaderStyle" />

@@ -70,7 +70,7 @@
             </div>
             <div class="panel-body">
                 <table class="ItemTD_green" style="width: 98%; float: right; border-collapse: separate; border-spacing: 1px;" border="1">
-                    <tr>
+                    <tr style="display:none">
                         <td class="HeadTD_green" style="padding: 5px;">收文文號：</td>
                         <td style="padding: 5px; text-align: left;">
                             <asp:TextBox ID="TxtWpinno" runat="server"></asp:TextBox>

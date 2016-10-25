@@ -46,7 +46,7 @@ namespace WDA
                 string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
 
                 //MODIFY BY RICHARD 20160407
-                this.MonitorLog.LogMonitor("", this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA04, "統計報表");
+                this.MonitorLog.LogMonitor("", this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA04, "統計報表-歸檔作業");
                 #endregion
             }
             catch (Exception ex)
@@ -103,9 +103,9 @@ namespace WDA
 
                     if (fileStartDate.Length > 0 && fileEndDate.Length > 0) 
                     {
-                        wptransWhere += string.Format("And wp.FileDate >= '{0}' \n", fileStartDate.Replace("/",string.Empty));
+                        wptransWhere += string.Format("And wp.FILEDATE >= '{0}' \n", fileStartDate.Replace("/", string.Empty));
 
-                        wptransWhere += string.Format("And wp.FileDate <= '{0}' \n", fileEndDate.Replace("/",string.Empty)); 
+                        wptransWhere += string.Format("And wp.FILEDATE <= '{0}' \n", fileEndDate.Replace("/", string.Empty)); 
                     }
 
 
@@ -271,7 +271,7 @@ namespace WDA
             string transTime = gridViewRow.Cells[1].Text.Trim().Replace('-', '/');
             string startTime = string.Format("{0} 00:00:00", transTime);//開始日期
             string endTime = string.Format("{0} 23:59:59", transTime);//結束日期
-            where += string.Format(" AND wt.TRANST Between TO_DATE('{0}','YYYY/MM/DD HH24:MI:SS') And TO_DATE('{1}','YYYY/MM/DD HH24:MI:SS') ", startTime, endTime);
+            where += string.Format(" AND wt.TRANST Between TO_DATE('{0}','YYYYMMDD HH24:MI:SS') And TO_DATE('{1}','YYYYMMDD HH24:MI:SS') ", startTime, endTime);
 
             // 統計項目2
             string realName = gridViewRow.Cells[2].Text.Trim();
@@ -290,6 +290,7 @@ namespace WDA
                 where += string.Format(" AND bt.BARCODEVALUE is null");
             else if (strIsFile == "有")
                 where += string.Format(" AND bt.BARCODEVALUE is not null");
+
 
             // 產生SQL
             where += "  ORDER BY wt.RECEIVER, bt.BARCODEVALUE, wp.WPINNO ";
