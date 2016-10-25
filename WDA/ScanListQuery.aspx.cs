@@ -120,7 +120,7 @@ namespace WDA
 
                         command.Parameters.Add(new OleDbParameter("RealName", OleDbType.VarChar)).Value = realName;
 
-                        where += string.Format("And ut.RealName =:RealName");
+                        where += string.Format(" And ut.RealName =:RealName");
                     }
                     if (!string.IsNullOrEmpty(txtScanCreateTime.Text))
                     {

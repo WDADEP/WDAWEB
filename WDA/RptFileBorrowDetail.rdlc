@@ -1146,14 +1146,14 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="TRANST">
+                    <Textbox Name="GETIME">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!TRANST.Value</Value>
+                              <Value>=Fields!GETIME.Value</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -1162,7 +1162,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>TRANST</rd:DefaultName>
+                      <rd:DefaultName>GETIME</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -1505,14 +1505,14 @@
           <DataField>REALNAME</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="TRANST">
-          <DataField>TRANST</DataField>
+        <Field Name="GETIME">
+          <DataField>GETIME</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>ReportDB</rd:DataSetName>
-        <rd:SchemaPath>C:\Users\LukeYang\Documents\Visual Studio 2013\Projects\WDA\WDA\ReportDB.xsd</rd:SchemaPath>
+        <rd:SchemaPath>C:\TEMP\WDA\WDA\ReportDB.xsd</rd:SchemaPath>
         <rd:TableName>FileBorrowDetailTable</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />

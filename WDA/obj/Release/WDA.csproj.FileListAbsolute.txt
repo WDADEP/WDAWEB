@@ -70,3 +70,4 @@ C:\TEMP\WDA\WDA\obj\Release\RdlCompile.cache
 C:\TEMP\WDA\WDA\obj\Release\RdlCompile.compiled
 C:\TEMP\WDA\WDA\obj\Release\WDA.dll
 C:\TEMP\WDA\WDA\obj\Release\WDA.pdb
+C:\TEMP\WDA\WDA\obj\Release\WDA.csprojResolveAssemblyReference.cache

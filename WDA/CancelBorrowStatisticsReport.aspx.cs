@@ -58,7 +58,7 @@ namespace WDA
                         string startTime = this.txtBorrowCreateTime.Text.Trim().Replace(StringFormatException.Mode.Sql);//開始日期
                         string endTime = this.txtBorrowEndTime.Text.Trim().Replace(StringFormatException.Mode.Sql);//結束日期
 
-                        where += string.Format(" AND wb.TRANST Between TO_DATE('{0} 00:00:00','YYYY/MM/DD HH24:MI:SS') And TO_DATE('{1} 23:59:59','YYYY/MM/DD HH24:MI:SS') ", startTime, endTime);
+                        where += string.Format(" AND fb.GETIME Between TO_DATE('{0} 00:00:00','YYYY/MM/DD HH24:MI:SS') And TO_DATE('{1} 23:59:59','YYYY/MM/DD HH24:MI:SS') ", startTime, endTime);
                     }
 
                     where += string.Format(" AND wb.REDATE = TO_DATE('{0}','YYYY/MM/DD HH24:MI:SS') ", "2999/12/31 12:00:00");
@@ -141,7 +141,7 @@ namespace WDA
             string transTime = gridViewRow.Cells[1].Text.Trim().Replace('-', '/');
             string startTime = string.Format("{0} 00:00:00", transTime);//開始日期
             string endTime = string.Format("{0} 23:59:59", transTime);//結束日期
-            where += string.Format(" AND wb.TRANST Between TO_DATE('{0}','YYYY/MM/DD HH24:MI:SS') And TO_DATE('{1}','YYYY/MM/DD HH24:MI:SS') ", startTime, endTime);
+            where += string.Format(" AND fb.GETIME Between TO_DATE('{0}','YYYY/MM/DD HH24:MI:SS') And TO_DATE('{1}','YYYY/MM/DD HH24:MI:SS') ", startTime, endTime);
 
             where += string.Format(" AND wb.REDATE = TO_DATE('{0}','YYYY/MM/DD HH24:MI:SS') ", "2999/12/31 12:00:00");
 

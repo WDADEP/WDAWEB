@@ -376,7 +376,7 @@ namespace WDA.Class
             {
                 #region SQL Command
 
-                string strSql = "SELECT wp.WPINNO AS BARCODEVALUE,wp.COMMNAME,wp.COMMADD,wp.WPOUTDATE,um.USERNAME as SENDMAN,wp.FILENO,wp.BOXNO,wt.RECEIVER,UT2.REALNAME AS SCANAME,tt.RECEIVER AS RECEIVER2,wp.KEEPYR,tt.TRANSTIME,wp.FILEDATE,bt.CREATETIME, ut.REALNAME,fb.GETIME AS TRANST\n"
+                string strSql = "SELECT wp.WPINNO AS BARCODEVALUE,wp.COMMNAME,wp.COMMADD,wp.WPOUTDATE,um.USERNAME as SENDMAN,wp.FILENO,wp.BOXNO,wt.RECEIVER,UT2.REALNAME AS SCANAME,tt.RECEIVER AS RECEIVER2,wp.KEEPYR,tt.TRANSTIME,wp.FILEDATE,bt.CREATETIME, ut.REALNAME,fb.GETIME\n"
                                 + " From FILEBORO fb \n"
                                 + " INNER JOIN {0} wp On fb.wpinno = wp.wpinno \n"
                                 + " inner Join WPBORROW wb On (wb.wpinno = fb.WPINNO and wb.RECEIVER=fb.RECEIVER and wb.TRANST=fb.TRANST) \n"
@@ -1795,14 +1795,14 @@ namespace WDA.Class
             {
                 #region SQL Command
 
-                string strSql = "Select  ROW_NUMBER() OVER(ORDER BY wb.USERID) AS RID, UT.REALNAME, substr(fb.GETIME,1,10) AS TRANST,wp.FILENO,dt.DEPTNAME,fb.chk,wb.VIEWTYPE,count(wb.USERID) AS FILECOUNT  \n"
+                string strSql = "Select  ROW_NUMBER() OVER(ORDER BY wb.USERID) AS RID, UT.REALNAME, substr(wb.REDATE,1,10) AS TRANST,wp.FILENO,dt.DEPTNAME,fb.chk,wb.VIEWTYPE,count(wb.USERID) AS FILECOUNT  \n"
                                 + "From WPBORROW wb \n"
                                 + "inner Join {0} wp On wb.wpinno = wp.wpinno \n"
                                 + "inner Join FILEBORO fb On (wb.wpinno = fb.WPINNO and wb.RECEIVER=fb.RECEIVER and wb.TRANST=fb.TRANST)\n"
                                 + "INNER JOIN USERTABLE UT ON wb.USERID=UT.USERID \n"
                                 + "INNER JOIN USERTABLE UT2 ON wb.RECEIVER=UT2.USERNAME \n"
                                 + "INNER JOIN DEPT dt ON dt.DEPTID=UT2.DEPTID \n"
-                                + "WHERE 1=1 {1} \n GROUP BY wb.USERID,UT.REALNAME, substr(fb.GETIME,1,10) ,wp.FILENO,dt.DEPTNAME,fb.chk,wb.VIEWTYPE \n "
+                                + "WHERE 1=1 {1} AND wb.REDATE< TO_DATE('2900/12/31 12:00:00','YYYY/MM/DD HH24:MI:SS') \n GROUP BY wb.USERID,UT.REALNAME, substr(wb.REDATE,1,10) ,wp.FILENO,dt.DEPTNAME,fb.chk,wb.VIEWTYPE \n "
                                 + "Order By wb.USERID \n";
 
                 #endregion
@@ -1823,7 +1823,7 @@ namespace WDA.Class
             {
                 #region SQL Command
 
-                string strSql = "SELECT wp.WPINNO AS BARCODEVALUE,wp.COMMNAME,wp.COMMADD,wp.WPOUTDATE,um.USERNAME as SENDMAN,wp.FILENO,wp.BOXNO,wt.RECEIVER,UT.REALNAME AS SCANAME,tt.RECEIVER AS RECEIVER2,wp.KEEPYR,tt.TRANSTIME,wp.FILEDATE,bt.CREATETIME, ut.REALNAME,wb.TRANST,fb.GETIME, ROUND(TO_NUMBER(fb.GETIME - wb.TRANST)) AS DateDiff \n"
+                string strSql = "SELECT wp.WPINNO AS BARCODEVALUE,wp.COMMNAME,wp.COMMADD,wp.WPOUTDATE,um.USERNAME as SENDMAN,wp.FILENO,wp.BOXNO,wt.RECEIVER,UT.REALNAME AS SCANAME,tt.RECEIVER AS RECEIVER2,wp.KEEPYR,tt.TRANSTIME,wp.FILEDATE,bt.CREATETIME, ut.REALNAME,fb.GETIME,wb.REDATE, ROUND(TO_NUMBER(wb.REDATE - fb.GETIME)+1) AS DateDiff \n"
                                 + " From WPBORROW wb \n"
                                 + " INNER JOIN {0} wp On wb.wpinno = wp.wpinno \n"
                                 + " inner Join FILEBORO fb On (wb.wpinno = fb.WPINNO and wb.RECEIVER=fb.RECEIVER and wb.TRANST=fb.TRANST) \n"
@@ -1855,13 +1855,13 @@ namespace WDA.Class
             {
                 #region SQL Command
 
-                string strSql = "Select  ROW_NUMBER() OVER(ORDER BY fb.workerid) AS RID, fb.workerid, substr(wb.TRANST,1,10) AS TRANST,wp.FILENO,dt.DEPTNAME,count(fb.workerid) AS FILECOUNT  \n"
+                string strSql = "Select  ROW_NUMBER() OVER(ORDER BY fb.workerid) AS RID, fb.workerid, substr(fb.GETIME,1,10) AS TRANST,wp.FILENO,dt.DEPTNAME,count(fb.workerid) AS FILECOUNT  \n"
                                 + "From FILEBORO fb \n"
                                 + "inner Join {0} wp On fb.wpinno = wp.wpinno \n"
                                 + "inner Join WPBORROW wb On (wb.wpinno = fb.WPINNO and wb.RECEIVER=fb.RECEIVER and wb.TRANST=fb.TRANST)\n"
                                 + "INNER JOIN USERTABLE UT ON wb.RECEIVER=UT.USERNAME \n"
                                 + "INNER JOIN DEPT dt ON dt.DEPTID=UT.DEPTID \n"
-                                + "WHERE 1=1 {1} GROUP BY fb.workerid, substr(wb.TRANST,1,10) ,wp.FILENO,dt.DEPTNAME \n "
+                                + "WHERE 1=1 {1} GROUP BY fb.workerid, substr(fb.GETIME,1,10) ,wp.FILENO,dt.DEPTNAME \n "
                                 + "Order By fb.workerid \n";
 
                 #endregion
@@ -1881,9 +1881,9 @@ namespace WDA.Class
             {
                 #region SQL Command
 
-                string strSql = "SELECT wp.WPINNO AS BARCODEVALUE,wp.COMMNAME,wp.COMMADD,wp.WPOUTDATE,um.USERNAME as SENDMAN,wp.FILENO,wp.BOXNO,wt.RECEIVER,UT2.REALNAME AS SCANAME,tt.RECEIVER AS RECEIVER2,wp.KEEPYR,tt.TRANSTIME,wp.FILEDATE,bt.CREATETIME, ut.REALNAME,wb.TRANST,fb.GETIME \n"
+                string strSql = "SELECT wp.WPINNO AS BARCODEVALUE,wp.COMMNAME,wp.COMMADD,wp.WPOUTDATE,um.USERNAME as SENDMAN,wp.FILENO,wp.BOXNO,wt.RECEIVER,UT2.REALNAME AS SCANAME,tt.RECEIVER AS RECEIVER2,wp.KEEPYR,tt.TRANSTIME,wp.FILEDATE,bt.CREATETIME, ut.REALNAME,wb.TRANST,wb.REDATE \n"
                                 + " From WPBORROW wb \n"
-                                + " INNER JOIN {0} wp On fb.wpinno = wp.wpinno \n"
+                                + " INNER JOIN {0} wp On wb.wpinno = wp.wpinno \n"
                                 + " inner Join FILEBORO fb On (wb.wpinno = fb.WPINNO and wb.RECEIVER=fb.RECEIVER and wb.TRANST=fb.TRANST) \n"
                                 + " INNER JOIN USERTABLE UT ON wb.RECEIVER=UT.USERNAME \n"
                                 + " INNER JOIN DEPT dt ON dt.DEPTID=UT.DEPTID \n"
