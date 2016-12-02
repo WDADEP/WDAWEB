@@ -348,7 +348,7 @@ namespace WDA
 
 
                     if (pageUtility.UserInfo.Privilege.Tables[0].Select(string.Format("PrivID={0}", 40)).Length > 0)
-                    { this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"CancelBorrowStatisticsReport.aspx\">取消還檔作業(統計)</a></li>"; }
+                    { this.LiteralMenu.Text += "<li><a runat=\"server\" href=\"CancelBorrowStatisticsReport.aspx\">取消調檔作業(統計)</a></li>"; }
 
                     this.LiteralMenu.Text += "</ol>";
                     this.LiteralMenu.Text += "</div>";

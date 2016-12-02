@@ -271,8 +271,8 @@
               <xs:element name="FILEDATE" msprop:Generator_ColumnVarNameInTable="columnFILEDATE" msprop:Generator_ColumnPropNameInRow="FILEDATE" msprop:Generator_ColumnPropNameInTable="FILEDATEColumn" msprop:Generator_UserColumnName="FILEDATE" type="xs:string" minOccurs="0" />
               <xs:element name="CREATETIME" msprop:Generator_ColumnVarNameInTable="columnCREATETIME" msprop:Generator_ColumnPropNameInRow="CREATETIME" msprop:Generator_ColumnPropNameInTable="CREATETIMEColumn" msprop:Generator_UserColumnName="CREATETIME" type="xs:string" minOccurs="0" />
               <xs:element name="REALNAME" msprop:Generator_ColumnVarNameInTable="columnREALNAME" msprop:Generator_ColumnPropNameInRow="REALNAME" msprop:Generator_ColumnPropNameInTable="REALNAMEColumn" msprop:Generator_UserColumnName="REALNAME" type="xs:string" minOccurs="0" />
-              <xs:element name="TRANST" msprop:Generator_ColumnVarNameInTable="columnTRANST" msprop:Generator_ColumnPropNameInRow="TRANST" msprop:Generator_ColumnPropNameInTable="TRANSTColumn" msprop:Generator_UserColumnName="TRANST" type="xs:string" minOccurs="0" />
               <xs:element name="GETIME" msprop:Generator_ColumnVarNameInTable="columnGETIME" msprop:Generator_ColumnPropNameInRow="GETIME" msprop:Generator_ColumnPropNameInTable="GETIMEColumn" msprop:Generator_UserColumnName="GETIME" type="xs:string" minOccurs="0" />
+              <xs:element name="REDATE" msprop:Generator_ColumnVarNameInTable="columnREDATE" msprop:Generator_ColumnPropNameInRow="REDATE" msprop:Generator_ColumnPropNameInTable="REDATEColumn" msprop:Generator_UserColumnName="REDATE" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

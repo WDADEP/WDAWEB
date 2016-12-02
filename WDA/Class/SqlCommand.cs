@@ -1802,7 +1802,7 @@ namespace WDA.Class
                                 + "INNER JOIN USERTABLE UT ON wb.USERID=UT.USERID \n"
                                 + "INNER JOIN USERTABLE UT2 ON wb.RECEIVER=UT2.USERNAME \n"
                                 + "INNER JOIN DEPT dt ON dt.DEPTID=UT2.DEPTID \n"
-                                + "WHERE 1=1 {1} AND wb.REDATE< TO_DATE('2900/12/31 12:00:00','YYYY/MM/DD HH24:MI:SS') \n GROUP BY wb.USERID,UT.REALNAME, substr(wb.REDATE,1,10) ,wp.FILENO,dt.DEPTNAME,fb.chk,wb.VIEWTYPE \n "
+                                + "WHERE 1=1 {1} AND wb.REDATE< TO_DATE('2100/12/31 12:00:00','YYYY/MM/DD HH24:MI:SS') \n GROUP BY wb.USERID,UT.REALNAME, substr(wb.REDATE,1,10) ,wp.FILENO,dt.DEPTNAME,fb.chk,wb.VIEWTYPE \n "
                                 + "Order By wb.USERID \n";
 
                 #endregion
@@ -1881,7 +1881,7 @@ namespace WDA.Class
             {
                 #region SQL Command
 
-                string strSql = "SELECT wp.WPINNO AS BARCODEVALUE,wp.COMMNAME,wp.COMMADD,wp.WPOUTDATE,um.USERNAME as SENDMAN,wp.FILENO,wp.BOXNO,wt.RECEIVER,UT2.REALNAME AS SCANAME,tt.RECEIVER AS RECEIVER2,wp.KEEPYR,tt.TRANSTIME,wp.FILEDATE,bt.CREATETIME, ut.REALNAME,wb.TRANST,wb.REDATE \n"
+                string strSql = "SELECT wp.WPINNO AS BARCODEVALUE,wp.COMMNAME,wp.COMMADD,wp.WPOUTDATE,um.USERNAME as SENDMAN,wp.FILENO,wp.BOXNO,wt.RECEIVER,UT2.REALNAME AS SCANAME,tt.RECEIVER AS RECEIVER2,wp.KEEPYR,tt.TRANSTIME,wp.FILEDATE,bt.CREATETIME, ut.REALNAME,fb.GETIME,wb.REDATE \n"
                                 + " From WPBORROW wb \n"
                                 + " INNER JOIN {0} wp On wb.wpinno = wp.wpinno \n"
                                 + " inner Join FILEBORO fb On (wb.wpinno = fb.WPINNO and wb.RECEIVER=fb.RECEIVER and wb.TRANST=fb.TRANST) \n"
@@ -2933,13 +2933,13 @@ namespace WDA.Class
                     + " FileDate = '{2}',\n"
                     + " KeepYr = '{3}',\n"
                     + " BoxNo = '{4}'\n"
-                    + "Where 1=1 {5}\n"
-                    + "And FILENO is null\n"
-                    + "And FILEDATE is null\n"
-                    + "And KEEPYR is null\n"
-                    + "And BOXNO is null\n"
+                    + "　Where 1=1 {5}\n"
+                    + " And FILENO is null\n"
+                    + " And FILEDATE is null\n"
+                    + " And KEEPYR is null\n"
+                    + " And BOXNO is null\n"
                     //ADD BY RICHARD 20160427 檢查該文號是否有發文(發文日期或發文人員有值)
-                    + "And (SENDMAN is not null or WPOUTDATE is not null) \n";  
+                    + " And (SENDMAN is not null or WPOUTDATE is not null) \n";  
 
                 #endregion
 

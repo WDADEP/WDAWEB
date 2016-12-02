@@ -60,7 +60,9 @@
             try {
                 var txtScanCreateTime = $get('MainContent_txtBorrowCreateTime').value;
 
-                if (txtScanCreateTime.length == 0) {
+                var dReceiver = $get('MainContent_ddlReceiver').value;
+
+                if (txtScanCreateTime.length == 0 && dReceiver == 0) {
                     alert('請輸入任一個查詢條件');
                     return false;
                 }
@@ -81,6 +83,14 @@
             </div>
             <div class="panel-body">
                 <table class="ItemTD_green" style="width: 98%; float: right; border-collapse: separate; border-spacing: 1px;" border="1">
+                    <tr>
+                        <td class="HeadTD_green" style="padding: 5px;">取消調檔作業者：
+                        </td>
+                        <td style="padding: 5px; text-align: left;">
+                                <asp:DropDownList ID="ddlReceiver" runat="server">
+                                </asp:DropDownList>
+                        </td>
+                    </tr>
                     <tr>
                         <td class="HeadTD_green" style="padding: 5px;">借檔日期起訖：
                         </td>

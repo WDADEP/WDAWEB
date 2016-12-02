@@ -6674,9 +6674,9 @@ namespace WDA {
             
             private global::System.Data.DataColumn columnREALNAME;
             
-            private global::System.Data.DataColumn columnTRANST;
-            
             private global::System.Data.DataColumn columnGETIME;
+            
+            private global::System.Data.DataColumn columnREDATE;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
@@ -6833,17 +6833,17 @@ namespace WDA {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn TRANSTColumn {
+            public global::System.Data.DataColumn GETIMEColumn {
                 get {
-                    return this.columnTRANST;
+                    return this.columnGETIME;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn GETIMEColumn {
+            public global::System.Data.DataColumn REDATEColumn {
                 get {
-                    return this.columnGETIME;
+                    return this.columnREDATE;
                 }
             }
             
@@ -6900,8 +6900,8 @@ namespace WDA {
                         string FILEDATE, 
                         string CREATETIME, 
                         string REALNAME, 
-                        string TRANST, 
-                        string GETIME) {
+                        string GETIME, 
+                        string REDATE) {
                 CancelBorrowDetailTableRow rowCancelBorrowDetailTableRow = ((CancelBorrowDetailTableRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         BARCODEVALUE,
@@ -6919,8 +6919,8 @@ namespace WDA {
                         FILEDATE,
                         CREATETIME,
                         REALNAME,
-                        TRANST,
-                        GETIME};
+                        GETIME,
+                        REDATE};
                 rowCancelBorrowDetailTableRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowCancelBorrowDetailTableRow);
                 return rowCancelBorrowDetailTableRow;
@@ -6958,8 +6958,8 @@ namespace WDA {
                 this.columnFILEDATE = base.Columns["FILEDATE"];
                 this.columnCREATETIME = base.Columns["CREATETIME"];
                 this.columnREALNAME = base.Columns["REALNAME"];
-                this.columnTRANST = base.Columns["TRANST"];
                 this.columnGETIME = base.Columns["GETIME"];
+                this.columnREDATE = base.Columns["REDATE"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -6995,10 +6995,10 @@ namespace WDA {
                 base.Columns.Add(this.columnCREATETIME);
                 this.columnREALNAME = new global::System.Data.DataColumn("REALNAME", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnREALNAME);
-                this.columnTRANST = new global::System.Data.DataColumn("TRANST", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnTRANST);
                 this.columnGETIME = new global::System.Data.DataColumn("GETIME", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnGETIME);
+                this.columnREDATE = new global::System.Data.DataColumn("REDATE", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnREDATE);
                 this.columnBARCODEVALUE.Caption = "WPINNO";
                 this.columnCOMMADD.Caption = "KINDTYPE";
             }
@@ -11683,22 +11683,6 @@ namespace WDA {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string TRANST {
-                get {
-                    try {
-                        return ((string)(this[this.tableCancelBorrowDetailTable.TRANSTColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("資料表 \'CancelBorrowDetailTable\' 中資料行 \'TRANST\' 的值是 DBNull。", e);
-                    }
-                }
-                set {
-                    this[this.tableCancelBorrowDetailTable.TRANSTColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public string GETIME {
                 get {
                     try {
@@ -11710,6 +11694,22 @@ namespace WDA {
                 }
                 set {
                     this[this.tableCancelBorrowDetailTable.GETIMEColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string REDATE {
+                get {
+                    try {
+                        return ((string)(this[this.tableCancelBorrowDetailTable.REDATEColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("資料表 \'CancelBorrowDetailTable\' 中資料行 \'REDATE\' 的值是 DBNull。", e);
+                    }
+                }
+                set {
+                    this[this.tableCancelBorrowDetailTable.REDATEColumn] = value;
                 }
             }
             
@@ -11895,18 +11895,6 @@ namespace WDA {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsTRANSTNull() {
-                return this.IsNull(this.tableCancelBorrowDetailTable.TRANSTColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetTRANSTNull() {
-                this[this.tableCancelBorrowDetailTable.TRANSTColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsGETIMENull() {
                 return this.IsNull(this.tableCancelBorrowDetailTable.GETIMEColumn);
             }
@@ -11915,6 +11903,18 @@ namespace WDA {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetGETIMENull() {
                 this[this.tableCancelBorrowDetailTable.GETIMEColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsREDATENull() {
+                return this.IsNull(this.tableCancelBorrowDetailTable.REDATEColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetREDATENull() {
+                this[this.tableCancelBorrowDetailTable.REDATEColumn] = global::System.Convert.DBNull;
             }
         }
         

@@ -206,11 +206,11 @@ namespace WDA
                 ht.Add("Flag", flag);
 
                 //取得相關資料
-                strWhere = string.Format(" AND WPINNO = '{0}'", Wpinno);
+                //MODIFY BY RICHARD 20161025 「歸檔新增時檢查文號有無發文」機制調整為「簽收新增時檢查文號有無發文」
+                strWhere = string.Format(" AND WPINNO = '{0}' AND  (SENDMAN is not null OR WPOUTDATE is not null)　", Wpinno);
                 strSql = this.Select.WprecInfos(strWhere);
                 this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
                 DataTable dtWprec = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
-
 
                 if (dtWprec.Rows.Count > 0){
                     ht.Add("COMMNAME", dtWprec.Rows[0]["COMMNAME"].ToString());
@@ -228,7 +228,7 @@ namespace WDA
                 }
                 else
                 {
-                    this.ShowMessage("未查詢到收文號資料", MessageMode.INFO);
+                    this.ShowMessage("未查詢到收文號資料或發文號為空值", MessageMode.INFO);
                     return false;
                 }
 

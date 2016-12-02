@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WDA.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ADHost" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">172.21.45.244</Value>
+    </Setting>
+    <Setting Name="ADPort" Type="System.UInt16" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="EnableAD" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="ADBaseDN" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">CN=sync,CN=user,DC=wda,DC=gov,DC=tw</Value>
+    </Setting>
+    <Setting Name="APHost" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">172.21.103.84</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

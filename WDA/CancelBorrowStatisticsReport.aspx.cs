@@ -24,6 +24,9 @@ namespace WDA
                     this.HiddenShowPanel.Value = "false";
                     this.GridView1.PageSize = Convert.ToInt32(this.GetSystem("PageSize"));
 
+                    //ADD BY RICHARD 20161001
+                    this.GetFileUserList();
+
                 }
             }
             catch (Exception ex)
@@ -31,6 +34,49 @@ namespace WDA
                 this.ShowMessage(ex);
             }
 
+        }
+        #endregion
+
+        #region GetFileUserList
+        /// <summary>
+        /// 取得檔案室人員列表
+        /// </summary>
+        private void GetFileUserList()
+        {
+            string strSql = string.Empty;
+
+            DataTable dt = null;
+            try
+            {
+                // Modified by Luke 2016/09/12
+                strSql = this.Select.UserTable(" AND DEPTID = 10 AND USERSTATUS=0 ");
+
+                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+                dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+
+                DataRow defaultRow = dt.NewRow();
+                defaultRow["RealName"] = "選擇人員";
+                dt.Rows.Add(defaultRow);
+
+                dt.DefaultView.Sort = "UserID";
+                this.ddlReceiver.DataSource = dt;
+
+                this.ddlReceiver.DataTextField = "RealName";
+                this.ddlReceiver.DataValueField = "USERID";
+
+                this.ddlReceiver.DataBind();
+
+                dt.Dispose(); dt = null;
+            }
+            catch (Exception ex)
+            {
+                this.ShowMessage(ex.Message);
+            }
+            finally
+            {
+                this.DBConn.Dispose(); this.DBConn = null;
+            }
         }
         #endregion
 
@@ -52,6 +98,12 @@ namespace WDA
 
                 if (Anew)
                 {
+
+                    string realName = this.ddlReceiver.SelectedValue.Trim();
+                    if (realName != "選擇人員")
+                    {
+                        where += string.Format(" AND wb.USERID = '{0}'", realName.Trim());
+                    }
 
                     if (!string.IsNullOrEmpty(this.txtBorrowCreateTime.Text.Trim()))
                     {

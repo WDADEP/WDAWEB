@@ -21,7 +21,9 @@ namespace WDA
             {
                 if (rePage == 1)
                 {
-                    this.ShowMessage("新增成功", MessageMode.INFO);
+                    //20161118 問題單 REMARK BY RICHARD 20161128
+                    //系統707「調妥作業-新增」頁面於新增收文文號時會跳出「新增成功」視窗及文字，建議調整為未新增成功時再行跳出提示畫面。
+                    //this.ShowMessage("新增成功", MessageMode.INFO);
                     rePage = 0;
                 }
 

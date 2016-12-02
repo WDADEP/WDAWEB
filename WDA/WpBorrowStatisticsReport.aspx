@@ -60,7 +60,7 @@
             try {
                 var dReceiver = $get('MainContent_ddlReceiver').value;
                 if (dReceiver == 0) {
-                    alert('請選擇借檔文件者');
+                    alert('請選擇還檔文件者');
                     return false;
                 }
                 var txtScanCreateTime = $get('MainContent_txtBorrowCreateTime').value;

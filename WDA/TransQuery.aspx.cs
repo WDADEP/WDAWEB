@@ -106,7 +106,7 @@ namespace WDA
                     }
 
                     string realName = this.ddlReceiver.SelectedValue;
-                    if (!string.IsNullOrEmpty(realName))
+                    if (realName != "選擇人員")
                     {
                         where += string.Format(" AND tt.RECEIVER = '{0}'", realName.Trim());
                     }
