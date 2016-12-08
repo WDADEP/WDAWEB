@@ -60,15 +60,15 @@
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <span style="white-space: nowrap">使用者帳號：</span>
+                                                                <span style="white-space: nowrap">AD使用者帳號：</span>
                                                             </td>
                                                             <td style="padding-top: 10px">
-                                                                <asp:TextBox ID="txtUserName" Style="ime-mode: disabled" runat="server" ClientIDMode="Static" AutoCompleteType="Disabled"></asp:TextBox>
+                                                                <asp:TextBox ID="txtUserName" Style="ime-mode: disabled" runat="server" ClientIDMode="Static" AutoCompleteType="Disabled" ></asp:TextBox>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <span id="Txt_Password" style="white-space: nowrap">使用者密碼：</span>
+                                                                <span id="Txt_Password" style="white-space: nowrap">AD使用者密碼：</span>
                                                             </td>
                                                             <td>
                                                                 <asp:TextBox ID="txtPd" runat="server" TextMode="Password" ClientIDMode="Static"></asp:TextBox>

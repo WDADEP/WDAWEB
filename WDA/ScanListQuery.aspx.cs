@@ -439,6 +439,14 @@ namespace WDA
                 {
                     btnDelete.Attributes.Add("onclick", string.Format(@"javascript:return confirm('{0}')", "是否確定刪除？"));
                 }
+
+                //ADD BY RICHARD 20161129 for 掃描資料編輯與刪除僅能由原始掃描者進行操作
+                if (!UserInfo.RealName.Equals(e.Row.Cells[5].Text.Trim()) )
+                {
+                    e.Row.Cells[0].Text = "";
+                    e.Row.Cells[1].Text = "";
+                }
+
             }
         }
         #endregion
@@ -475,6 +483,7 @@ namespace WDA
             GridView gv = (GridView)sender;
 
             DataTable dt = null;
+            DataTable dtWprec = null;
             try
             {
                 if (e.CommandName != "Stop") return;
@@ -487,10 +496,12 @@ namespace WDA
                 int result = 0;
 
                 string strSql = string.Empty, strWhere = string.Empty;
+                string strCond = string.Empty;
+                string userIP = string.Empty;
 
                 if (e.CommandName == "Stop")
                 {
-                    #region Select
+                    #region Select & delete
 
                     this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
 
@@ -504,7 +515,68 @@ namespace WDA
                     {
                         if (dt.Rows.Count == 1)
                         {
-                            this.ShowMessage("本收文文號僅有 1 筆，無法刪除"); return;
+                            //this.ShowMessage("本收文文號僅有 1 筆，無法刪除"); return;
+                            //ADD BY RICHARD 20161129 需於歸檔前才可以刪除
+                            strWhere = string.Format(" WPINNO = '{0}'\n And FILENO is null And FILEDATE is null And KEEPYR is null And BOXNO is null  ", barcodeValue.Trim());
+
+                            strSql = this.Select.WprecCheck(strWhere);
+
+                            this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+                            this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
+
+                            dtWprec = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+
+                            if (dtWprec != null && (dtWprec.Rows.Count > 0))
+                            {
+                                //delete barcodeTable
+                                strSql = this.Delete.BarcodeTable(barcodeValue, caseid);
+                                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                                result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
+
+                                strCond = string.Format(" AND CASEID='{0}' ", caseid);
+                                //update casetable
+                                strSql = this.Update.CaseStatus("99", "SYSDATE", strCond);
+                                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                                result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
+
+                                if (result <= 0)
+                                {
+                                    this.ShowMessage("刪除失敗"); return;
+                                }
+
+                                this.DBConnTransac.GeneralSqlCmd.Transaction.Commit();
+                                this.ShowMessage("刪除成功", MessageMode.INFO);
+
+                                //ADD BY RICHARD 20161129
+                                #region Monitor
+                                userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+                                this.MonitorLog.LogMonitor(barcodeValue, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA02, "刪除最後一筆收文文號");
+                                #endregion
+
+                            }
+                            else
+                            {
+                                this.ShowMessage("此收文號已歸檔，無法刪除"); return;
+                            }
+                        }
+                        else //比數大於1
+                        {
+                            this.DBConnTransac.GeneralSqlCmd.Command.CommandTimeout = 90;
+
+                            //BarcodeTable
+                            strSql = this.Delete.BarcodeTable(barcodeValue, caseid);
+                            this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+                            result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
+
+                            if (result <= 0)
+                            {
+                                this.ShowMessage("刪除失敗"); return;
+                            }
+
+                            this.DBConnTransac.GeneralSqlCmd.Transaction.Commit();
+                            this.ShowMessage("刪除成功", MessageMode.INFO);
+
                         }
                     }
                     else
@@ -514,32 +586,15 @@ namespace WDA
 
                     #endregion
 
-                    #region Delete
-
-                    this.DBConnTransac.GeneralSqlCmd.Command.CommandTimeout = 90;
-
-                    //BarcodeTable
-                    strSql = this.Delete.BarcodeTable(barcodeValue, caseid);
-                    this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
-                    result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
-
-                    if (result <= 0)
-                    {
-                        this.ShowMessage("刪除失敗"); return;
-                    }
-
-                    this.DBConnTransac.GeneralSqlCmd.Transaction.Commit();
-                    this.ShowMessage("刪除成功", MessageMode.INFO);
 
                     this.DataBind(true, true);
 
                     //ADD BY RICHARD 20160407 
                     #region Monitor
-                    string userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
+                    userIP = this.Request.ServerVariables["REMOTE_ADDR"].ToString();
                     this.MonitorLog.LogMonitor(barcodeValue, this.UserInfo.UserName, this.UserInfo.RealName, userIP, Monitor.MSGID.WDA02, "刪除收文文號");
                     #endregion
 
-                    #endregion
                 }
             }
             catch (System.Exception ex)
@@ -555,6 +610,8 @@ namespace WDA
             finally
             {
                 if (dt != null) { dt.Dispose(); dt = null; }
+
+                if (dtWprec != null) { dtWprec.Dispose(); dtWprec = null; }
 
                 if (this.DBConn != null) { this.DBConn.Dispose(); this.DBConn = null; }
 

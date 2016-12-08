@@ -30,6 +30,9 @@ namespace WDA
                     string httpLink = httpType.ToLower() == "on" ? " https" : "http";
 
                     string serverName = this.Request.ServerVariables["SERVER_NAME"].ToString();
+                    //MODIFY BY RICHARD 20161128
+                    if(serverName.Trim().Equals("127.0.0.1"))
+                        serverName = "172.21.103.84";
                     //ex:80
                     string serverPort = this.Request.ServerVariables["SERVER_PORT"].ToString();
                     //ex:/DMG/ViewerXmlMaker.aspx

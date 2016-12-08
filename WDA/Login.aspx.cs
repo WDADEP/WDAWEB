@@ -14,6 +14,8 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.DirectoryServices;
+using System.Configuration;
 
 namespace WDA
 {
@@ -33,46 +35,11 @@ namespace WDA
 
             this.LoadPage(false);
 
+            this.LoginShowMessage("請使用電腦開機帳號密碼登入系統");
+
             try
             {
-                //DataTable dt = new DataTable();
-                //DataRow row;
-
-
-                //dt.Columns.Add("fileno", typeof(string));
-                //dt.Columns.Add("boxno", typeof(string));
-
-                //{
-                //    row = dt.NewRow();
-                //    row["fileno"] = "22070102";
-                //    row["boxno"] = "10300677005";
-                //    dt.Rows.Add(row);
-
-                //    row = dt.NewRow();
-                //    row["fileno"] = "22010101";
-                //    row["boxno"] = "10301320014";
-                //    dt.Rows.Add(row);
-
-                //    row = dt.NewRow();
-                //    row["fileno"] = "22010301";
-                //    row["boxno"] = "10301667010";
-                //    dt.Rows.Add(row);
-
-                //    row = dt.NewRow();
-                //    row["fileno"] = "22010102";
-                //    row["boxno"] = "10306809019";
-                //    dt.Rows.Add(row);
-
-                //    row = dt.NewRow();
-                //    row["fileno"] = "22070103";
-                //    row["boxno"] = "10303980050";
-                //    dt.Rows.Add(row);
-                //}
-
-                //dt.DefaultView.Sort = "fileno,boxno";
-
-                //dt = dt.DefaultView.ToTable(); 
-
+               
                 if (rePage == 1)
                 {
                     FormsAuthentication.SignOut();
@@ -84,6 +51,7 @@ namespace WDA
                 }
                 else
                 {
+
                     if (!IsPostBack)
                     {
                         if (Request.QueryString.Count == 0)
@@ -129,7 +97,8 @@ namespace WDA
 
                 //if (userLogin == "0")
                 {
-                    #region 資料庫驗證
+                    // Modified by Luke 2016/11/23
+                    /*#region 資料庫驗證
                     try
                     {
                         possword = possword.EncryptDES();
@@ -175,6 +144,125 @@ namespace WDA
                     }
 
                     #endregion
+                     * */
+
+                    bool bEnableAD = (Properties.Settings.Default.EnableAD == "1");
+                    bool bAuthenticated = false;
+                    if (bEnableAD)
+                    {
+                        #region AD(LDAP)驗證
+
+                        string host = Properties.Settings.Default.ADHost;
+                        if (string.IsNullOrWhiteSpace(host))
+                            this.LoginShowMessage("找不到AD主機!");
+
+                        ushort port = Properties.Settings.Default.ADPort;
+                        if (port == 0)
+                            port = 389;
+
+                        //string domain = Properties.Settings.Default.ADDefaultDomain;
+
+                        //string baseDn = DomainToLDAPString(domain);
+                        //if (!string.IsNullOrWhiteSpace(baseDn))
+                        //{
+                        //    if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.ADBaseDN))
+                        //        baseDn = Properties.Settings.Default.ADBaseDN + "," + baseDn;
+                        //}
+                        //else
+                        //{
+                        //    if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.ADBaseDN))
+                        //        baseDn = Properties.Settings.Default.ADBaseDN;
+                        //}
+
+                        string baseDn = Properties.Settings.Default.ADBaseDN;
+
+                        string path = string.Empty;
+                        if (!string.IsNullOrEmpty(baseDn))
+                            path = string.Format("LDAP://{0}:{1}/{2}", host, port, baseDn);
+                        else
+                            path = string.Format("LDAP://{0}:{1}", host, port);
+
+                        LdapAuthentication auth = new LdapAuthentication(path);
+
+                        // userName若為"domain\account"格式,發現即使domain錯誤但只要account及密碼對,也能驗證成功,
+                        // 因此要改成"account@domain"格式
+                        if (userName.Contains(@"\"))
+                        {
+                            int index = userName.IndexOf(@"\");
+                            string _account = userName.Substring(index + 1);
+                            string _domain = userName.Substring(0, index);
+                            userName = string.Format("{0}@{1}", _account, _domain);
+                        }
+                        //// userName若為單純的"account"格式,且ADDefaultDomain設定中有指定預設的domain,
+                        //// 則userName要改成"account@ADDefaultDomain"格式
+                        //else if (!userName.Contains("@") && !string.IsNullOrEmpty(domain))
+                        //{
+                        //    userName = string.Format("{0}@{1}", userName, domain);
+                        //}
+
+                        bAuthenticated = auth.IsAuthenticated(userName, possword);
+
+                        if(!bAuthenticated)
+                            this.LoginShowMessage("AD驗證失敗!");
+
+                        #endregion
+                    }
+
+                    #region 資料庫驗證; 而AD(LDAP)驗證成功, 不需驗證密碼但也要自資料庫讀取帳號狀態
+                    if (bEnableAD && bAuthenticated)
+                    {
+                        //where = " And UserName = :username";
+                        where = " And UPPER(UserName) = UPPER(:username)";
+
+                    }
+                    else
+                    {
+                        possword = possword.EncryptDES();
+                        //where = " And UserName = :username And ut.Password = :password";
+                        where = " And UPPER(UserName) = UPPER(:username) And ut.Password = :password";
+
+                    }
+
+                    if (userName.Contains(@"\"))
+                    {
+                        userName = userName.Split(@"\".ToCharArray())[1];
+                    }
+                    else if (userName.Contains("@"))
+                    {
+                        userName = userName.Split("@".ToCharArray())[0];
+                    }
+
+                    strSql = this.Select.UserTable(where);
+
+                    OleDbCommand command = (OleDbCommand)this.DBConn.GeneralSqlCmd.Command;
+
+                    command.Parameters.Clear();
+                    command.Parameters.Add(new OleDbParameter("username", OleDbType.VarChar)).Value = userName;
+                    if (!bEnableAD || !bAuthenticated)
+                        command.Parameters.Add(new OleDbParameter("password", OleDbType.VarChar)).Value = possword;
+
+                    DataTable dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+
+                    if (dt != null && dt.Rows.Count > 0)
+                    {
+                        string status = dt.Rows[0]["UserStatus"] != null ? dt.Rows[0]["UserStatus"].ToString().Trim() : "0";
+
+                        userID = dt.Rows[0]["UserID"] != null ? dt.Rows[0]["UserID"].ToString().Trim() : "0";
+
+                        if (status == "99") this.LoginShowMessage("帳號已被停用");
+                        else
+                        {
+                            Session[SessionName.UserID] = userID;
+
+                            this.LocationReplace();
+                        }
+                    }
+                    else
+                    {
+                        this.LoginShowMessage("請輸入正確帳號密碼");
+                    }
+                    #endregion
+
                 }
             }
             catch (Exception ex)
@@ -391,6 +479,116 @@ namespace WDA
             finally
             {
                 this.DBConn.Dispose(); this.DBConn = null;
+            }
+        }
+        #endregion
+
+        // Added by Luke 2016/11/23
+        #region DomainToLDAPString()
+        private string DomainToLDAPString(string domain)
+        {
+            string ret = "";
+
+            if (!string.IsNullOrWhiteSpace(domain))
+            {
+                string[] dcs = domain.Split('.');
+
+                List<string> dcList = new List<string>(dcs.Length);
+                foreach (string dc in dcs)
+                {
+                    if (!string.IsNullOrWhiteSpace(dc))
+                        dcList.Add("DC=" + dc);
+                }
+
+                ret = string.Join(",", dcList.ToArray());
+            }
+
+            return ret;
+        }
+        #endregion
+
+        // Added by Luke 2016/11/23
+        #region class LdapAuthentication
+        public class LdapAuthentication
+        {
+            private string _path;
+            private string _filterAttribute;
+
+            private List<string> _groups = new List<string>();
+
+            public List<string> Groups
+            {
+                get
+                {
+                    return _groups;
+                }
+            }
+
+            public LdapAuthentication(string path)
+            {
+                _path = path;
+            }
+
+            public bool IsAuthenticated(string username, string pwd)
+            {
+                //log.Debug(string.Format("====== {0} ======", MethodBase.GetCurrentMethod().Name));
+
+                _groups.Clear();
+
+                DirectoryEntry entry = new DirectoryEntry(_path, username, pwd, AuthenticationTypes.Secure | AuthenticationTypes.ServerBind);
+
+                try
+                {
+                    //Bind to the native AdsObject to force authentication.
+                    object obj = entry.NativeObject;
+
+                    DirectorySearcher search = new DirectorySearcher(entry);
+
+                    if (username.Contains(@"\"))
+                        username = username.Split(@"\".ToCharArray())[1];
+                    else if (username.Contains("@"))
+                        username = username.Split("@".ToCharArray())[0];
+
+                    search.Filter = "(sAMAccountName=" + username + ")";
+                    search.PropertiesToLoad.Add("cn");
+                    search.PropertiesToLoad.Add("memberOf");
+                    SearchResult result = search.FindOne();
+
+                    if (null == result)
+                    {
+                        return false;
+                    }
+
+                    //Update the new path to the user in the directory.
+                    _path = result.Path;
+                    //log.Debug("_path=" + _path);
+                    _filterAttribute = (string)result.Properties["cn"][0];
+                    //log.Debug("_filterAttribute=" + _filterAttribute);
+
+                    //Get groups which user belongs to
+                    int propertyCount = result.Properties["memberOf"].Count;
+                    string dn;
+                    int equalsIndex, commaIndex;
+                    for (int propertyCounter = 0; propertyCounter < propertyCount; propertyCounter++)
+                    {
+                        dn = (string)result.Properties["memberOf"][propertyCounter];
+                        equalsIndex = dn.IndexOf("=", 1);
+                        commaIndex = dn.IndexOf(",", 1);
+                        if (-1 == equalsIndex)
+                        {
+                            continue;
+                        }
+                        _groups.Add(dn.Substring((equalsIndex + 1), (commaIndex - equalsIndex) - 1));
+                    }
+                    //log.Debug("_groups=" + string.Join("|", _groups.ToArray()));
+
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("使用者帳號AD驗證錯誤: " + ex.Message);
+                }
+
+                return true;
             }
         }
         #endregion

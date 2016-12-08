@@ -2415,7 +2415,7 @@ namespace WDA.Class
             {
                 #region SQL Command
 
-                string strSql = "Update CaseTable Set CaseStatus = {0},CloseTime = {1} Where 1=1{2}";
+                string strSql = "Update CaseTable Set CaseStatus = {0}, LASTMODIFYTIME ={1} Where 1=1 {2}";
 
                 #endregion
 

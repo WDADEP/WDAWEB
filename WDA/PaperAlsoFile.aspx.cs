@@ -22,8 +22,9 @@ namespace WDA
             {
                 if (rePage == 1)
                 {
-
-                    this.ShowMessage("還檔成功");
+                    //20161118 問題單 REMARK BY RICHARD 20161128
+                    //系統703&705「還檔作業-借閱還檔」頁面於操作步驟完成前後均會跳出「還檔成功」視窗及文字，建議比照前項調整為未新增成功時再行跳出提示畫面
+                    //this.ShowMessage("還檔成功");
                     rePage = 0;
                 }
                 else if (rePage == 2)

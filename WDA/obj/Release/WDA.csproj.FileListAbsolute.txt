@@ -47,8 +47,6 @@ C:\Users\White\ChangingtecProjects\勞發署\程式\WDA\WDA\obj\Release\RdlCompi
 C:\Users\White\ChangingtecProjects\勞發署\程式\WDA\WDA\obj\Release\WDA.dll
 C:\Users\White\ChangingtecProjects\勞發署\程式\WDA\WDA\obj\Release\WDA.pdb
 C:\Users\White\ChangingtecProjects\勞發署\程式\WDA\WDA\obj\Release\WDA.csprojResolveAssemblyReference.cache
-C:\TEMP\WDA\WDA\obj\Release\RdlCompile.cache
-C:\TEMP\WDA\WDA\obj\Release\RdlCompile.compiled
 C:\TEMP\WDA\WDA\bin\WDA.dll
 C:\TEMP\WDA\WDA\bin\WDA.pdb
 C:\TEMP\WDA\WDA\bin\Antlr3.Runtime.dll
@@ -68,5 +66,7 @@ C:\TEMP\WDA\WDA\bin\System.Web.Optimization.xml
 C:\TEMP\WDA\WDA\bin\Antlr3.Runtime.pdb
 C:\TEMP\WDA\WDA\bin\Newtonsoft.Json.xml
 C:\TEMP\WDA\WDA\bin\zh-Hant\System.Web.Optimization.resources.dll
+C:\TEMP\WDA\WDA\obj\Release\RdlCompile.cache
+C:\TEMP\WDA\WDA\obj\Release\RdlCompile.compiled
 C:\TEMP\WDA\WDA\obj\Release\WDA.dll
 C:\TEMP\WDA\WDA\obj\Release\WDA.pdb

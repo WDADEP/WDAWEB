@@ -119,6 +119,22 @@ namespace WDA
         }
         #endregion
 
+        #region FileRealname
+        /// <summary>
+        /// 檔案室人員
+        /// </summary>
+        protected string FileRealname
+        {
+            get
+            {
+                if (ViewState["FileRealname"] == null) { return string.Empty; }
+                else { return ViewState["FileRealname"].ToString(); }
+            }
+            set { ViewState["FileRealname"] = value; }
+        }
+        #endregion
+
+
         #endregion
 
         #region Page_Load()
@@ -134,6 +150,9 @@ namespace WDA
                     this.InitControl();
 
                     this.HiddenShowPanel.Value = "false";
+
+                    //ADD BY Richard 20161122
+                    GetFileUserList();
                 }
             }
             catch (Exception ex) { this.ShowMessage(ex); }
@@ -150,14 +169,16 @@ namespace WDA
                 this.ShowMessage("發文號為空值或是此收文號已經歸檔", MessageMode.INFO); return;
             }
 
+            if (!this.CheckTransData())
+            {
+                this.HiddenShowPanel.Value = "false";
+                //MODIFY BY RICHARD 20161025
+                this.ShowMessage("此收文號檔案室人員尚未簽收", MessageMode.INFO); return;
+            }
 
             if (!this.GetCaseID())
             {
                 this.ViewType = "1";//紙本
-
-                //this.HiddenShowPanel.Value = "false";
-
-                //this.ShowMessage("查詢不到對應的案件編號", MessageMode.INFO);
 
                 this.txtBarcodeValue.Text = this.txtQueryBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
                 this.txtFileDate.Text = DateTime.Now.ToString("yyyyMMdd");
@@ -178,6 +199,14 @@ namespace WDA
         #region BtnAdd_Click()
         protected void BtnAdd_Click(object sender, EventArgs e)
         {
+            if (!this.CheckTransData())
+            {
+                this.HiddenShowPanel.Value = "false";
+                //MODIFY BY RICHARD 20161125
+                this.ShowMessage("此收文號檔案室人員尚未簽收", MessageMode.INFO); 
+                return;
+            }
+
             if (this.ViewType == "1")
             {
                 if (this.UpdateDataByWprec())
@@ -241,9 +270,50 @@ namespace WDA
             try
             {
                 //MODIFY BY RICHARD 20160427 檢查該文號是否有發文(發文日期或發文人員有值)
-                where = string.Format(" WPINNO = '{0}'\n And FILENO is null And FILEDATE is null And KEEPYR is null And BOXNO is null AND  (SENDMAN is not null or WPOUTDATE is not null) ", this.txtQueryBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim());
+                //MODIFY BY RICHARD 20161025 「歸檔新增時檢查文號有無發文」機制移除
+                //where = string.Format(" WPINNO = '{0}'\n And FILENO is null And FILEDATE is null And KEEPYR is null And BOXNO is null AND  (SENDMAN is not null or WPOUTDATE is not null) ", this.txtQueryBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim());
+                where = string.Format(" WPINNO = '{0}'\n And FILENO is null And FILEDATE is null And KEEPYR is null And BOXNO is null  ", this.txtQueryBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim());
 
                 strSql = this.Select.WprecCheck(where);
+
+                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+                this.DBConn.GeneralSqlCmd.Command.CommandTimeout = 90;
+
+                dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+
+                if (dt.Rows.Count > 0) { result = true; }
+            }
+            catch (System.Exception ex) { this.ShowMessage(ex); }
+            finally
+            {
+                if (this.DBConn != null) { this.DBConn.Dispose(); this.DBConn = null; }
+            }
+            return result;
+        }
+        #endregion
+
+        #region CheckTransData()
+        /// <summary>
+        /// 檢查簽收紀錄
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckTransData()
+        {
+            string strSql = string.Empty, where = string.Empty, strBarCode=string.Empty;
+
+            bool result = false;
+            DataTable dt = null;
+            try
+            {
+                strBarCode =this.txtQueryBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
+                if (strBarCode.Equals(string.Empty))
+                    strBarCode = txtBarcodeValue.Text.Trim().Replace(StringFormatException.Mode.Sql).Trim();
+                
+                //MODIFY BY RICHARD 20161125 「歸檔新增時移除檢查文號有無發文」,但新增檔案室人員有無簽收資料
+                where = string.Format(" AND WPINNO = '{0}' AND RECEIVER in ({1})\n ", strBarCode, FileRealname.Substring(0,FileRealname.Length-1));
+
+                strSql = this.Select.Transtable(where);
 
                 this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
 
@@ -362,7 +432,7 @@ namespace WDA
         }
         #endregion
 
-        #region GetCaseID()
+        #region GetCaseID
         /// <summary>
         /// 取得 CaseID
         /// </summary>
@@ -528,7 +598,7 @@ namespace WDA
                 this.DBConnTransac.GeneralSqlCmd.Command.CommandTimeout = 90;
 
                 //Wprec
-                strWhere = string.Format("And WpinNo = '{0}'\n", this.BarcodeValue);
+                strWhere = string.Format("　And WPINNO = '{0}'\n", this.BarcodeValue);
                 strSql = this.Update.Wprec(ht, strWhere);
                 this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
                 result = this.DBConnTransac.GeneralSqlCmd.ExecuteNonQuery(strSql);
@@ -580,6 +650,48 @@ namespace WDA
             return Convert.ToBoolean(result);
         }
         #endregion
+
+        #region GetFileUserList
+        /// <summary>
+        /// 取得檔案室人員列表
+        /// </summary>
+        private void GetFileUserList()
+        {
+            string strSql = string.Empty;
+
+            DataTable dt = null;
+            try
+            {
+                // Modified by Luke 2016/09/12
+                strSql = this.Select.UserTable(" AND DEPTID = 10 AND USERSTATUS=0 ");
+
+                this.WriteLog(global::Log.Mode.LogMode.DEBUG, strSql);
+
+                dt = this.DBConn.GeneralSqlCmd.ExecuteToDataTable(strSql);
+
+                if (dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        if (row["RealName"].ToString().Trim().Length > 0)
+                        {
+                            this.FileRealname += "'"+row["RealName"].ToString().Trim()+"',";
+                        }
+                    }
+                }
+                dt.Dispose(); dt = null;
+            }
+            catch (Exception ex)
+            {
+                this.ShowMessage(ex.Message);
+            }
+            finally
+            {
+                this.DBConn.Dispose(); this.DBConn = null;
+            }
+        }
+        #endregion
+
 
         #endregion
     }
